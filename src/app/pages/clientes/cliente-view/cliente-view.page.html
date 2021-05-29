@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="secondary">
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ cliente.nombre }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <small style="color:gray">Nombre</small>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-margin-bottom">
+      <ion-col>
+        {{ cliente.nombre }}
+      </ion-col>
+    </ion-row>
+  
+    <ion-row>
+      <ion-col>
+        <small style="color:gray">Calle</small>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-margin-bottom">
+      <ion-col>
+        {{ cliente.direccion.calle }}
+      </ion-col>
+    </ion-row>
+  
+    <ion-row>
+      <ion-col>
+        <small style="color:gray">Altura</small>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-margin-bottom">
+      <ion-col>
+        {{ cliente.direccion.altura }}
+      </ion-col>
+    </ion-row>
+  
+    <ion-row>
+      <ion-col>
+        <small style="color:gray">Localidad</small>
+      </ion-col>
+    </ion-row>
+    <ion-row class="ion-margin-bottom">
+      <ion-col>
+        {{ cliente.direccion.localidad }}
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="warning" (click)="borrarCliente()">
+      <ion-icon name="trash"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+</ion-content>
+
+
+<ion-footer>
+  <ion-toolbar color="light">
+    <ion-buttons color="light" slot="start">
+      <a class="waves-effect waves-light btn-small">button</a>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
