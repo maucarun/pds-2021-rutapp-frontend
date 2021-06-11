@@ -11,7 +11,8 @@ export class AppComponent implements OnInit {
     { title: 'Clientes', url: '/clientes', icon: 'people' },
     { title: 'Productos', url: '/productos', icon: 'cart' },
     { title: 'Hoja de ruta', url: '/hojasderuta', icon: 'location' },
-    { title: 'Hacerca de', url: '/about', icon: 'information' }
+    { title: 'Perfil', url: '/perfil', icon: 'person' },
+    { title: 'Acerca de', url: '/about', icon: 'information' }
   ];
   public labels = [];
   constructor(

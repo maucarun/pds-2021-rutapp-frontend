@@ -1,41 +1,64 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from './core/auth/auth.guard';
+import { AuthGuard } from './guards/auth.guard'
+import { AutoLoginGuard } from './guards/auto-login.guard';
+import { fromEventPattern } from 'rxjs';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'clientes',
-    pathMatch: 'full'
-  },
+  { path: '', redirectTo: 'clientes', pathMatch: 'full' },
   {
     path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
+    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule),
+    // canLoad: [AutoLoginGuard]
   },
   {
     path: 'clientes',
-    canActivate:[AuthGuard],
+    // canActivate:[AuthGuard],
     children: [
       {
         path: "",
         loadChildren: () => import('./pages/clientes/clientes.module').then(m => m.ClientesPageModule)
+      },
+      {
+        path: ":idCliente",
+        loadChildren: () => import('./pages/cliente-view/cliente-view.module').then(m => m.ClienteViewPageModule)
       }
     ]
   },
   {
-    path: 'cliente',
-    canActivate:[AuthGuard],
+    path: 'productos',
+    // canActivate:[AuthGuard],
     children: [
       {
-        path: ":id",
-        loadChildren: () => import('./pages/clientes/cliente-view/cliente-view.module').then(m => m.ClienteViewPageModule)
+        path: "",
+        loadChildren: () => import('./pages/productos/productos.module').then( m => m.ProductosPageModule)
+      },
+      {
+        path: ':idProducto',
+        loadChildren: () => import('./pages/producto-view/producto-view.module').then( m => m.ProductoViewPageModule)
       }
     ]
   },
-  {
-    path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
-  }
+  // {
+  //   path: 'hojasderuta',
+  //   canActivate:[AuthGuard],
+  //   children: [
+  //     {
+  //       path: "",
+  //       // loadChildren: () => import('./pages/clientes/clientes.module').then(m => m.ClientesPageModule)
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: 'perfil',
+  //   canActivate:[AuthGuard],
+  //   children: [
+  //     {
+  //       path: "",
+  //       // loadChildren: () => import('./pages/clientes/clientes.module').then(m => m.ClientesPageModule)
+  //     }
+  //   ]
+  // },
 ];
 
 @NgModule({

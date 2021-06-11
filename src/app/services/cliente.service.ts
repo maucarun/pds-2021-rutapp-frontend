@@ -14,11 +14,10 @@ export class ClienteService {
 
   async getAll(): Promise<cliente[]> {
     console.log((await this.usr()))
-    return await this.http.get<cliente[]>(`${this.url}/usuario/${(await this.usr()).idUsuario}`).toPromise()
+    return await this.http.get<cliente[]>(`${this.url}/activo/usuario/${(await this.usr()).idUsuario}`).toPromise()
   }
 
   async get(id: string): Promise<cliente> {
-    console.log(`${this.url}/usuario/${(await this.usr()).idUsuario}/cliente/${id}`)
     return await this.http.get<cliente>(`${this.url}/usuario/${(await this.usr()).idUsuario}/cliente/${id}`).toPromise()
   }
 

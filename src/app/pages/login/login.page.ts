@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
-import { Usuario } from 'src/app/models/usuario.models';
 import { UsuarioService } from '../../services/usuario.service'
+// import { AuthenticationService } '../../services/authentication.service'
 
 @Component({
   selector: 'app-login',
@@ -12,7 +12,7 @@ import { UsuarioService } from '../../services/usuario.service'
 })
 export class LoginPage implements OnInit {
 
-  constructor(private usuarioServ: UsuarioService, private router: Router, private menu: MenuController) { }
+  constructor(private authService: UsuarioService, private router: Router, private menu: MenuController) { }
 
   ngOnInit() {
     this.menu.enable(false)
@@ -21,7 +21,7 @@ export class LoginPage implements OnInit {
   errorMessage: string = '';
 
   login(form: NgForm) {
-      this.usuarioServ.login(form.value.user, form.value.password)
+      this.authService.login(form.value.user, form.value.password)
       .then(()=>{
         this.menu.enable(true)
         this.router.navigate(['clientes']) 
