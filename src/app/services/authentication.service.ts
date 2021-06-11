@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Plugins } from '@capacitor/core';
 import { HttpClient } from '@angular/common/http';
 const { Storage } = Plugins;
-const TOKEN_KEY = 'my-token';
+const TOKEN_KEY = 'esa-token';
 const USER = 'user';
 
 import { map, tap, switchMap } from 'rxjs/operators';
@@ -19,6 +19,7 @@ export class AuthenticationService {
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
   token = '';
   private userData = new BehaviorSubject(null);
+  url = environment.apiUrl + '/usuario';
 
   constructor(private http: HttpClient) { 
     this.loadToken();
@@ -33,6 +34,8 @@ export class AuthenticationService {
     } else {
       this.userData.next(false);
     }
+    this.userData.next(false);
+    // console.log(user)
   }
 
   async loadToken() {
@@ -46,20 +49,8 @@ export class AuthenticationService {
     }
   }
 
-
-  /*
-    async login(username: string, password: string) {
-    let usr = {
-      username: username,
-      password: password
-    }
-      const rta: Usuario = await this.http.post<Usuario>(`${this.url}/login`, usr).toPromise()
-      this.authService.login(rta)
-  }
-  */
-
   login(credentials: {username, password}): Observable<any> {
-    return this.http.post(environment.apiUrl + 'login', credentials).pipe(
+    return this.http.post(this.url + '/login', credentials).pipe(
       map((data: any) => data),
       switchMap(data => {
         Storage.set({key: USER, value: JSON.stringify(data) });

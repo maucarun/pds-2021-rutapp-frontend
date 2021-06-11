@@ -15,15 +15,6 @@ export class UsuarioService {
   url = environment.apiUrl + '/usuario';
   constructor(private http: HttpClient, private authService: AuthService) { }
 
-  async login(username: string, password: string) {
-    let usr = {
-      username: username,
-      password: password
-    }
-      const rta: Usuario = await this.http.post<Usuario>(`${this.url}/login`, usr).toPromise()
-      this.authService.login(rta)
-  }
-
   async getUsuarioById(idUsuario: any): Promise<Usuario> {
     const usuario: Usuario = await this.http.get<any>(this.url + '/' + idUsuario).toPromise();
     console.log(usuario);

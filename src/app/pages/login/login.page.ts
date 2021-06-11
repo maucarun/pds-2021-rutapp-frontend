@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthenticationService } from '../../services/authentication.service';
+import { MenuController, AlertController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
-import { UsuarioService } from '../../services/usuario.service'
-// import { AuthenticationService } '../../services/authentication.service'
 
 @Component({
   selector: 'app-login',
@@ -11,24 +10,54 @@ import { UsuarioService } from '../../services/usuario.service'
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
+  credentials: FormGroup;
 
-  constructor(private authService: UsuarioService, private router: Router, private menu: MenuController) { }
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthenticationService,
+    private alertController: AlertController,
+    private router: Router,
+    private loadingController: LoadingController,
+    private menu: MenuController
+    ) { }
 
   ngOnInit() {
-    this.menu.enable(false)
+    this.credentials = this.fb.group({
+      username: ['homer', [Validators.required]],
+      password: ['abcd1', [Validators.required]],
+    });
+    // this.menu.enable(false)
   }
 
   errorMessage: string = '';
 
-  login(form: NgForm) {
-      this.authService.login(form.value.user, form.value.password)
-      .then(()=>{
-        this.menu.enable(true)
-        this.router.navigate(['clientes']) 
-      })
-      .catch(
-        ()=>{console.log('credenciales invalidas')
-        this.errorMessage = 'credenciales invalidas'} 
-      )
+  async login() {
+    const loading = await this.loadingController.create();
+    await loading.present();
+    
+    this.authService.login(this.credentials.value).subscribe(
+      async (res) => {
+        await loading.dismiss();        
+        this.router.navigateByUrl('/clientes', { replaceUrl: true });
+      }, async (res) => {
+        await loading.dismiss();
+        const alert = await this.alertController.create({
+          header: 'Login failed',
+          // message: res.error,
+          buttons: ['OK'],
+        });
+ 
+        await alert.present();
+      }
+    );
   }
+
+  get username() {
+    return this.credentials.get('username');
+  }
+  
+  get password() {
+    return this.credentials.get('password');
+  }
+
 }

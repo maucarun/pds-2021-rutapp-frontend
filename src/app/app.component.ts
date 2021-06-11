@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from './services/authentication.service'
+import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage-angular';
 
 @Component({
@@ -16,10 +18,17 @@ export class AppComponent implements OnInit {
   ];
   public labels = [];
   constructor(
-    private storage: Storage
+    private _authService: AuthenticationService,
+    private router: Router,
+    private storage: Storage,
   ) { }
   
   async ngOnInit() {
     await this.storage.create();
+  }
+
+  async logout() {
+    await this._authService.logout();
+    this.router.navigateByUrl('', { replaceUrl: true });
   }
 }

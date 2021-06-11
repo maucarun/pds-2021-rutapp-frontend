@@ -2,18 +2,17 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard'
 import { AutoLoginGuard } from './guards/auto-login.guard';
-import { fromEventPattern } from 'rxjs';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'clientes', pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule),
-    // canLoad: [AutoLoginGuard]
+    canLoad: [AutoLoginGuard]
   },
   {
     path: 'clientes',
-    // canActivate:[AuthGuard],
+    canLoad:[AuthGuard],
     children: [
       {
         path: "",
@@ -27,7 +26,7 @@ const routes: Routes = [
   },
   {
     path: 'productos',
-    // canActivate:[AuthGuard],
+    canLoad:[AuthGuard],
     children: [
       {
         path: "",

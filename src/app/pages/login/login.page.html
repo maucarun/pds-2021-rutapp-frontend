@@ -7,7 +7,7 @@
 </ion-header>
 
 <ion-content padding>
-  <form #form="ngForm" (ngSubmit)="login(form)">
+  <!-- <form #form="ngForm" (ngSubmit)="login(form)">
     <ion-grid>
       <ion-row color="primary" justify-content-center>
         <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
@@ -26,5 +26,30 @@
       </ion-row>
     </ion-grid>
     <label class="error-message">{{errorMessage}}</label>
+  </form> -->
+  <form (ngSubmit)="login()" [formGroup]="credentials">
+    <div class="input-group">
+      <ion-item>
+        <ion-input type="username" placeholder="Usuario" formControlName="username"></ion-input>
+      </ion-item>
+
+      <div *ngIf="(username.dirty || username.touched) && username.errors" class="errors">
+        <span *ngIf="username.errors?.required">Username is required</span>
+        <span *ngIf="username.errors?.username">Username is invalid</span>
+      </div>
+
+      <ion-item>
+        <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+      </ion-item>
+      <div *ngIf="(password.dirty || password.touched) && password.errors" class="errors">
+        <span *ngIf="password.errors?.required">Password is required</span>
+        <span *ngIf="password.errors?.minlength">Password needs to be 6 characters</span>
+      </div>
+    </div>
+
+    <ion-button type="submit" expand="block" [disabled]="!credentials.valid">Iniciar Sesión</ion-button>
+    <ion-button type="button" expand="block" color="light" fill="clear">No eres parte aún? Registrate!</ion-button>
+
+
   </form>
 </ion-content>
