@@ -1,6 +1,11 @@
+<div class="ion-page" id="main-content">
+
 <ion-header [translucent]="true">
   <ion-toolbar color="secondary">
     <ion-buttons slot="start">
+      <ion-back-button (click)="goBack()" defaultHref></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
       <ion-menu-button color="light"></ion-menu-button>
     </ion-buttons>
     <ion-title>{{ cliente.nombre }}</ion-title>
@@ -71,3 +76,4 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
+</div>

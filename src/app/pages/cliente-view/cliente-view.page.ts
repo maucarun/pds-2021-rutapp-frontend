@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AlertController } from '@ionic/angular';
 import { cliente } from 'src/app/models/cliente.models';
 import { ClienteService } from 'src/app/services/cliente.service';
+import { IonRouterOutlet } from '@ionic/angular';
 
 @Component({
   selector: 'app-cliente-view',
@@ -16,7 +17,8 @@ export class ClienteViewPage implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private clienteSev: ClienteService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private routerOutlet: IonRouterOutlet
   ) { }
 
   async ngOnInit() {
@@ -49,6 +51,11 @@ export class ClienteViewPage implements OnInit {
       ]
     });
     await msjConfirmacion.present();
+  }
+
+
+  goBack() {
+    this.router.navigateByUrl('/clientes', {replaceUrl:true});
   }
 
 }

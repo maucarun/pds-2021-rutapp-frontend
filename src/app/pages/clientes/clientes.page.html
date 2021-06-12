@@ -1,3 +1,4 @@
+<div class="ion-page" id="main-content">
 <ion-header [translucent]="true">
   <ion-toolbar color="secondary">
     <ion-buttons slot="start">
@@ -10,17 +11,20 @@
 <ion-content>
   <ion-list id="inbox-list">
       <ion-item *ngFor="let cliente of clientes" [routerLink]="['/clientes',cliente.idCliente]" >
+        <ion-avatar slot="start">
+          <ion-img [src]=""></ion-img>
+        </ion-avatar>
         <ion-grid>
           <ion-row>
             <ion-col>
               <ion-label>
-                {{cliente.nombre}}
+                {{ cliente.nombre }}
               </ion-label>
             </ion-col>
           </ion-row>
           <ion-row>
             <ion-col>
-              <!-- <ion-text><small>{{cliente.direccion.calle}} {{cliente.direccion.altura}}, {{cliente.direccion.localidad}}</small></ion-text> -->
+              <ion-text><small>{{cliente.direccion.calle}} {{cliente.direccion.altura}}, {{cliente.direccion.localidad}}</small></ion-text>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -33,3 +37,4 @@
     </ion-fab-button>
   </ion-fab>
 </ion-content>
+</div>
