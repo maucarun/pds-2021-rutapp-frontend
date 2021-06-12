@@ -25,10 +25,13 @@ export class ClienteViewPage implements OnInit {
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       const clienteId = paramMap.get('idCliente');
       
-      this.clienteSev.get(clienteId).then(
-        (data: cliente) => this.cliente = data
-        )})
+      this.cliente = await this.clienteSev.get(clienteId)
       console.log(this.cliente);
+      // this.clienteSev.get(clienteId).then(
+      //   (data: cliente) => this.cliente = data
+      //   )
+      
+      })
   }
 
 
