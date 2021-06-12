@@ -14,39 +14,17 @@ const routes: Routes = [
          * De la otra forma, apenas entres a la aplicación te va a cargar todas las páginas (EAGER fetch)
          */
         path: 'clientes',
-        children: [
-          {
-            path: '',
-            loadChildren: () => import('../clientes/clientes.module').then(m => m.ClientesPageModule)
-          },
-          {
-            path: ':idCliente',
-            loadChildren: () => import('../cliente-view/cliente-view.module').then(m => m.ClienteViewPageModule)
-          },
-          // {
-          //   path: 'nuevo',
-          //   loadChildren: () => import('./pages/cliente-new/cliente-new.module').then(m => m.ClienteNewPageModule)
-          // },
-          {
-            path: '',
-            redirectTo: '/menu/clientes',
-            pathMatch: 'full'
-          }
-        ]
+        loadChildren: () => import('../clientes/clientes.module').then(m => m.ClientesPageModule)
       },
       {
         path: 'productos',
-        children: [
-          {
-            path: "",
-            loadChildren: () => import('../productos/productos.module').then(m => m.ProductosPageModule)
-          },
-          {
-            path: ':idProducto',
-            loadChildren: () => import('../producto-view/producto-view.module').then(m => m.ProductoViewPageModule)
-          }
-        ]
+        loadChildren: () => import('../productos/productos.module').then(m => m.ProductosPageModule)
       },
+      {
+        path: '',
+        redirectTo: '/menu/clientes',
+        pathMatch: 'full'
+      }
     ]
   }
 ];
@@ -56,15 +34,3 @@ const routes: Routes = [
   exports: [RouterModule],
 })
 export class MenuPageRoutingModule { }
-/*
-@NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ClientesPageRoutingModule
-  ],
-  declarations: [ClientesPage]
-})
-export class ClientesPageModule {}
-*/

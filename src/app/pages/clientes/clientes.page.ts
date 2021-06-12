@@ -44,5 +44,10 @@ export class ClientesPage {
       (data:cliente[])=> this.clientes= data
     );
   }
+
+  agregarNuevoCliente() {
+    this.router.navigateByUrl('menu/clientes/nuevo', { replaceUrl: true})
+    // this.router.navigate(['menu','clientes','nuevo']);
+  }
   
 }

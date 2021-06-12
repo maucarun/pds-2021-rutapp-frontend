@@ -29,18 +29,28 @@ export class ClienteViewPage implements OnInit {
   async ngOnInit() {
     let user = this.authService.getUser()
     this.user = JSON.parse(user)
-
+    
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       const clienteId = paramMap.get('idCliente');
+      console.log("entre al view page del cliente id " + clienteId);
       
       this.cliente = await this.clienteSev.get(this.user.idUsuario, clienteId)
       console.log(this.cliente);
-      // this.clienteSev.get(clienteId).then(
-      //   (data: cliente) => this.cliente = data
-      //   )
-      
       })
   }
+
+  // async ionViewWillEnter() {
+  //   let user = this.authService.getUser()
+  //   this.user = JSON.parse(user)
+    
+  //   this.activatedRoute.paramMap.subscribe(async paramMap => {
+  //     const clienteId = paramMap.get('idCliente');
+  //     console.log("entre al view page del cliente id " + clienteId);
+      
+  //     this.cliente = await this.clienteSev.get(this.user.idUsuario, clienteId)
+  //     console.log(this.cliente);
+  //     })
+  // }
 
 
   async borrarCliente() {
