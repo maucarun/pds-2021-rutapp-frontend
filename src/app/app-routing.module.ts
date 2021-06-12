@@ -11,6 +11,11 @@ const routes: Routes = [
     canLoad: [AutoLoginGuard]
   },
   {
+    /**
+     * La diferencia entre loadChildren y asignar el componente es que loadChildren
+     *  trabaja de forma LAZY. Es decir, cuando entras en la página, recién ahí te carga la página (LAZY fetch).
+     * De la otra forma, apenas entres a la aplicación te va a cargar todas las páginas (EAGER fetch)
+     */
     path: 'clientes',
     canLoad:[AuthGuard],
     children: [

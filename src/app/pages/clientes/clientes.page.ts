@@ -13,16 +13,24 @@ export class ClientesPage implements OnInit {
   clientes: cliente[];
 
   constructor(private clieServ: ClienteService, private router: Router) { }
-
-  ngOnInit() {
+  
+  /**
+   * Este método se ejecuta cuando se genera el componente por
+   *  primera vez.
+   */
+  async ngOnInit() {
     this.clieServ.getAll().then(
       (data:cliente[])=> this.clientes= data
     );
   }
-
-  ionViewWillEnter() {
+  
+  /**
+   * Este método se ejecuta cada vez que se entra al componente
+   */
+  async ionViewWillEnter() {
     this.clieServ.getAll().then(
       (data:cliente[])=> this.clientes= data
     );
   }
+  
 }
