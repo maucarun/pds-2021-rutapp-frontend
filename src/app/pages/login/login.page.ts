@@ -38,7 +38,7 @@ export class LoginPage implements OnInit {
     this.authService.login(this.credentials.value).subscribe(
       async (res) => {
         await loading.dismiss();        
-        this.router.navigateByUrl('/clientes', { replaceUrl: true });
+        this.router.navigateByUrl('/menu/clientes', { replaceUrl: true });
       }, async (res) => {
         await loading.dismiss();
         const alert = await this.alertController.create({

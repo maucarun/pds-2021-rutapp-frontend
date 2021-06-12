@@ -1,0 +1,48 @@
+<ion-split-pane contentId="main-content">
+
+  <ion-menu side="start" menuId="first" contentId="main-content" type="overlay">
+  <!-- <ion-menu contentId="main-content"> -->
+    <ion-header>
+      <ion-toolbar translucent>
+        <!-- <ion-title>RUTAPP</ion-title> -->
+        <ion-img src="assets/Logo.png" style="padding: 20px;"></ion-img>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content>
+      <ion-list>
+        <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+          <ion-item [routerLink]="p.url" routerDirection="root" [class.active-item]="selectedPath === p.url" routerLinkActive="selected">
+            <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+            <ion-label >{{ p.title }}</ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+        <ion-item>
+          <ion-icon slot="start" name="log-in-outline"></ion-icon>
+          <ion-label (click)="logout()">Cerrar sesión</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  
+  <ion-router-outlet id="main-content" main></ion-router-outlet>
+  
+</ion-split-pane>
+  <!--  <ion-content>
+      <ion-list id="inbox-list">
+        <ion-menu-toggle auto-hide="false" >
+          <ion-item *ngFor="let p of appPages" [routerLink]="[p.url]" routerDirection="root" lines="none" detail="false"
+            routerLinkActive="selected">
+            <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+            <ion-label >{{ p.title }}</ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-button (click)="logout()">
+              Cerrar sesión
+            </ion-button>
+          </ion-item>
+        </ion-menu-toggle>
+      </ion-list>
+    </ion-content>
+  </ion-menu> -->

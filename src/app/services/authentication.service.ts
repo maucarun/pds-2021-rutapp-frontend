@@ -22,6 +22,10 @@ export class AuthenticationService {
   url = environment.apiUrl + '/usuario';
 
   constructor(private http: HttpClient) { 
+    this.loadsData();
+  }
+
+  async loadsData() {
     this.loadToken();
     this.loadUser();
   }
@@ -34,8 +38,6 @@ export class AuthenticationService {
     } else {
       this.userData.next(false);
     }
-    this.userData.next(false);
-    // console.log(user)
   }
 
   async loadToken() {
@@ -69,6 +71,7 @@ export class AuthenticationService {
   }
 
   getUser() {
+    // await this.loadUser()
     console.log(this.userData)
     return this.userData.getValue();
   }

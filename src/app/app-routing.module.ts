@@ -11,58 +11,10 @@ const routes: Routes = [
     canLoad: [AutoLoginGuard]
   },
   {
-    /**
-     * La diferencia entre loadChildren y asignar el componente es que loadChildren
-     *  trabaja de forma LAZY. Es decir, cuando entras en la página, recién ahí te carga la página (LAZY fetch).
-     * De la otra forma, apenas entres a la aplicación te va a cargar todas las páginas (EAGER fetch)
-     */
-    path: 'clientes',
-    canLoad:[AuthGuard],
-    children: [
-      {
-        path: "",
-        loadChildren: () => import('./pages/clientes/clientes.module').then(m => m.ClientesPageModule)
-      },
-      {
-        path: ":idCliente",
-        loadChildren: () => import('./pages/cliente-view/cliente-view.module').then(m => m.ClienteViewPageModule)
-      }
-    ]
-  },
-  {
-    path: 'productos',
-    canLoad:[AuthGuard],
-    children: [
-      {
-        path: "",
-        loadChildren: () => import('./pages/productos/productos.module').then( m => m.ProductosPageModule)
-      },
-      {
-        path: ':idProducto',
-        loadChildren: () => import('./pages/producto-view/producto-view.module').then( m => m.ProductoViewPageModule)
-      }
-    ]
-  },
-  // {
-  //   path: 'hojasderuta',
-  //   canActivate:[AuthGuard],
-  //   children: [
-  //     {
-  //       path: "",
-  //       // loadChildren: () => import('./pages/clientes/clientes.module').then(m => m.ClientesPageModule)
-  //     }
-  //   ]
-  // },
-  // {
-  //   path: 'perfil',
-  //   canActivate:[AuthGuard],
-  //   children: [
-  //     {
-  //       path: "",
-  //       // loadChildren: () => import('./pages/clientes/clientes.module').then(m => m.ClientesPageModule)
-  //     }
-  //   ]
-  // },
+    path: 'menu',
+    loadChildren: () => import('./pages/menu/menu.module').then(m => m.MenuPageModule),
+    canLoad: [AuthGuard]
+  }
 ];
 
 @NgModule({

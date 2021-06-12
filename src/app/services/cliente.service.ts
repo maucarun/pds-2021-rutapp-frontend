@@ -1,27 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { cliente } from "../models/cliente.models";
-import { Usuario } from '../models/usuario.models';
-import { Storage } from '@ionic/storage-angular';
+import { environment } from 'src/environments/environment';
+import { UsuarioService } from './usuario.service';
+import { AuthenticationService } from './authentication.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteService {
 
-  url = 'http://localhost:8080/cliente';
-  constructor(private http: HttpClient, private storage: Storage) { }
+  idUsuario: number;
+  url = environment.apiUrl + '/cliente';
+  
+  constructor(private http: HttpClient, private usuarioService: UsuarioService, private authService: AuthenticationService) {
+    this.authService.loadsData();
+    let user = this.authService.getUser();
+    this.idUsuario = JSON.parse(user).idUsuario;
+    // this.user = JSON.parse(user)
+   }
 
-  async getAll(): Promise<cliente[]> {
-    console.log((await this.usr()))
-    return await this.http.get<cliente[]>(`${this.url}/activo/usuario/${(await this.usr()).idUsuario}`).toPromise()
+  async getAll(idUsuario: number): Promise<cliente[]> {
+    console.log("Buscaré los clientes del usuario " + this.idUsuario)
+    return await this.http.get<cliente[]>(this.url+ '/activo/usuario/' + this.idUsuario).toPromise()
   }
 
-  async get(id: string): Promise<cliente> {
-    return await this.http.get<cliente>(`${this.url}/usuario/${(await this.usr()).idUsuario}/cliente/${id}`).toPromise()
-  }
-
-  async usr(): Promise<Usuario> {
-    return await this.storage.get('Usuario');
+  async get(idUsuario: number, id: string): Promise<cliente> {
+    return await this.http.get<cliente>(this.url + '/usuario/' + idUsuario + '/cliente/' + id).toPromise()
   }
 }
