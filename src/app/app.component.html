@@ -17,9 +17,9 @@
           <ion-note> </ion-note> 
           -->
 
-          <ion-menu-toggle auto-hide="false" *ngFor="let pages of appPages; let i = index">
-            <ion-item (click)="activeIndex = i" routerDirection="root" [routerLink]="[pages.url]" lines="none"
-              detail="false" [class.selected]="activeIndex == i">
+          <ion-menu-toggle auto-hide="false" *ngFor="let pages of appPages">
+            <ion-item routerDirection="root" [routerLink]="[pages.url]" lines="none" detail="false"
+              [class.selected]="selectedPath === pages.url" routerLinkActive="selected">
               <ion-icon slot="start" [ios]="pages.icon + '-outline'" [md]="pages.icon + '-sharp'"></ion-icon>
               <ion-label>{{ pages.title }}</ion-label>
             </ion-item>

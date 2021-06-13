@@ -12,10 +12,11 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
 
-  activePageTitle = 'Clientes';
+  /* activePageTitle = ''; */
+  selectedPath = '';
 
   appPages = [
-    { title: 'Clientes', url: '', icon: 'people' },
+    { title: 'Clientes', url: '/clientes', icon: 'people' },
     { title: 'Productos', url: '/productos', icon: 'cart' },
     { title: 'Remitos', url: '/remitos', icon: 'reader' },
     { title: 'Hoja de ruta', url: '/hojasderuta', icon: 'location' },

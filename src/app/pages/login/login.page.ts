@@ -28,7 +28,7 @@ export class LoginPage implements OnInit {
       username: ['homer', [Validators.required]],
       password: ['abcd1', [Validators.required]],
     });
-    // this.menu.enable(false)
+    this.menu.enable(false);
   }
 
   async login() {

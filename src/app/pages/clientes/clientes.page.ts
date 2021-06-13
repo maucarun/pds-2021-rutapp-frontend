@@ -4,6 +4,7 @@ import { ClienteService } from '../../services/cliente.service';
 import { Router } from '@angular/router';
 import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-clientes',
@@ -17,7 +18,8 @@ export class ClientesPage {
 
   constructor(private clieServ: ClienteService,
     private router: Router,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private menu: MenuController
   ) { }
 
   /**
@@ -43,6 +45,8 @@ export class ClientesPage {
     this.clieServ.getAll(this.user.idUsuario).then(
       (data: cliente[]) => this.clientes = data
     );
+
+    this.menu.enable(true);
   }
 
   agregarNuevoCliente() {
