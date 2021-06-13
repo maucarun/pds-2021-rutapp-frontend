@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ClienteNewPage } from '../cliente-new/cliente-new.page';
 import { ClienteViewPage } from '../cliente-view/cliente-view.page';
 
 import { ClientesPage } from './clientes.page';
