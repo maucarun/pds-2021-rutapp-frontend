@@ -61,16 +61,12 @@ export class RemitoViewPage implements OnInit {
           text: 'Borrar',
           handler: () => {
             //  this.remitoService.delete(this.remito.id);
-            this.router.navigate(['/menu/remitos']);
+            this.router.navigate(['/remitos']);
           }
         }
       ]
     });
     await msjConfirmacion.present();
-  }
-
-  goBack() {
-    this.router.navigateByUrl('/menu/remitos', { replaceUrl: true });
   }
 
 }

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
-import { AlertController } from '@ionic/angular';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController, IonRouterOutlet } from '@ionic/angular';
 import { cliente } from 'src/app/models/cliente.models';
 import { ClienteService } from 'src/app/services/cliente.service';
-import { IonRouterOutlet } from '@ionic/angular';
 import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
@@ -27,26 +26,26 @@ export class ClienteViewPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    let user = this.authService.getUser()
-    this.user = JSON.parse(user)
-    
+    const user = this.authService.getUser();
+    this.user = JSON.parse(user);
+
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       const clienteId = paramMap.get('idCliente');
-      console.log("entre al view page del cliente id " + clienteId);
-      
-      this.cliente = await this.clienteSev.get(this.user.idUsuario, clienteId)
+      console.log('entre al view page del cliente id ' + clienteId);
+
+      this.cliente = await this.clienteSev.get(this.user.idUsuario, clienteId);
       console.log(this.cliente);
-      })
+    });
   }
 
   // async ionViewWillEnter() {
   //   let user = this.authService.getUser()
   //   this.user = JSON.parse(user)
-    
+
   //   this.activatedRoute.paramMap.subscribe(async paramMap => {
   //     const clienteId = paramMap.get('idCliente');
   //     console.log("entre al view page del cliente id " + clienteId);
-      
+
   //     this.cliente = await this.clienteSev.get(this.user.idUsuario, clienteId)
   //     console.log(this.cliente);
   //     })
@@ -66,17 +65,12 @@ export class ClienteViewPage implements OnInit {
           text: 'Borrar',
           handler: () => {
             //  this.clienteSev.delete(this.cliente.id);
-            this.router.navigate(['/menu/clientes'])
+            this.router.navigate(['']);
           }
         }
       ]
     });
     await msjConfirmacion.present();
-  }
-
-
-  goBack() {
-    this.router.navigateByUrl('/menu/clientes', {replaceUrl:true});
   }
 
 }

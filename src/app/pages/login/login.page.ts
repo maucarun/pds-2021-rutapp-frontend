@@ -12,6 +12,8 @@ import { Router } from '@angular/router';
 export class LoginPage implements OnInit {
   credentials: FormGroup;
 
+  errorMessage = '';
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthenticationService,
@@ -19,7 +21,7 @@ export class LoginPage implements OnInit {
     private router: Router,
     private loadingController: LoadingController,
     private menu: MenuController
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.credentials = this.fb.group({
@@ -29,16 +31,14 @@ export class LoginPage implements OnInit {
     // this.menu.enable(false)
   }
 
-  errorMessage: string = '';
-
   async login() {
     const loading = await this.loadingController.create();
     await loading.present();
-    
+
     this.authService.login(this.credentials.value).subscribe(
       async (res) => {
-        await loading.dismiss();        
-        this.router.navigateByUrl('/menu/clientes', { replaceUrl: true });
+        await loading.dismiss();
+        this.router.navigateByUrl('', { replaceUrl: true });
       }, async (res) => {
         await loading.dismiss();
         const alert = await this.alertController.create({
@@ -46,7 +46,7 @@ export class LoginPage implements OnInit {
           // message: res.error,
           buttons: ['OK'],
         });
- 
+
         await alert.present();
       }
     );
@@ -55,7 +55,7 @@ export class LoginPage implements OnInit {
   get username() {
     return this.credentials.get('username');
   }
-  
+
   get password() {
     return this.credentials.get('password');
   }

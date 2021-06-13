@@ -1,8 +1,9 @@
 <div class="ion-page" id="main-content">
+
   <ion-header [translucent]="true">
     <ion-toolbar color="secondary">
-      <ion-buttons slot="start">
-        <ion-menu-button color="light"></ion-menu-button>
+      <ion-buttons slot="end">
+        <ion-menu-button autoHide="false" color="light"></ion-menu-button>
       </ion-buttons>
       <ion-title>Remitos</ion-title>
     </ion-toolbar>
@@ -10,7 +11,7 @@
 
   <ion-content>
     <ion-list id="inbox-list">
-      <ion-item *ngFor="let remito of remitos" [routerLink]="['/menu/remitos',remito.id_remito]">
+      <ion-item *ngFor="let remito of remitos" [routerLink]="['/remitos',remito.id_remito]">
         <ion-avatar slot="start">
           <ion-img [src]=""></ion-img>
         </ion-avatar>

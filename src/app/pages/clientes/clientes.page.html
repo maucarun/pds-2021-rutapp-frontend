@@ -10,7 +10,7 @@
 
 <ion-content>
   <ion-list id="inbox-list">
-      <ion-item *ngFor="let cliente of clientes" [routerLink]="['/menu/clientes/',cliente.idCliente]" routerDirection="forward" >
+      <ion-item *ngFor="let cliente of clientes" [routerLink]="['/clientes/',cliente.idCliente]" routerDirection="forward" >
         <ion-avatar slot="start">
           <ion-img [src]=""></ion-img>
         </ion-avatar>

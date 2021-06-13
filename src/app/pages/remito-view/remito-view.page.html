@@ -1,13 +1,16 @@
-<div class="ion-page" id="main-content">
+<div *ngIf="!!remito" class="ion-page" id="main-content">
 
   <ion-header [translucent]="true">
     <ion-toolbar color="secondary">
+
       <ion-buttons slot="start">
-        <ion-back-button (click)="goBack()" defaultHref="/menu/remitos"></ion-back-button>
+        <ion-back-button defaultHref="/remitos"></ion-back-button>
       </ion-buttons>
+
       <ion-buttons slot="end">
-        <ion-menu-button color="light"></ion-menu-button>
+        <ion-menu-button autoHide="false" color="light"></ion-menu-button>
       </ion-buttons>
+
       <ion-title>Detalle del Remito</ion-title>
     </ion-toolbar>
   </ion-header>

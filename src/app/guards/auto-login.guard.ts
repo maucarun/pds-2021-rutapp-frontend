@@ -17,13 +17,13 @@ export class AutoLoginGuard implements CanLoad {
       take(1), // Otherwise the Observable doesn't complete!
       map(isAuthenticated => {
         if (isAuthenticated) {
-          // Directly open inside area       
-          this.router.navigateByUrl('/menu/clientes', { replaceUrl: true });
-        } else {          
+          // Directly open inside area
+          this.router.navigateByUrl('', { replaceUrl: true });
+        } else {
           // Simply allow access to the login
           return true;
         }
       })
-    )
+    );
   }
 }
