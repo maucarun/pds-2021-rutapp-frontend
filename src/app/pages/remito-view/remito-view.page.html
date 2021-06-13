@@ -1,0 +1,102 @@
+<div class="ion-page" id="main-content">
+
+  <ion-header [translucent]="true">
+    <ion-toolbar color="secondary">
+      <ion-buttons slot="start">
+        <ion-back-button (click)="goBack()" defaultHref="/menu/remitos"></ion-back-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-menu-button color="light"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Detalle del Remito</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-grid>
+
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Cliente</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          {{ remito.cliente.nombre }}
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Hoja de Ruta</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          <!-- {{ remito.hojaDeRuta.id }} -->
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Estado</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          {{ remito.estado.nombre }}
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Pedidos</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          {{ remito.productos }}
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Cantidad de productos</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          {{ remito.cantidadDeItems }}
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Precio total</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          $ {{ remito.total }}
+        </ion-col>
+      </ion-row>
+
+    </ion-grid>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button color="warning" (click)="borrarRemito()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+
+  </ion-content>
+
+
+  <ion-footer>
+    <ion-toolbar color="light">
+      <ion-buttons color="light" slot="start">
+        <a class="waves-effect waves-light btn-small">button</a>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>
+</div>

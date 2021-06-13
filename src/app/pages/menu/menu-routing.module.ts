@@ -24,7 +24,20 @@ const routes: Routes = [
         path: '',
         redirectTo: '/menu/clientes',
         pathMatch: 'full'
-      }
+      },
+      {
+        path: 'remitos',
+        /* children: [
+          {
+            path: '', */
+            loadChildren: () => import('../remitos/remitos.module').then(m => m.RemitosPageModule)
+        /*   },
+          {
+            path: ':idRemito',
+            loadChildren: () => import('../remito-view/remito-view.module').then(m => m.RemitoViewPageModule)
+          }
+        ] */
+      },
     ]
   }
 ];
