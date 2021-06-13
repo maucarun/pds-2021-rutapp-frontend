@@ -1,4 +1,4 @@
-import { cliente } from './cliente.models';
+import { Cliente } from './cliente.models';
 import { Producto } from './producto.models';
 import { Estado } from './estado.models';
 import { ComprobanteEntrega } from './comprobanteEntrega.models';
@@ -9,7 +9,7 @@ export interface Remito {
     total: number;
     motivo: string;
     tiempo_espera: number;
-    cliente: cliente;
+    cliente: Cliente;
     estado: Estado;
     productos: Producto[];
     comprobante: ComprobanteEntrega;

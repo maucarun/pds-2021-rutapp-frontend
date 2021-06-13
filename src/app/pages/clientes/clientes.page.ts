@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { cliente } from '../../models/cliente.models';
+import { Cliente } from '../../models/cliente.models';
 import { ClienteService } from '../../services/cliente.service';
 import { Router } from '@angular/router';
 import { Usuario } from 'src/app/models/usuario.models';
@@ -13,7 +13,7 @@ import { MenuController } from '@ionic/angular';
 })
 export class ClientesPage {
 
-  clientes: cliente[];
+  clientes: Cliente[];
   user: Usuario;
 
   constructor(private clieServ: ClienteService,
@@ -43,7 +43,7 @@ export class ClientesPage {
     this.user = JSON.parse(user);
 
     this.clieServ.getAll(this.user.idUsuario).then(
-      (data: cliente[]) => this.clientes = data
+      (data: Cliente[]) => this.clientes = data
     );
 
     this.menu.enable(true);

@@ -3,7 +3,7 @@ import { Usuario } from "./usuario.models";
 import { Direccion } from "./direccion.models";
 import { Disponibilidad } from "./disponibilidad.models";
 
-export interface cliente{
+export interface Cliente{
     idCliente:number,
     nombre:string,
     observaciones:string,

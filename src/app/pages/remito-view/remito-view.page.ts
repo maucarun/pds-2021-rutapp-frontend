@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, IonRouterOutlet } from '@ionic/angular';
-import { cliente } from 'src/app/models/cliente.models';
+import { Cliente } from 'src/app/models/cliente.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Remito } from 'src/app/models/remito.models';
 import { RemitoService } from 'src/app/services/remito.service';
@@ -13,7 +13,7 @@ import { RemitoService } from 'src/app/services/remito.service';
 })
 export class RemitoViewPage implements OnInit {
 
-  cliente: cliente;
+  cliente: Cliente;
   remito: Remito;
 
   constructor(

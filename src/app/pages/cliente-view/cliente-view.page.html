@@ -1,79 +1,115 @@
-<div *ngIf="!!cliente" class="ion-page" id="main-content">
+<div class="ion-page" id="main-content">
 
-<ion-header [translucent]="true">
-  <ion-toolbar color="secondary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref=""></ion-back-button>
-    </ion-buttons>
-    <ion-buttons slot="end">
-      <ion-menu-button color="light"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>{{ cliente.nombre }}</ion-title>
-  </ion-toolbar>
-</ion-header>
+  <ion-header [translucent]="true">
+    <ion-toolbar color="secondary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref=""></ion-back-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-menu-button color="light"></ion-menu-button>
+      </ion-buttons>
+      <ion-title *ngIf="viewMode && cliente!!">{{ cliente.nombre }}</ion-title>
+      <ion-title *ngIf="editMode">Editar Cliente</ion-title>
+      <ion-title *ngIf="createMode">Crear Cliente</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-col>
-        <small style="color:gray">Nombre</small>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-margin-bottom">
-      <ion-col>
-        {{ cliente.nombre }}
-      </ion-col>
-    </ion-row>
-  
-    <ion-row>
-      <ion-col>
-        <small style="color:gray">Calle</small>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-margin-bottom">
-      <ion-col>
-        {{ cliente.direccion.calle }}
-      </ion-col>
-    </ion-row>
-  
-    <ion-row>
-      <ion-col>
-        <small style="color:gray">Altura</small>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-margin-bottom">
-      <ion-col>
-        {{ cliente.direccion.altura }}
-      </ion-col>
-    </ion-row>
-  
-    <ion-row>
-      <ion-col>
-        <small style="color:gray">Localidad</small>
-      </ion-col>
-    </ion-row>
-    <ion-row class="ion-margin-bottom">
-      <ion-col>
-        {{ cliente.direccion.localidad }}
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-content>
 
-  
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="warning" (click)="borrarCliente()">
-      <ion-icon name="trash"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+    <ion-item id="formCliente" *ngIf="createMode">
 
-</ion-content>
+      <form [formGroup]="clienteForm" (ngSubmit)="onSubmit(clienteForm,$event)">
+        <div class="buscador">
+          <ion-item color="secondary">
+            <ion-input formControlName="nombre" type="text" name="nombre" placeholder="Nombre"></ion-input>
+          </ion-item>
+          <ion-item color="secondary">
+            <ion-input formControlName="calle" class="search-input" type="text" name="calle"
+              placeholder="Calle"></ion-input>
+          </ion-item>
+          <ion-item color="secondary">
+            <ion-input formControlName="altura" type="text" name="altura" placeholder="Altura"></ion-input>
+          </ion-item>
+          <ion-item color="secondary">
+            <ion-input formControlName="localidad" type="text" name="localidad" placeholder="Localidad"></ion-input>
+          </ion-item>
+
+          <div *ngFor="let error of errorMessages.cliente">
+            <ng-container *ngIf="cliente.hasError(error.type) && (cliente.dirty || cliente.touched)">
+              <small class="error-message">{{ error.message }}</small>
+            </ng-container>
+          </div>
+        </div>
+        <ion-item>
+          <ion-button class="btn btn-primary" type="submit" [disabled]="clienteForm.invalid">Guardar</ion-button>
+        </ion-item>
+      </form>
+
+    </ion-item>
+
+    <ion-item id="clienteView" *ngIf="viewMode && cliente!!">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <small style="color:gray">Nombre</small>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom">
+          <ion-col>
+            {{ cliente.nombre }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <small style="color:gray">Calle</small>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom">
+          <ion-col>
+            {{ cliente.direccion.calle }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <small style="color:gray">Altura</small>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom">
+          <ion-col>
+            {{ cliente.direccion.altura }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <small style="color:gray">Localidad</small>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom">
+          <ion-col>
+            {{ cliente.direccion.localidad }}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
 
-<ion-footer>
-  <ion-toolbar color="light">
-    <ion-buttons color="light" slot="start">
-      <a class="waves-effect waves-light btn-small">button</a>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-footer>
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button color="warning" (click)="borrarCliente()">
+          <ion-icon name="trash"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-item>
+
+  </ion-content>
+
+
+  <ion-footer>
+    <ion-toolbar color="light">
+      <ion-buttons color="light" slot="start">
+        <a class="waves-effect waves-light btn-small">button</a>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>
 </div>

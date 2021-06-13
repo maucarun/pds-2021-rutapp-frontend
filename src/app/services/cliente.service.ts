@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { cliente } from "../models/cliente.models";
+import { Cliente } from "../models/cliente.models";
 import { environment } from 'src/environments/environment';
 import { UsuarioService } from './usuario.service';
 import { AuthenticationService } from './authentication.service';
@@ -20,12 +20,12 @@ export class ClienteService {
     // this.user = JSON.parse(user)
    }
 
-  async getAll(idUsuario: number): Promise<cliente[]> {
+  async getAll(idUsuario: number): Promise<Cliente[]> {
     console.log("Buscaré los clientes del usuario " + this.idUsuario)
-    return await this.http.get<cliente[]>(this.url+ '/activo/usuario/' + this.idUsuario).toPromise()
+    return await this.http.get<Cliente[]>(this.url+ '/activo/usuario/' + this.idUsuario).toPromise()
   }
 
-  async get(idUsuario: number, id: string): Promise<cliente> {
-    return await this.http.get<cliente>(this.url + '/usuario/' + idUsuario + '/cliente/' + id).toPromise()
+  async get(idUsuario: number, id: string): Promise<Cliente> {
+    return await this.http.get<Cliente>(this.url + '/usuario/' + idUsuario + '/cliente/' + id).toPromise()
   }
 }

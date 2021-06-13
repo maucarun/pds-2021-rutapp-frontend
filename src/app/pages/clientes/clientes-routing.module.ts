@@ -11,12 +11,16 @@ const routes: Routes = [
     component: ClientesPage,
   },
   {
+    path: 'nuevo',
+    component: ClienteViewPage
+  },
+  {
     path: ':idCliente',
     component: ClienteViewPage
   },
   {
-    path: 'nuevo',
-    component: ClienteNewPage
+    path: 'editar/:idCliente',
+    component: ClienteViewPage
   },
 ];
 
