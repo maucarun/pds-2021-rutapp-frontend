@@ -1,9 +1,113 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>producto-view</ion-title>
-  </ion-toolbar>
-</ion-header>
+<div  *ngIf="!!producto" class="ion-page" id="main-content">
+  <ion-header [translucent]="true">
+    <ion-toolbar color="secondary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="productos"></ion-back-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-menu-button color="light"></ion-menu-button>
+      </ion-buttons>
+      <ion-title> Producto </ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-<ion-content>
+  <ion-content>
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Nombre</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          <!-- {{ producto.nombre }} -->
+          <ion-item class="newitem2">
+            <ion-input 
+            placeholder="nombre" 
+            type="text" 
+            [(ngModel)]="producto.nombre" 
+            required
+            [disabled]="flag"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
 
-</ion-content>
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Precio</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          <!-- {{ producto.precio_unitario }} -->
+          <ion-item class="newitem2">
+            <ion-input 
+            placeholder="precio" 
+            type="number" 
+            [(ngModel)]="producto.precio_unitario" 
+            required
+            [disabled]="flag"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Descripcion</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          <!-- {{ producto.descripcion }} -->
+          <ion-item class="newitem2">
+            <ion-input 
+            placeholder="descripcion" 
+            type="text" 
+            [(ngModel)]="producto.descripcion" 
+            required
+            [disabled]="flag"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Imagen</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          <!-- {{ producto.url_imagen }} -->
+          <!-- <ion-avatar slot="start"> -->
+          <!-- <ion-img [src]="producto.url_imagen"></ion-img> -->
+          <!-- </ion-avatar> -->
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+
+    <ion-fab *ngIf='flag' vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button color="warning" (click)="borrarProducto()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <ion-fab *ngIf='flag'vertical="bottom" horizontal="start" slot="fixed">
+      <ion-fab-button  color="warning" (click)="editarProducto()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    <ion-fab *ngIf='!flag'vertical="bottom" horizontal="start" slot="fixed">
+      <ion-fab-button color="warning" (click)="guardarProducto()">
+          <ion-icon name="save-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+    </ion-content>
+
+
+</div>

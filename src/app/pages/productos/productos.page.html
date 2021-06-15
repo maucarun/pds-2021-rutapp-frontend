@@ -9,7 +9,7 @@
 
 <ion-content>
   <ion-list id="inbox-list">
-      <ion-item *ngFor="let producto of productos" [routerLink]="['/productos',producto.idCliente]" >
+      <ion-item *ngFor="let producto of productos" [routerLink]="['/productos',producto.idProducto]" >
         <ion-avatar slot="start">
           <ion-img [src]="producto.url_imagen"></ion-img>
         </ion-avatar>
@@ -31,7 +31,7 @@
   </ion-list>
 
   <ion-fab vertical="bottom" horizontal="end"  slot="fixed">
-    <ion-fab-button color="danger" >
+    <ion-fab-button color="primary" (click)="agregarNuevoProducto()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Producto } from '../../models/producto.models';
-import { ProductoService } from "../../services/producto.service"
-import { Router } from "@angular/router";
+import { ProductoService } from '../../services/producto.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-productos',
@@ -25,4 +25,7 @@ export class ProductosPage implements OnInit {
     );
   }
 
+  agregarNuevoProducto(){
+      this.router.navigateByUrl('productos/nuevo', { replaceUrl: true });
+  }
 }
