@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Cliente } from './cliente.models';
 import { Producto } from './producto.models';
 import { Estado } from './estado.models';
