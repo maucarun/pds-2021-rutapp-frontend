@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Producto } from '../../models/producto.models';
 import { ProductoService } from '../../services/producto.service';
 import { Router } from '@angular/router';
+import { HojaDeRutaService } from 'src/app/services/hojaDeRuta.service';
 
 @Component({
   selector: 'app-productos',
@@ -11,12 +12,14 @@ import { Router } from '@angular/router';
 export class ProductosPage implements OnInit {
 
   productos: Producto[];
-  constructor(private productoService: ProductoService, private router: Router) { }
+  constructor(private productoService: ProductoService, private router: Router, 
+    private hojaDeRutaService: HojaDeRutaService,) { }
 
   ngOnInit() {
     this.productoService.getAll().then(
       (productos: Producto[])=> this.productos = productos
     );
+    console.log('hojaDeRutaService: ', Object.values(this.hojaDeRutaService.getAll())[1]);
   }
 
   ionViewWillEnter() {
