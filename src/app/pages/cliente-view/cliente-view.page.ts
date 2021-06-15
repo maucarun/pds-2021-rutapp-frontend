@@ -13,7 +13,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./cliente-view.page.scss'],
 })
 export class ClienteViewPage implements OnInit {
-
+  lat = -34.5770106;
+  lng = -58.5406398;
+ 
   clienteForm: FormGroup;
   clienteSubmit: Cliente;
   idCliente: string;

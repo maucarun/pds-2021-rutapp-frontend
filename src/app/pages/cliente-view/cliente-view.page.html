@@ -33,6 +33,11 @@
           <ion-item color="secondary">
             <ion-input formControlName="localidad" type="text" name="localidad" placeholder="Localidad"></ion-input>
           </ion-item>
+          <ion-item color="secondary">
+            <agm-map [zoom]="15" [latitude]="lat" [longitude]="lng">
+              <agm-marker  [latitude]="lat" [longitude]="lng"></agm-marker>
+            </agm-map>
+          </ion-item>
 
           <div *ngFor="let error of errorMessages.cliente">
             <ng-container *ngIf="cliente.hasError(error.type) && (cliente.dirty || cliente.touched)">

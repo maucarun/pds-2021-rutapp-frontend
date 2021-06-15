@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { AgmCoreModule } from '@agm/core';
 
 import { IonicModule, IonicRouteStrategy, Platform } from '@ionic/angular';
 
@@ -22,7 +23,11 @@ import { IonicStorageModule } from '@ionic/storage-angular';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule],
+    AppRoutingModule,
+    AgmCoreModule.forRoot({
+      apiKey: 'AIzaSyBYuqCbjDgzChAwAhj_pMVA-3bE2wpdhuQ'
+    })
+  ],
   providers: [
     Platform,
     StatusBar,

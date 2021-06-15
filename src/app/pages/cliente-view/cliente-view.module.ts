@@ -8,6 +8,7 @@ import { ClienteViewPageRoutingModule } from './cliente-view-routing.module';
 
 import { ClienteViewPage } from './cliente-view.page';
 import { BrowserModule } from '@angular/platform-browser';
+import { AgmCoreModule } from '@agm/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { BrowserModule } from '@angular/platform-browser';
     ReactiveFormsModule,
     BrowserModule,
     IonicModule,
-    ClienteViewPageRoutingModule
+    ClienteViewPageRoutingModule,
+      AgmCoreModule
   ],
   declarations: [ClienteViewPage]
 })
