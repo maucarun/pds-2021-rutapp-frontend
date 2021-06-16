@@ -8,7 +8,7 @@ const routes: Routes = [
     component: RemitoViewPage
   },
   {
-    path: ':idRemito',
+    path: ':id',
     component: RemitoViewPage
   }
 ];

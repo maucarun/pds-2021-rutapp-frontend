@@ -9,7 +9,15 @@ const routes: Routes = [
     component: RemitosPage
   },
   {
+    path: 'nuevo',
+    component: RemitoViewPage
+  },
+  {
     path: ':idRemito',
+    component: RemitoViewPage
+  },
+  {
+    path: 'editar/:idRemito',
     component: RemitoViewPage
   },
 ];

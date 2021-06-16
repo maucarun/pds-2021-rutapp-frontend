@@ -1,96 +1,145 @@
-<div *ngIf="!!remito" class="ion-page" id="main-content">
+<div class="ion-page" id="main-content">
 
   <ion-header [translucent]="true">
     <ion-toolbar color="secondary">
 
       <ion-buttons slot="start">
-        <ion-back-button defaultHref="/remitos"></ion-back-button>
+        <ion-back-button defaultHref=""></ion-back-button>
       </ion-buttons>
 
       <ion-buttons slot="end">
         <ion-menu-button autoHide="false" color="light"></ion-menu-button>
       </ion-buttons>
 
-      <ion-title>Detalle del Remito</ion-title>
+      <ion-title *ngIf="viewMode && remito!!">{{ remito.nombre }}</ion-title>
+      <ion-title *ngIf="editMode">Editar Remito</ion-title>
+      <ion-title *ngIf="createMode">Crear Remito</ion-title>
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
-    <ion-grid>
 
-      <ion-row>
-        <ion-col>
-          <small style="color:gray">Cliente</small>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-margin-bottom">
-        <ion-col>
-          {{ remito.cliente.nombre }}
-        </ion-col>
-      </ion-row>
+    <ion-item id="formRemito" *ngIf="createMode">
 
-      <ion-row>
-        <ion-col>
-          <small style="color:gray">Hoja de Ruta</small>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-margin-bottom">
-        <ion-col>
-          <!-- {{ remito.hojaDeRuta.id }} -->
-        </ion-col>
-      </ion-row>
+      <form [formGroup]="remitoForm" (ngSubmit)="onSubmit(remitoForm,$event)">
+        <div class="buscador">
+          <ion-item color="secondary">
+            <ion-input formControlName="nombreDeCliente" type="text" name="nomnombreDeClientebre"
+              placeholder="Nombre del Cliente"></ion-input>
+          </ion-item>
+          <ion-item color="secondary">
+            <ion-input formControlName="pedidos" class="search-input" type="text" name="pedidos" placeholder="Pedidos">
+            </ion-input>
+          </ion-item>
 
-      <ion-row>
-        <ion-col>
-          <small style="color:gray">Estado</small>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-margin-bottom">
-        <ion-col>
-          {{ remito.estado.nombre }}
-        </ion-col>
-      </ion-row>
+          <div *ngFor="let error of errorMessages.remito">
+            <ng-container *ngIf="remito.hasError(error.type) && (remito.dirty || remito.touched)">
+              <small class="error-message">{{ error.message }}</small>
+            </ng-container>
+          </div>
+        </div>
+        <ion-item>
+          <ion-button class="btn btn-primary" type="submit" [disabled]="remitoForm.invalid">Guardar</ion-button>
+        </ion-item>
+      </form>
 
-      <ion-row>
-        <ion-col>
-          <small style="color:gray">Pedidos</small>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-margin-bottom">
-        <ion-col>
-          {{ remito.productos }}
-        </ion-col>
-      </ion-row>
+    </ion-item>
 
-      <ion-row>
-        <ion-col>
-          <small style="color:gray">Cantidad de productos</small>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-margin-bottom">
-        <ion-col>
-          {{ remito.cantidadDeItems }}
-        </ion-col>
-      </ion-row>
+    <ion-item id="remitoView" *ngIf="viewMode && remito!!">
+      <ion-grid>
 
-      <ion-row>
-        <ion-col>
-          <small style="color:gray">Precio total</small>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-margin-bottom">
-        <ion-col>
-          $ {{ remito.total }}
-        </ion-col>
-      </ion-row>
+        <ion-row>
+          <ion-col>
+            <small style="color:gray">Cliente</small>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom">
+          <ion-col>
+            {{ remito.cliente.nombre }}
+          </ion-col>
+        </ion-row>
 
-    </ion-grid>
+        <ion-row *ngIf="!!remito.hojaDeRuta">
+          <ion-col>
+            <small style="color:gray">Hoja de Ruta</small>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngIf="!!remito.hojaDeRuta" class="ion-margin-bottom">
+          <ion-col>
+            {{ remito.hojaDeRuta.id }}
+          </ion-col>
+        </ion-row>
 
-    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button color="warning" (click)="borrarRemito()">
-        <ion-icon name="trash"></ion-icon>
-      </ion-fab-button>
-    </ion-fab>
+        <ion-row>
+          <ion-col>
+            <small style="color:gray">Estado</small>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom">
+          <ion-col>
+            {{ remito.estado.nombre }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <small style="color:gray">Pedidos</small>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-align-items-center">
+          <ion-col style="background-color: lightgrey;">
+            <ion-text color="primary">Producto</ion-text>
+          </ion-col>
+          <ion-col style="background-color: lightgrey;">
+            <ion-text color="primary">Cantidad</ion-text>
+          </ion-col>
+          <ion-col style="background-color: lightgrey; size: 2px;">
+            <ion-text color="primary">Precio Unitario</ion-text>
+          </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let item of remito.productos" class="ion-margin-bottom">
+          <ion-col>
+            {{ item.producto.nombre }}
+          </ion-col>
+          <ion-col>
+            {{ item.cantidad }}
+          </ion-col>
+          <ion-col>
+            {{ item.precio_unitario }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <small style="color:gray">Cantidad de productos</small>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom">
+          <ion-col>
+            {{ remito.cantidadDeItems }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row>
+          <ion-col>
+            <small style="color:gray">Precio total</small>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom">
+          <ion-col>
+            $ {{ remito.total }}
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button color="warning" (click)="borrarRemito()">
+          <ion-icon name="trash"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+
+    </ion-item>
 
   </ion-content>
 

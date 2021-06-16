@@ -77,7 +77,7 @@ export class ClienteViewPage implements OnInit {
     });
     console.log(this.clienteForm);
 
-    /* Verificando si el formulario tiene id */
+    /* Verificando si la página tiene id */
 
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       this.idCliente = paramMap.get('idCliente');
