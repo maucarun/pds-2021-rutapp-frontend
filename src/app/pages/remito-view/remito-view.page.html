@@ -83,31 +83,42 @@
 
         <ion-row>
           <ion-col>
-            <small style="color:gray">Pedidos</small>
+            <small style="color:gray">Productos</small>
           </ion-col>
         </ion-row>
-        <ion-row class="ion-align-items-center">
-          <ion-col style="background-color: lightgrey;">
-            <ion-text color="primary">Producto</ion-text>
-          </ion-col>
-          <ion-col style="background-color: lightgrey;">
-            <ion-text color="primary">Cantidad</ion-text>
-          </ion-col>
-          <ion-col style="background-color: lightgrey; size: 2px;">
-            <ion-text color="primary">Precio Unitario</ion-text>
-          </ion-col>
-        </ion-row>
-        <ion-row *ngFor="let item of remito.productos" class="ion-margin-bottom">
-          <ion-col>
-            {{ item.producto.nombre }}
-          </ion-col>
-          <ion-col>
-            {{ item.cantidad }}
-          </ion-col>
-          <ion-col>
-            {{ item.precio_unitario }}
-          </ion-col>
-        </ion-row>
+
+        <ion-list>
+          <ion-item>
+            <ion-grid>
+              <ion-row style="background-color: lightgrey;" class="ion-align-items-center">
+                <ion-col>
+                  <ion-text color="primary">Cant.</ion-text>
+                </ion-col>
+                <ion-col>
+                  <ion-text color="primary">Descripción</ion-text>
+                </ion-col>
+                <ion-col style="size: 2px;">
+                  <ion-text color="primary">Precio Unit.</ion-text>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+          <ion-item *ngFor="let item of remito.productos" class="ion-margin-bottom">
+            <ion-grid>
+              <ion-row>
+                <ion-col class="ion-align-self-center">
+                  {{ item.cantidad }}
+                </ion-col>
+                <ion-col class="ion-align-self-start">
+                  {{ item.producto.nombre }}
+                </ion-col>
+                <ion-col class="ion-align-self-center">
+                  $ {{ item.precio_unitario }}
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+        </ion-list>
 
         <ion-row>
           <ion-col>
