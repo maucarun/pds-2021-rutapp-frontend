@@ -19,9 +19,41 @@
 
   <ion-content>
 
-    <ion-item id="formRemito" *ngIf="createMode">
+    <ion-item id="formRemito" *ngIf="createMode || editMode">
 
-      <form [formGroup]="remitoForm" (ngSubmit)="onSubmit(remitoForm,$event)">
+      <!-- <ion-list> -->
+      <!-- <ion-list-header>
+          <ion-label>
+            Cliente
+          </ion-label>
+        </ion-list-header> -->
+
+      <ion-item style="width: 100%;">
+        <ion-label>Cliente</ion-label>
+        <ion-select interface="action-sheet" placeholder="Seleccione el cliente" okText="OK" cancelText="Cancelar">
+          <!-- interface="popover"||"alert" -->
+          <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+
+      <ion-item style="width: 100%;">
+        <ion-label>Productos</ion-label>
+        <ion-select interface="action-sheet" placeholder="Seleccione el cliente" okText="OK" cancelText="Cancelar">
+          <ion-select-option *ngFor="let producto of productos" [value]="producto">{{ producto.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+
+
+      
+
+      <!-- </ion-list> -->
+
+
+      <!--  <form [formGroup]="remitoForm" (ngSubmit)="onSubmit(remitoForm,$event)">
         <div class="buscador">
           <ion-item color="secondary">
             <ion-input formControlName="nombreDeCliente" type="text" name="nomnombreDeClientebre"
@@ -41,9 +73,12 @@
         <ion-item>
           <ion-button class="btn btn-primary" type="submit" [disabled]="remitoForm.invalid">Guardar</ion-button>
         </ion-item>
-      </form>
+      </form> --->
 
     </ion-item>
+
+
+
 
     <ion-item id="remitoView" *ngIf="viewMode && remito!!">
       <ion-grid>

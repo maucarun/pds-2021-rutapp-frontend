@@ -6,6 +6,8 @@ import { RemitoService } from 'src/app/services/remito.service';
 import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Cliente } from 'src/app/models/cliente.models';
+import { ClienteService } from 'src/app/services/cliente.service';
 
 @Component({
   selector: 'app-remito-view',
@@ -19,6 +21,7 @@ export class RemitoViewPage implements OnInit {
   idRemito: string;
   remito: Remito;
   user: Usuario;
+  clientes: Cliente[];
 
   viewMode = false;
   editMode = false;
@@ -39,11 +42,13 @@ export class RemitoViewPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private remitoService: RemitoService,
     private alertCtrl: AlertController,
+    private clienteService: ClienteService,
   ) { }
 
   async ngOnInit() {
     const user = this.authService.getUser();
     this.user = JSON.parse(user);
+    this.clientes = await this.clienteService.getAll(this.user.idUsuario);
 
     this.remitoForm = this.formBuilder.group({
       nombreDeCliente: ['', [Validators.required]],
