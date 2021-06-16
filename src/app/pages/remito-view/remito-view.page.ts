@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController} from '@ionic/angular';
+import { AlertController, PopoverController} from '@ionic/angular';
 import { Remito } from 'src/app/models/remito.models';
 import { RemitoService } from 'src/app/services/remito.service';
 import { Usuario } from 'src/app/models/usuario.models';
@@ -8,6 +8,8 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Cliente } from 'src/app/models/cliente.models';
 import { ClienteService } from 'src/app/services/cliente.service';
+import { Producto } from 'src/app/models/producto.models';
+import { ProductoService } from 'src/app/services/producto.service';
 
 @Component({
   selector: 'app-remito-view',
@@ -22,6 +24,8 @@ export class RemitoViewPage implements OnInit {
   remito: Remito;
   user: Usuario;
   clientes: Cliente[];
+  productos: Producto[];
+  productosAgregados: Producto[];
 
   viewMode = false;
   editMode = false;
@@ -43,12 +47,15 @@ export class RemitoViewPage implements OnInit {
     private remitoService: RemitoService,
     private alertCtrl: AlertController,
     private clienteService: ClienteService,
+    private productoService: ProductoService,
+    private popoverController: PopoverController
   ) { }
 
   async ngOnInit() {
     const user = this.authService.getUser();
     this.user = JSON.parse(user);
     this.clientes = await this.clienteService.getAll(this.user.idUsuario);
+    this.productos = await this.productoService.getAll();
 
     this.remitoForm = this.formBuilder.group({
       nombreDeCliente: ['', [Validators.required]],
@@ -101,12 +108,6 @@ export class RemitoViewPage implements OnInit {
     });
   }
 
-  getPedidoForm() {
-    return this.formBuilder.group({
-      opcion: ["", Validators.required],
-    });
-  }
-
   async borrarRemito() {
     const msjConfirmacion = await this.alertCtrl.create({
       header: 'Confirme',
@@ -126,6 +127,14 @@ export class RemitoViewPage implements OnInit {
       ]
     });
     await msjConfirmacion.present();
+  }
+
+  eliminarProducto(producto: Producto) {
+    this.productos = this.productos.filter(p => producto != p)
+  }
+
+  agregarProducto(producto: Producto) {
+    this.productosAgregados.push(producto)
   }
 
   cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
