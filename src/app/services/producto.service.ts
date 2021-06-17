@@ -61,7 +61,4 @@ export class ProductoService {
     return await this.http.delete<Producto>(this.url+ '/' + id, {headers}).toPromise();
   }
 
-  // async usr(): Promise<Usuario> {
-  //   return await this.storage.get('Usuario');
-  // }
 }

@@ -20,7 +20,6 @@
       </ion-row>
       <ion-row class="ion-margin-bottom">
         <ion-col>
-          <!-- {{ producto.nombre }} -->
           <ion-item class="newitem2">
             <ion-input 
             placeholder="nombre" 
@@ -41,7 +40,6 @@
       </ion-row>
       <ion-row class="ion-margin-bottom">
         <ion-col>
-          <!-- {{ producto.precio_unitario }} -->
           <ion-item class="newitem2">
             <ion-input 
             placeholder="precio" 
@@ -62,7 +60,6 @@
       </ion-row>
       <ion-row class="ion-margin-bottom">
         <ion-col>
-          <!-- {{ producto.descripcion }} -->
           <ion-item class="newitem2">
             <ion-input 
             placeholder="descripcion" 
@@ -83,10 +80,12 @@
       </ion-row>
       <ion-row class="ion-margin-bottom">
         <ion-col>
-          <!-- {{ producto.url_imagen }} -->
-          <!-- <ion-avatar slot="start"> -->
-          <!-- <ion-img [src]="producto.url_imagen"></ion-img> -->
-          <!-- </ion-avatar> -->
+            <!-- se muestra al crear o editar un producto  -->
+            <ion-item *ngIf='!flag'>
+              <ion-input type="file" accept="image/*" (change)="changeListener($event)"></ion-input>
+            </ion-item>
+            <!-- Imagen que siempre se muestra -->
+            <ion-img  [src]="producto.url_imagen" alt='photo'></ion-img>
         </ion-col>
       </ion-row>
     </ion-grid>

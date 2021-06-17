@@ -16,6 +16,7 @@ import { ProductoService } from 'src/app/services/producto.service';
    user: Usuario;
    productoId: string;
    flag=true;
+   public_id: string;//es el id de la imagen, se usa para eliminar la imagen
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -42,16 +43,13 @@ import { ProductoService } from 'src/app/services/producto.service';
         return;
       }
 
-      // console.log('Entre al view page del cliente id ' + this.productoId);
-
       this.producto = await this.productoService.get(this.productoId);
-      // console.log('*** Producto: ', this.producto);
-
+      this.corregirURL();
     });
   }
 
   async borrarProducto() {
-    await this.productoService.delete(this.producto.idProducto.toString());
+    const respuesta = await this.productoService.delete(this.producto.idProducto.toString());
     alert('Producto eliminado');
     this.redirigirAProductos();
   }
@@ -67,6 +65,8 @@ import { ProductoService } from 'src/app/services/producto.service';
         alert('Producto creado');
         this.redirigirAProductos();
       } else {
+        //public_id viejo | imagen nueva
+        this.producto.url_imagen = this.public_id+'|'+ this.producto.url_imagen;
         const respuesta = await this.productoService.update(this.producto.idProducto.toString(), this.producto);
         alert('Producto actualizado');
         this.redirigirAProductos();
@@ -79,6 +79,28 @@ import { ProductoService } from 'src/app/services/producto.service';
   redirigirAProductos(){
     this.router.navigateByUrl('productos', { replaceUrl: true });
   }
+
+  corregirURL(){
+    if (this.producto.url_imagen && (this.producto.url_imagen.indexOf('|')!==-1)){
+      console.log('hay imagen');
+      this.public_id = this.producto.url_imagen.split('|')[0];
+      this.producto.url_imagen = this.producto.url_imagen.split('|')[1];
+    }else{
+      console.log('No hay imagen');
+    }
+  }
+
+  async changeListener($event): Promise<void> {
+    const imagenBase64 = await this.getBase64($event.target.files[0]);
+    this.producto.url_imagen = imagenBase64.toString();
+  }
+
+  getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
 }
-
-
