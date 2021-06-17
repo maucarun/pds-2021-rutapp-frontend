@@ -37,6 +37,7 @@ import { ProductoService } from 'src/app/services/producto.service';
           descripcion: '',
           url_imagen: '',
           esPrincipal: false,
+          cantidad: 0
         };
         return;
       }

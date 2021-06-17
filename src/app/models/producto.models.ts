@@ -6,4 +6,5 @@ export interface Producto {
     descripcion: string;
     url_imagen: string;
     esPrincipal: boolean;
+    cantidad: number;
 }

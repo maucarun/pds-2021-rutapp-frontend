@@ -21,13 +21,6 @@
 
     <ion-content id="formRemito" *ngIf="createMode || editMode">
 
-      <!-- <ion-list> -->
-      <!-- <ion-list-header>
-          <ion-label>
-            Cliente
-          </ion-label>
-        </ion-list-header> -->
-
       <ion-item style="width: 100%;">
         <ion-label>Cliente</ion-label>
         <ion-select interface="action-sheet" placeholder="Seleccione el cliente" okText="OK" cancelText="Cancelar">
@@ -40,82 +33,56 @@
       <ion-item>
         <ion-label>Productos</ion-label>
         <!-- <ion-button fill="transparent" slot="icon-only"> -->
-        <ion-button fill="transparent" >
+        <ion-button (click)="presentModal()" fill="transparent">
           <ion-icon name="add-circle-outline"></ion-icon>
         </ion-button>
       </ion-item>
-        
-        <ion-list>
-          <ion-item *ngFor="let producto of productos" style="width: 100%;">
-            <ion-grid>
-              <ion-row class="ion-align-items-center">
-                <ion-col size="2">
-                  <ion-checkbox></ion-checkbox>
-                </ion-col>
-                <ion-col size="5">
-                  <ion-label>{{ producto.nombre }}</ion-label>
-                </ion-col>
-                <ion-col size="3">
-                  <ion-input type="number" placeholder="Cant."></ion-input>
-                </ion-col>
-                <ion-col size="2">
-                  <ion-button (click)="eliminarProducto(producto)" color="primary">
-                    <ion-icon name="trash"></ion-icon>
-                  </ion-button>
-                </ion-col>
-              </ion-row>
-            </ion-grid>
-          </ion-item>
-          
-        </ion-list>
-        
 
-      <!-- <ion-item *ngFor="let item of remito.productos" class="ion-margin-bottom">
-        <ion-grid>
-          <ion-row>
-            <ion-col class="ion-align-self-center">
-              {{ item.cantidad }}
-            </ion-col>
-            <ion-col class="ion-align-self-start">
-              {{ item.producto.nombre }}
-            </ion-col>
-            <ion-col class="ion-align-self-center">
-              $ {{ item.precio_unitario }}
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-item> -->
-
-      
-
-      <!-- </ion-list> -->
-
-
-      <!--  <form [formGroup]="remitoForm" (ngSubmit)="onSubmit(remitoForm,$event)">
-        <div class="buscador">
-          <ion-item color="secondary">
-            <ion-input formControlName="nombreDeCliente" type="text" name="nomnombreDeClientebre"
-              placeholder="Nombre del Cliente"></ion-input>
-          </ion-item>
-          <ion-item color="secondary">
-            <ion-input formControlName="pedidos" class="search-input" type="text" name="pedidos" placeholder="Pedidos">
-            </ion-input>
-          </ion-item>
-
-          <div *ngFor="let error of errorMessages.remito">
-            <ng-container *ngIf="remito.hasError(error.type) && (remito.dirty || remito.touched)">
-              <small class="error-message">{{ error.message }}</small>
-            </ng-container>
-          </div>
-        </div>
-        <ion-item>
-          <ion-button class="btn btn-primary" type="submit" [disabled]="remitoForm.invalid">Guardar</ion-button>
+      <ion-list>
+        <ion-item *ngFor="let producto of productosAgregados" style="width: 100%;">
+          <ion-grid>
+            <ion-row class="ion-align-items-center">
+              <ion-col size="5">
+                <ion-label>{{ producto.nombre }}</ion-label>
+              </ion-col>
+              <ion-col size="3">
+                <ion-input type="number" placeholder="Cant." min="1" [(ngModel)]="producto.cantidad"
+                  (change)="calcularTotal()">
+                </ion-input>
+              </ion-col>
+              <ion-col size="2">
+                <ion-button (click)="eliminarProducto(producto)" color="primary">
+                  <ion-icon name="trash"></ion-icon>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
         </ion-item>
-      </form> --->
+      </ion-list>
+
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Cantidad de productos</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          {{ remito.cantidadDeItems }}
+        </ion-col>
+      </ion-row>
+
+      <ion-row>
+        <ion-col>
+          <small style="color:gray">Precio total</small>
+        </ion-col>
+      </ion-row>
+      <ion-row class="ion-margin-bottom">
+        <ion-col>
+          $ {{ remito.total }}
+        </ion-col>
+      </ion-row>
 
     </ion-content>
-
-
 
 
     <ion-content id="remitoView" *ngIf="viewMode && remito!!">
@@ -228,11 +195,11 @@
   </ion-content>
 
 
-  <ion-footer>
+<!--   <ion-footer>
     <ion-toolbar color="light">
       <ion-buttons color="light" slot="start">
         <a class="waves-effect waves-light btn-small">button</a>
       </ion-buttons>
     </ion-toolbar>
-  </ion-footer>
+  </ion-footer> -->
 </div>

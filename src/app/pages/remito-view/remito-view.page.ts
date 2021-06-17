@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController, PopoverController} from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Remito } from 'src/app/models/remito.models';
 import { RemitoService } from 'src/app/services/remito.service';
 import { Usuario } from 'src/app/models/usuario.models';
@@ -10,6 +10,7 @@ import { Cliente } from 'src/app/models/cliente.models';
 import { ClienteService } from 'src/app/services/cliente.service';
 import { Producto } from 'src/app/models/producto.models';
 import { ProductoService } from 'src/app/services/producto.service';
+import { ModalPage } from 'src/app/component/modal/modal.component';
 
 @Component({
   selector: 'app-remito-view',
@@ -38,7 +39,7 @@ export class RemitoViewPage implements OnInit {
   get pedidos() {
     return this.remitoForm.get('pedidos');
   }
-  
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthenticationService,
@@ -48,7 +49,7 @@ export class RemitoViewPage implements OnInit {
     private alertCtrl: AlertController,
     private clienteService: ClienteService,
     private productoService: ProductoService,
-    private popoverController: PopoverController
+    private modalController: ModalController,
   ) { }
 
   async ngOnInit() {
@@ -81,7 +82,7 @@ export class RemitoViewPage implements OnInit {
         try {
           this.remitoSubmit = await this.remitoService.get(this.idRemito);
         } catch (error) {
-          console.log("Ha ocurrido un error cargando el remito, reintente.")
+          console.log('Ha ocurrido un error cargando el remito, reintente.');
         }
 
         if (this.editMode) {
@@ -89,7 +90,7 @@ export class RemitoViewPage implements OnInit {
           //Habilito las propiedades para editar en el formulario
           console.log('Como está en modo edición, completo el formulario con los datos del BE ');
           this.cambiarWebEstado(false, true, false);
-          this.remitoForm.patchValue(this.remitoSubmit)
+          this.remitoForm.patchValue(this.remitoSubmit);
           console.log(this.remitoSubmit);
         } else {
 
@@ -104,6 +105,10 @@ export class RemitoViewPage implements OnInit {
         //Habilito las propiedades para crear en el formulario
         console.log('Como está en modo creación, dejo el formulario vacío');
         this.cambiarWebEstado(false, false, true);
+        const nuevoRemito = {} as Remito;
+        nuevoRemito.total = 0;
+        nuevoRemito.cantidadDeItems = 0;
+        this.remito = nuevoRemito;
       }
     });
   }
@@ -130,17 +135,41 @@ export class RemitoViewPage implements OnInit {
   }
 
   eliminarProducto(producto: Producto) {
-    this.productos = this.productos.filter(p => producto != p)
+    this.productosAgregados = this.productosAgregados.filter(p => producto !== p);
+    this.calcularTotal();
   }
 
-  agregarProducto(producto: Producto) {
-    this.productosAgregados.push(producto)
+  calcularTotal() {
+    this.remito.cantidadDeItems = this.productosAgregados.length;
+    this.remito.total = this.productosAgregados.reduce((total, e) => total + (e.precio_unitario * e.cantidad), 0);
   }
 
   cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
     this.viewMode = view;
     this.editMode = edit;
     this.createMode = create;
+  }
+
+  async presentModal() {
+    const modal = await this.modalController.create({
+      component: ModalPage,
+      componentProps: {
+        elementos: this.productos,
+        elementosSeleccionados: this.productosAgregados
+      }
+    });
+    await modal.present();
+    await modal.onWillDismiss().then((respuestaModal) => {
+      console.log(respuestaModal);
+      console.log(respuestaModal.data);
+      if (respuestaModal.role !== 'cancelar') {
+        this.productosAgregados = respuestaModal.data;
+        this.productosAgregados.forEach((e) => {
+          if (e.cantidad === undefined) { e.cantidad = 1; }
+        });
+        this.calcularTotal();
+      }
+    });
   }
 
 }
