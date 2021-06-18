@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Remito } from '../models/remito.models';
 import { environment } from 'src/environments/environment';
@@ -31,6 +31,23 @@ export class RemitoService {
 
   async get(idRemito: string): Promise<Remito> {
     return this.http.get<Remito>(`${this.url}/${idRemito}`).toPromise();
+  }
+
+  async cancelarRemito(idRemito: string) {
+    const headers = new HttpHeaders({
+      usuario: 'homer',
+      password: 'abcd1',
+    });
+    return await this.http.delete<Remito>(this.url + '/' + idRemito, {headers}).toPromise();
+  }
+
+  async guardarRemito(remito: Remito) {
+    const headers = new HttpHeaders({
+      usuario: 'homer',
+      password: 'abcd1',
+      contentType: 'application/json',
+    });
+    return await this.http.post<Remito>(this.url, remito, { headers}).toPromise();
   }
 
 }

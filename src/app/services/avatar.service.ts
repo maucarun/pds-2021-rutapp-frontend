@@ -22,7 +22,7 @@ export class AvatarService {
   }
 
   getAvatarCancelado(nombre: string) {
-    return this.url + '/?name=' + nombre + '&background=00FFFF&color=fff';
+    return this.url + '/?name=' + nombre + '&background=FF0000&color=fff';
   }
 
 }
