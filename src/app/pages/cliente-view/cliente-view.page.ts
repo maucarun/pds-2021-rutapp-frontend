@@ -96,7 +96,9 @@ export class ClienteViewPage implements OnInit {
           //Habilito las propiedades para editar en el formulario
           console.log('Como está en modo edición, completo el formulario con los datos del BE ');
           this.cambiarWebEstado(false, true, false);
-          this.clienteForm.patchValue(this.clienteSubmit)
+          // this.clienteForm.patchValue(this.clienteSubmit)
+          /* El patch value solo se puede usar si son las mismas propiedades del objeto */
+          this.calle.setValue(this.clienteSubmit.direccion.calle)
           console.log(this.clienteSubmit);
         } else {
 

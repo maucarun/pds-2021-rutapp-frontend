@@ -13,5 +13,6 @@ export interface Cliente{
     propietario:Usuario,
     direccion:Direccion,
     disponibilidades:Disponibilidad[],
-    contactos:Contacto[]
+    contactos:Contacto[],
+    urlImagenPerfil:string
 }

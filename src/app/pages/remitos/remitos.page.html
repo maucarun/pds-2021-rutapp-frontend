@@ -13,7 +13,7 @@
     <ion-list id="inbox-list">
       <ion-item *ngFor="let remito of remitos" [routerLink]="['/remitos',remito.id_remito]">
         <ion-avatar slot="start">
-          <ion-img [src]=""></ion-img>
+          <ion-img [src]="remito.cliente.urlImagenPerfil"></ion-img>
         </ion-avatar>
         <ion-grid>
           <ion-row>

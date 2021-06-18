@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Remito } from 'src/app/models/remito.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Usuario } from 'src/app/models/usuario.models';
+import { AvatarService } from 'src/app/services/avatar.service';
 
 @Component({
   selector: 'app-remitos',
@@ -19,7 +20,8 @@ export class RemitosPage {
   constructor(
     private remitoService: RemitoService, 
     private router: Router,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private avatarService: AvatarService
   ) { }
 
 
@@ -29,13 +31,25 @@ export class RemitosPage {
     this.user = JSON.parse(user);
 
     this.remitoService.getAll(this.user.idUsuario).then(
-      //this.remitoService.getAll(idCliente, 'Pendiente').then(
       (data: Remito[]) => this.remitos = data
+    ).then(
+      () => {
+        for ( const remito of this.remitos) {
+          console.log(remito);
+          if (remito.estado.nombre == "Pendiente") {
+            remito.cliente.urlImagenPerfil = this.avatarService.getAvatarPendiente(remito.cliente.nombre);
+          } else if (remito.estado.nombre == "Entregado") {
+            remito.cliente.urlImagenPerfil = this.avatarService.getAvatarEntregado(remito.cliente.nombre);
+          } else {
+            remito.cliente.urlImagenPerfil = this.avatarService.getAvatarCancelado(remito.cliente.nombre);
+          }
+        }
+      }
     );
   }
 
   agregarNuevoRemito() {
-    this.router.navigateByUrl('remitos/nuevo', { replaceUrl: true });
+    this.router.navigate(['remitos/nuevo']);
   }
 
 }

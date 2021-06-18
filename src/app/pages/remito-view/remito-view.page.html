@@ -21,6 +21,15 @@
 
     <ion-content id="formRemito" *ngIf="createMode || editMode">
 
+<!--
+  Alternativa que me dio Maxi para setear un valor cuando haces editar en el ion-select   
+  <ion-item>
+          <ion-label>Categoria</ion-label>
+          <ion-select placeholder="Seleccione categoria por favor" formControlName="categoria" type="text" name="categoria">
+            <ion-select-option value="{{categoria.id}}" *ngFor="let categoria of categorias">{{categoria.descripcion}}</ion-select-option>
+          </ion-select>
+        </ion-item>
+     -->
       <ion-item style="width: 100%;">
         <ion-label>Cliente</ion-label>
         <ion-select interface="action-sheet" placeholder="Seleccione el cliente" okText="OK" cancelText="Cancelar">

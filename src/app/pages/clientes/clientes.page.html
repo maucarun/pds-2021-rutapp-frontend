@@ -12,7 +12,7 @@
   <ion-list id="inbox-list">
       <ion-item *ngFor="let cliente of clientes" [routerLink]="['/clientes/',cliente.idCliente]" routerDirection="forward" >
         <ion-avatar slot="start">
-          <ion-img [src]=""></ion-img>
+          <ion-img [src]="cliente.urlImagenPerfil"></ion-img>
         </ion-avatar>
         <ion-grid>
           <ion-row>

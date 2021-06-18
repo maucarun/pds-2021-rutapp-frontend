@@ -173,3 +173,24 @@ export class RemitoViewPage implements OnInit {
   }
 
 }
+
+/**
+ * this.editMode = params["id"] != null;
+      if (idSubasta){
+        try {
+          this.subasta = await this.subastasService.getSubastaById(idSubasta);
+          console.log(this.subasta);
+          this.lotes = this.subasta.lotes; // al asignar los lotes de la subasta directamente hay que modificar la asignacion de las imagenes ya que de lo contrario se verá un error de asignacion de variables
+
+          this.subastaForm.patchValue(this.subasta);
+          // this.imagen.setValue(this.subasta.img);
+          this.categoria.setValue(""+this.subasta.categoria.id);
+          this.fechaIni.setValue(this.subasta.fecha_ini);
+          this.fechaFin.setValue(this.subasta.fecha_fin);
+ 
+        } catch (error) {
+          this.toastService.presentToast('Ha ocurrido un error cargando subasta a editar, reintente.');
+        }
+
+      }
+ */
