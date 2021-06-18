@@ -1,18 +1,18 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Cliente } from './cliente.models';
-import { Producto } from './producto.models';
 import { Estado } from './estado.models';
 import { ComprobanteEntrega } from './comprobanteEntrega.models';
+import { ProductoRemito } from './productoRemito.models';
 
 export interface Remito {
     id_remito: number;
     fechaDeCreacion: string;
     total: number;
     motivo: string;
-    tiempo_espera: number;
+    tiempo_espera: string;
     cliente: Cliente;
     estado: Estado;
-    productos: Producto[];
+    productosDelRemito: ProductoRemito[];
     comprobante: ComprobanteEntrega;
     cantidadDeItems: number;
     /* hojaDeRuta: HojaDeRuta; */

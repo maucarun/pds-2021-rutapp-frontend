@@ -10,6 +10,8 @@ import { ClienteService } from 'src/app/services/cliente.service';
 import { Producto } from 'src/app/models/producto.models';
 import { ProductoService } from 'src/app/services/producto.service';
 import { ModalPage } from 'src/app/component/modal/modal.component';
+import { ProductoRemito } from 'src/app/models/productoRemito.models';
+import { Estado } from 'src/app/models/estado.models';
 
 @Component({
   selector: 'app-remito-view',
@@ -73,14 +75,25 @@ export class RemitoViewPage implements OnInit {
           // console.log(this.remito);
         }
       } else {
-
-        //Habilito las propiedades para crear en el formulario
         console.log('Como está en modo creación, dejo el formulario vacío');
+        //Habilito las propiedades para crear en el formulario
         this.cambiarWebEstado(false, false, true);
-        const nuevoRemito = {} as Remito;
+
+        const nuevoRemito = {} as Remito; //Manera de instanciar un objeto del tipo interfaz
+        var estadoRemito = {} as Estado
+        estadoRemito.nombre = "Pendiente"
+        estadoRemito.tipo = "Remito"
+
         nuevoRemito.total = 0;
         nuevoRemito.cantidadDeItems = 0;
-        nuevoRemito.fechaDeCreacion = new Date().toISOString();
+        nuevoRemito.fechaDeCreacion = new Date().toLocaleDateString();
+        nuevoRemito.productosDelRemito = [];
+        nuevoRemito.estado = estadoRemito
+        
+        var diezMinutos = new Date();
+        diezMinutos.setHours(0,0,0);
+        nuevoRemito.tiempo_espera = diezMinutos.toLocaleTimeString();
+        
         this.remito = nuevoRemito;
       }
     });
@@ -108,14 +121,14 @@ export class RemitoViewPage implements OnInit {
     await msjConfirmacion.present();
   }
 
-  eliminarProducto(producto: Producto) {
-    this.remito.productos = this.remito.productos.filter(p => producto !== p);
+  eliminarProducto(producto: ProductoRemito) {
+    this.remito.productosDelRemito = this.remito.productosDelRemito.filter(rp => producto !== rp);
     this.calcularTotal();
   }
 
   calcularTotal() {
-    this.remito.cantidadDeItems = this.remito.productos.length;
-    this.remito.total = this.remito.productos.reduce((total, e) => total + (e.precio_unitario * e.cantidad), 0);
+    this.remito.cantidadDeItems = this.remito.productosDelRemito.length;
+    this.remito.total = this.remito.productosDelRemito.reduce((total, pr) => total + (pr.precio_unitario * pr.cantidad), 0);
   }
 
   cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
@@ -125,40 +138,50 @@ export class RemitoViewPage implements OnInit {
   }
 
   async presentModal() {
+    /* Transformo la lista de PRs ya seleccionados en productos seleccionados */
+    var productosSeleccionados: Producto[] = [];
+    this.remito.productosDelRemito.forEach(pr => {
+      if (pr.producto !== undefined)
+        productosSeleccionados.push(pr.producto);
+    })
+
     const modal = await this.modalController.create({
       component: ModalPage,
       componentProps: {
         elementos: this.productos,
-        elementosSeleccionados: this.remito.productos
+        elementosSeleccionados: productosSeleccionados
       }
     });
     await modal.present();
     await modal.onWillDismiss().then((respuestaModal) => {
       console.log(respuestaModal);
       if (respuestaModal.role !== 'cancelar' && respuestaModal.role !== 'backdrop') {
-        this.remito.productos = respuestaModal.data;
-        this.remito.productos.forEach((e) => {
-          if (e.cantidad === undefined) { e.cantidad = 1; }
+        // this.remito.productosDelRemito = respuestaModal.data;
+        
+        this.remito.productosDelRemito = []; // Vacio la lista de pr porque solamente voy a hacer push
+        /* Quiero setear cada uno de los productos en el remito.ProductosDelRemito */
+        respuestaModal.data.forEach(producto => {
+          var productoDelRemito = {} as ProductoRemito // Instancio un pr
+          productoDelRemito.producto = producto;
+          // productoDelRemito.remito.id_remito = this.remito.id_remito;
+          productoDelRemito.precio_unitario = producto.precio_unitario;
+          
+          this.remito.productosDelRemito.push(productoDelRemito);
+        });
+        this.remito.productosDelRemito.forEach(pr => {
+          if (pr.cantidad === undefined) { pr.cantidad = 1; }
         });
         this.calcularTotal();
+        console.log(this.remito);
       }
     });
   }
 
   async guardarRemito() {
-    // fechaDeCreacion: string; listo
-    // total: number; listo
-    // motivo: string; listo
-    // tiempo_espera: number; 
-    // cliente: Cliente; listo
-    // estado: Estado; lo hace el be
-    // productos: Producto[]; listo
-    // comprobante: ComprobanteEntrega; no aplica
-    // cantidadDeItems: number; listo
     console.log(this.remito);
     
-    // await this.remitoService.guardarRemito(this.remito);
-    // this.router.navigate(['/remitos']);
+    await this.remitoService.guardarRemito(this.remito);
+    this.router.navigate(['/remitos']);
   }
 
 }
