@@ -167,7 +167,7 @@ export class RemitoViewPage implements OnInit {
         respuestaModal.data.forEach(producto => {
           const productoDelRemito = {} as ProductoRemito; // Instancio un pr
           productoDelRemito.producto = producto;
-          // productoDelRemito.remito.id_remito = this.remito.id_remito;
+          // productoDelRemito.remito.idRemito = this.remito.idRemito;
           productoDelRemito.precio_unitario = producto.precio_unitario;
 
           this.remito.productosDelRemito.push(productoDelRemito);

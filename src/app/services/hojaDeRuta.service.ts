@@ -99,7 +99,7 @@ const cliente1 = {
 };
 
 const remito1 = {
-    id_remito: 1,
+    idRemito: 1,
     fechaDeCreacion: new Date(),
     total: 2500,
     motivo: '',
@@ -204,7 +204,7 @@ const cliente2 = {
 };
 
 const remito2 = {
-    id_remito: 2,
+    idRemito: 2,
     fechaDeCreacion: new Date(),
     total: 500500,
     motivo: '',
@@ -310,7 +310,7 @@ const cliente3 = {
 };
 
 const remito3 = {
-    id_remito: 3,
+    idRemito: 3,
     fechaDeCreacion: new Date(),
     total: 10000,
     motivo: '',

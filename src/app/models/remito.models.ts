@@ -5,7 +5,7 @@ import { ComprobanteEntrega } from './comprobanteEntrega.models';
 import { ProductoRemito } from './productoRemito.models';
 
 export interface Remito {
-    id_remito: number;
+    idRemito: number;
     fechaDeCreacion: string;
     total: number;
     motivo: string;
