@@ -10,6 +10,7 @@
 <ion-content>
   <ion-list id="inbox-list">
       <ion-item *ngFor="let producto of productos" [routerLink]="['/productos',producto.idProducto]" >
+      <!--  (click)="verProducto(producto.idProducto)">-->
         <ion-avatar slot="start">
           <ion-img [src]="producto.url_imagen"></ion-img>
         </ion-avatar>

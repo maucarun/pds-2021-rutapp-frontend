@@ -11,11 +11,16 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class ProductoService {
 
   idUsuario: number;
+  username: string;
+  password: string;
   url = environment.apiUrl + '/producto';
+
   constructor(private http: HttpClient, private authService: AuthenticationService ) {
     this.authService.loadsData();
     const user = this.authService.getUser();
     this.idUsuario = JSON.parse(user).idUsuario;
+    this.username = JSON.parse(user).username;
+    this.password = JSON.parse(user).password;
   }
 
   async getAll(): Promise<Producto[]> {
@@ -23,40 +28,39 @@ export class ProductoService {
   }
 
   async get(id: string): Promise<Producto> {
-    // Esto va a variar dependiendo del usuario logeado
     const headers = new HttpHeaders({
-      usuario: 'homer',
-      password: 'abcd1'
+      usuario: this.username,
+      password: this.password,
     });
-
+    // console.log('headers: ', headers);
     return await this.http.get<Producto>(this.url+ '/' + id, {headers}).toPromise();
   }
 
   async create(id: string, producto: Producto): Promise<Producto> {
-    // Esto va a variar dependiendo del usuario logeado
     const headers = new HttpHeaders({
-      usuario: 'homer',
-      password: 'abcd1',
-      contentType: 'application/json',
+      usuario: this.username,
+      password: this.password,
     });
     return await this.http.post<Producto>(this.url, producto, {headers}).toPromise();
   }
 
-  async update(id: string, producto: Producto): Promise<Producto> {
-    // Esto va a variar dependiendo del usuario logeado
+  async update(producto: Producto): Promise<Producto> {
     const headers = new HttpHeaders({
-      usuario: 'homer',
-      password: 'abcd1',
-      contentType: 'application/json',
+      usuario: this.username,
+      password: this.password,
     });
     return await this.http.put<Producto>(this.url, producto, {headers}).toPromise();
   }
 
   async delete(id: string): Promise<Producto> {// por ahora es put pero en el futuro debería ser delete
     // Esto va a variar dependiendo del usuario logeado
+    // const headers = new HttpHeaders({
+    //   usuario: 'homer',
+    //   password: 'abcd1',
+    // });
     const headers = new HttpHeaders({
-      usuario: 'homer',
-      password: 'abcd1',
+      usuario: this.username,
+      password: this.password,
     });
     return await this.http.delete<Producto>(this.url+ '/' + id, {headers}).toPromise();
   }

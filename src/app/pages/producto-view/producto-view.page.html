@@ -26,7 +26,7 @@
             type="text" 
             [(ngModel)]="producto.nombre" 
             required
-            [disabled]="flag"
+            [disabled]="isView"
             >
             </ion-input>
           </ion-item>
@@ -46,7 +46,7 @@
             type="number" 
             [(ngModel)]="producto.precio_unitario" 
             required
-            [disabled]="flag"
+            [disabled]="isView"
             >
             </ion-input>
           </ion-item>
@@ -66,7 +66,7 @@
             type="text" 
             [(ngModel)]="producto.descripcion" 
             required
-            [disabled]="flag"
+            [disabled]="isView"
             >
             </ion-input>
           </ion-item>
@@ -81,7 +81,7 @@
       <ion-row class="ion-margin-bottom">
         <ion-col>
             <!-- se muestra al crear o editar un producto  -->
-            <ion-item *ngIf='!flag'>
+            <ion-item *ngIf='!isView'>
               <ion-input type="file" accept="image/*" (change)="changeListener($event)"></ion-input>
             </ion-item>
             <!-- Imagen que siempre se muestra -->
@@ -91,17 +91,17 @@
     </ion-grid>
 
 
-    <ion-fab *ngIf='flag' vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab *ngIf='isView' vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button color="warning" (click)="borrarProducto()">
         <ion-icon name="trash"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-fab *ngIf='flag'vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab *ngIf='isView'vertical="bottom" horizontal="start" slot="fixed">
       <ion-fab-button  color="warning" (click)="editarProducto()">
         <ion-icon name="create-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-fab *ngIf='!flag'vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab *ngIf='!isView'vertical="bottom" horizontal="start" slot="fixed">
       <ion-fab-button color="warning" (click)="guardarProducto()">
           <ion-icon name="save-outline"></ion-icon>
       </ion-fab-button>

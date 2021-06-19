@@ -12,11 +12,26 @@ import { HojaDeRutaService } from 'src/app/services/hojaDeRuta.service';
 export class ProductosPage implements OnInit {
 
   productos: Producto[];
-  constructor(private productoService: ProductoService, private router: Router,
-    private hojaDeRutaService: HojaDeRutaService,) {
+  constructor(
+    private productoService: ProductoService,
+    private router: Router,
+    private hojaDeRutaService: HojaDeRutaService,
+    ) {
   }
 
   ngOnInit() {
+    // this.productos = [];
+    // this.productoService.getAll().then(
+    //   (productos: Producto[])=> this.productos = productos
+    // )
+    // .then( ()=>{
+    //   this.corregirURL();
+    // })
+    // .catch(e =>console.error(e));
+    // console.log('hojaDeRutaService: ', Object.values(this.hojaDeRutaService.getAll())[1]);
+  }
+
+  ionViewWillEnter() {
     this.productos = [];
     this.productoService.getAll().then(
       (productos: Producto[])=> this.productos = productos
@@ -25,7 +40,6 @@ export class ProductosPage implements OnInit {
       this.corregirURL();
     })
     .catch(e =>console.error(e));
-    console.log('hojaDeRutaService: ', Object.values(this.hojaDeRutaService.getAll())[1]);
   }
 
   corregirURL(){
@@ -44,4 +58,7 @@ export class ProductosPage implements OnInit {
   agregarNuevoProducto() {
     this.router.navigateByUrl('productos/nuevo', { replaceUrl: true });
   }
+  // verProducto(idProducto: string){
+  //   this.router.navigateByUrl('productos/'+idProducto, { replaceUrl: true });
+  // }
 }
