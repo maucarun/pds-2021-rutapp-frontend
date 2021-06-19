@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
 
 @Component({
@@ -6,13 +6,11 @@ import { PopoverController } from '@ionic/angular';
   templateUrl: './popover.component.html',
   styleUrls: ['./popover.component.scss'],
 })
-export class PopoverComponent implements OnInit {
+export class PopoverComponent {
 
   @Input() estados: any;
 
   constructor(public popoverController: PopoverController) { }
-
-  ngOnInit() { }
 
   seleccionar(estado: string) {
     this.popoverController.dismiss(estado, 'filtrar');

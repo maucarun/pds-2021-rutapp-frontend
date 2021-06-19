@@ -9,9 +9,11 @@
     </ion-toolbar>
     <ion-toolbar color="secondary">
       <ion-searchbar (ionInput)="getRemitosBusqueda($event)" autocomplete="on" placeholder="Buscar Remito"
-        color="primary">
+        color="primary" [(ngModel)]="buscarRemito">
       </ion-searchbar>
-      <ion-button icon-only slot="end" fill="clear" size="large" (click)="presentPopover($event)" ><ion-icon name="ellipsis-vertical-circle"></ion-icon></ion-button>
+      <ion-button icon-only slot="end" fill="clear" size="large" (click)="presentPopover($event)">
+        <ion-icon name="ellipsis-vertical-circle"></ion-icon>
+      </ion-button>
     </ion-toolbar>
   </ion-header>
 

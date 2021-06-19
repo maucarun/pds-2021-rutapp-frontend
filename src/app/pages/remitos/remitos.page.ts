@@ -21,6 +21,7 @@ export class RemitosPage {
   user: Usuario;
   estados: string[];
   estadoSeleccionado: string;
+  buscarRemito: string;
 
   constructor(
     private remitoService: RemitoService,
@@ -57,8 +58,6 @@ export class RemitosPage {
 
   async getRemitosBusqueda(ev: any) {
     this.remitos = await this.remitosBackup;
-
-    this.filtrarRemitos();
 
     const val = ev.target.value;
 
@@ -104,8 +103,8 @@ export class RemitosPage {
       } else {
         this.estadoSeleccionado = respuestaPopover.data;
       }
-      this.getRemitosBusqueda(ev);
-      //this.filtrarRemitos();
+      this.filtrarRemitos();
+      this.buscarRemito = '';
     });
   }
 
