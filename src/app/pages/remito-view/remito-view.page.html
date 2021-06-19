@@ -19,7 +19,7 @@
 
   <ion-content>
 
-    <ion-content id="formRemito" *ngIf="createMode || editMode">
+    <ion-content id="formRemito" *ngIf="createMode || (editMode && !!remito)">
 
       <ion-item>
         <ion-label floating>Fecha del Remito</ion-label>
@@ -41,7 +41,7 @@
       <ion-item style="width: 100%;">
         <ion-label>Cliente</ion-label>
         <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
-        <ion-select required="true" interface="action-sheet" [(ngModel)]="remito.cliente"
+        <ion-select required="true" interface="action-sheet" [selectedText]="remito.cliente.nombre" [(ngModel)]="remito.cliente"
           placeholder="Seleccione el cliente" okText="Aceptar" cancelText="Cancelar">
           <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
           <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }}

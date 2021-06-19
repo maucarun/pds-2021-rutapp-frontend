@@ -9,19 +9,23 @@ import { AuthenticationService } from './authentication.service';
 })
 export class RemitoService {
   idUsuario: number;
+  //username: string;
+  //password: string;
   url = environment.apiUrl + '/remito';
   constructor(
     private http: HttpClient,
     private authService: AuthenticationService
-  ) { 
+  ) {
     this.authService.loadsData();
-    let user = this.authService.getUser();
+    const user = this.authService.getUser();
     this.idUsuario = JSON.parse(user).idUsuario;
+    //this.username = JSON.parse(user).username;
+    //this.password = JSON.parse(user).password;
   }
 
   async getAll(idUsuario: number): Promise<Remito[]> {
     console.log("Buscaré los remitos del usuario " + this.idUsuario)
-    return await this.http.get<Remito[]>(this.url+ '/all/' + this.idUsuario).toPromise()
+    return await this.http.get<Remito[]>(this.url + '/all/' + this.idUsuario).toPromise()
   }
 
   async getAllRemitosPorCliente(idCliente: number, estado: string): Promise<Remito[]> {
@@ -38,7 +42,7 @@ export class RemitoService {
       usuario: 'homer',
       password: 'abcd1',
     });
-    return await this.http.delete<Remito>(this.url + '/' + idRemito, {headers}).toPromise();
+    return await this.http.delete<Remito>(this.url + '/' + idRemito, { headers }).toPromise();
   }
 
   async guardarRemito(remito: Remito) {
@@ -47,7 +51,16 @@ export class RemitoService {
       password: 'abcd1',
       contentType: 'application/json',
     });
-    return await this.http.post<Remito>(this.url, remito, { headers}).toPromise();
+    return await this.http.post<Remito>(this.url, remito, { headers }).toPromise();
+  }
+
+  async actualizarRemito(remito: Remito) {
+    const headers = new HttpHeaders({
+      usuario: 'homer',
+      password: 'abcd1',
+      contentType: 'application/json',
+    });
+    return await this.http.put<Remito>(this.url, remito, { headers }).toPromise();
   }
 
 }

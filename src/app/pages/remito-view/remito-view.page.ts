@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
@@ -66,6 +67,8 @@ export class RemitoViewPage implements OnInit {
           //Habilito las propiedades para editar en el formulario
           console.log('Como está en modo edición, completo el formulario con los datos del BE ');
           this.cambiarWebEstado(false, true, false);
+          this.remito = await this.remitoService.get(this.idRemito);
+          console.log(this.remito);
         } else {
 
           //Habilito las propiedades ver en el formulario
@@ -86,9 +89,10 @@ export class RemitoViewPage implements OnInit {
 
         nuevoRemito.total = 0;
         nuevoRemito.cantidadDeItems = 0;
-        nuevoRemito.fechaDeCreacion = new Date().toLocaleDateString();
+        nuevoRemito.fechaDeCreacion = new Date().toISOString();
         nuevoRemito.productosDelRemito = [];
         nuevoRemito.estado = estadoRemito;
+        nuevoRemito.cliente = this.clientes[0];
 
         const tiempoDeEsperaDefault = new Date();
         tiempoDeEsperaDefault.setHours(0, 0, 0);
@@ -143,6 +147,7 @@ export class RemitoViewPage implements OnInit {
     this.remito.productosDelRemito.forEach(pr => {
       if (pr.producto !== undefined) { productosSeleccionados.push(pr.producto); }
     });
+    console.log(productosSeleccionados);
 
     const modal = await this.modalController.create({
       component: ModalPage,
@@ -177,12 +182,16 @@ export class RemitoViewPage implements OnInit {
   }
 
   async guardarRemito() {
-    console.log(this.remito);
-
     this.remito.fechaDeCreacion = this.formatearFecha(this.remito.fechaDeCreacion);
-    this.remito.tiempo_espera = this.formatearHora(this.remito.tiempo_espera);
-
-    await this.remitoService.guardarRemito(this.remito);
+    console.log(this.remito);
+    if (this.createMode) {
+      this.remito.tiempo_espera = this.formatearHora(this.remito.tiempo_espera);
+      console.log(this.remito);
+      await this.remitoService.guardarRemito(this.remito);
+    } else {
+      delete this.remito.comprobante;
+      await this.remitoService.actualizarRemito(this.remito);
+    }
     this.router.navigate(['/remitos']);
   }
 
@@ -197,6 +206,10 @@ export class RemitoViewPage implements OnInit {
     const date = new Date(hora);
     return ('00' + date.getHours()).slice(-2) + ':' +
       ('00' + date.getMinutes()).slice(-2);
+  }
+
+  editarRemito() {
+    this.router.navigate(['remitos/editar/' + this.idRemito]);
   }
 
 }

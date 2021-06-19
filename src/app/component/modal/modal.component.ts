@@ -21,8 +21,10 @@ export class ModalPage implements OnInit {
 
   async agregarPropSeleccionado() {
     this.elementos.forEach(e => e.seleccionado = false);
-    if (this.elementosSeleccionados !== undefined) {
-      this.elementos.filter(e => this.elementosSeleccionados.includes(e)).forEach(e => e.seleccionado = true);
+    if (this.elementosSeleccionados !== undefined || this.elementosSeleccionados.length) {
+      this.elementosSeleccionados.forEach(e => e.seleccionado = true);
+      this.elementos.filter(e => this.elementosSeleccionados.some(es => es.idProducto === e.idProducto))
+      .forEach(e => e.seleccionado = true);
     }
   }
 
