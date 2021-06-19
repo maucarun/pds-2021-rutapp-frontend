@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { PopoverComponent } from './popover/popover.component';
 
 @NgModule({
-    declarations: [ModalPage],
-    exports: [ModalPage],
+    declarations: [ModalPage, PopoverComponent],
+    exports: [ModalPage, PopoverComponent],
     imports: [
         CommonModule, RouterModule, FormsModule, ReactiveFormsModule, IonicModule
     ]

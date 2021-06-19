@@ -5,7 +5,13 @@
       <ion-buttons slot="end">
         <ion-menu-button autoHide="false" color="light"></ion-menu-button>
       </ion-buttons>
-      <ion-title>Remitos</ion-title>
+      <ion-title class="large-title">Remitos</ion-title>
+    </ion-toolbar>
+    <ion-toolbar color="secondary">
+      <ion-searchbar (ionInput)="getRemitosBusqueda($event)" autocomplete="on" placeholder="Buscar Remito"
+        color="primary">
+      </ion-searchbar>
+      <ion-button icon-only slot="end" fill="clear" size="large" (click)="presentPopover($event)" ><ion-icon name="ellipsis-vertical-circle"></ion-icon></ion-button>
     </ion-toolbar>
   </ion-header>
 
