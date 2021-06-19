@@ -5,6 +5,8 @@
       <ion-checkbox [(ngModel)]="elemento.seleccionado"></ion-checkbox>
     </ion-item>
   </ion-list>
-  <button (click)="agregarElementos()">Aceptar</button>
-  <button (click)="cancelar()">Cancelar</button>
+  <ion-item>
+    <ion-button color="danger" size="default" slot="end" (click)="cancelar()">Cancelar</ion-button>
+    <ion-button color="success" size="default" slot="end" (click)="agregarElementos()">Aceptar</ion-button>
+  </ion-item>
 </ion-content>

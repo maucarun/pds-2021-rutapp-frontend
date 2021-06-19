@@ -39,7 +39,7 @@
       <ion-item style="width: 100%;">
         <ion-label>Cliente</ion-label>
         <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
-        <ion-select interface="action-sheet" [(ngModel)]="remito.cliente" placeholder="Seleccione el cliente" okText="Aceptar" cancelText="Cancelar">
+        <ion-select required="true" interface="action-sheet" [(ngModel)]="remito.cliente" placeholder="Seleccione el cliente" okText="Aceptar" cancelText="Cancelar">
           <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
           <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }}
           </ion-select-option>
@@ -47,7 +47,7 @@
       </ion-item>
 
       <ion-item>
-        <ion-label>Tiempo de Espera Aproximado</ion-label>
+        <ion-label>Tiempo de espera aproximado</ion-label>
         <ion-datetime [(ngModel)]="remito.tiempo_espera" displayFormat="HH:mm"></ion-datetime>
       </ion-item>
 
@@ -67,7 +67,7 @@
                 <ion-label>{{ pr.producto.nombre }}</ion-label>
               </ion-col>
               <ion-col size="3">
-                <ion-input type="number" placeholder="Cant." min="1" [(ngModel)]="pr.cantidad"
+                <ion-input required="true" type="number" placeholder="Cant." min="1" [(ngModel)]="pr.cantidad"
                   (change)="calcularTotal()">
                 </ion-input>
               </ion-col>
@@ -83,7 +83,7 @@
 
       <ion-row>
         <ion-col>
-          <small style="color:gray">Cantidad de productos</small>
+          <ion-label style="color:gray">Cantidad de productos</ion-label>
         </ion-col>
       </ion-row>
       <ion-row class="ion-margin-bottom">
@@ -94,7 +94,7 @@
 
       <ion-row>
         <ion-col>
-          <small style="color:gray">Precio total</small>
+          <ion-label style="color:gray">Precio total</ion-label>
         </ion-col>
       </ion-row>
       <ion-row class="ion-margin-bottom">
@@ -104,7 +104,7 @@
       </ion-row>
 
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button color="primary" (click)="guardarRemito()">
+        <ion-fab-button color="warning" (click)="guardarRemito()">
           <ion-icon name="save-outline"></ion-icon>
         </ion-fab-button>
       </ion-fab>
@@ -117,7 +117,7 @@
 
         <ion-row>
           <ion-col>
-            <small style="color:gray">Cliente</small>
+            <ion-label style="color:gray">Cliente</ion-label>
           </ion-col>
         </ion-row>
         <ion-row class="ion-margin-bottom">
@@ -128,7 +128,7 @@
 
         <ion-row *ngIf="!!remito.hojaDeRuta">
           <ion-col>
-            <small style="color:gray">Hoja de Ruta</small>
+            <ion-label style="color:gray">Hoja de Ruta</ion-label>
           </ion-col>
         </ion-row>
         <ion-row *ngIf="!!remito.hojaDeRuta" class="ion-margin-bottom">
@@ -139,7 +139,7 @@
 
         <ion-row>
           <ion-col>
-            <small style="color:gray">Estado</small>
+            <ion-label style="color:gray">Estado</ion-label>
           </ion-col>
         </ion-row>
         <ion-row class="ion-margin-bottom">
@@ -150,7 +150,7 @@
 
         <ion-row>
           <ion-col>
-            <small style="color:gray">Productos</small>
+            <ion-label style="color:gray">Productos</ion-label>
           </ion-col>
         </ion-row>
 
@@ -189,7 +189,7 @@
 
         <ion-row>
           <ion-col>
-            <small style="color:gray">Cantidad de productos</small>
+            <ion-label style="color:gray">Cantidad de productos</ion-label>
           </ion-col>
         </ion-row>
         <ion-row class="ion-margin-bottom">
@@ -200,7 +200,7 @@
 
         <ion-row>
           <ion-col>
-            <small style="color:gray">Precio total</small>
+            <ion-label style="color:gray">Precio total</ion-label>
           </ion-col>
         </ion-row>
         <ion-row class="ion-margin-bottom">
