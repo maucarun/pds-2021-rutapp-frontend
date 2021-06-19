@@ -23,7 +23,9 @@
 
       <ion-item>
         <ion-label floating>Fecha del Remito</ion-label>
-        <ion-datetime [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY" [(ngModel)]="remito.fechaDeCreacion" [max]="fechaDeHoy"></ion-datetime>
+        <ion-datetime [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar"
+          displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY" [(ngModel)]="remito.fechaDeCreacion"
+          [max]="fechaDeHoy"></ion-datetime>
       </ion-item>
 
       <!--
@@ -39,7 +41,8 @@
       <ion-item style="width: 100%;">
         <ion-label>Cliente</ion-label>
         <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
-        <ion-select required="true" interface="action-sheet" [(ngModel)]="remito.cliente" placeholder="Seleccione el cliente" okText="Aceptar" cancelText="Cancelar">
+        <ion-select required="true" interface="action-sheet" [(ngModel)]="remito.cliente"
+          placeholder="Seleccione el cliente" okText="Aceptar" cancelText="Cancelar">
           <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
           <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }}
           </ion-select-option>
@@ -54,8 +57,8 @@
       <ion-item>
         <ion-label>Productos</ion-label>
         <!-- <ion-button fill="transparent" slot="icon-only"> -->
-        <ion-button (click)="presentModal()" fill="transparent">
-          <ion-icon name="add-circle-outline"></ion-icon>
+        <ion-button size="default" (click)="presentModal()" fill="clear">
+          <ion-icon name="add-circle"></ion-icon>
         </ion-button>
       </ion-item>
 
@@ -72,7 +75,7 @@
                 </ion-input>
               </ion-col>
               <ion-col size="2">
-                <ion-button (click)="eliminarProducto(pr)" color="primary">
+                <ion-button (click)="eliminarProducto(pr)" color="danger">
                   <ion-icon name="trash"></ion-icon>
                 </ion-button>
               </ion-col>
@@ -81,27 +84,29 @@
         </ion-item>
       </ion-list>
 
-      <ion-row>
-        <ion-col>
-          <ion-label style="color:gray">Cantidad de productos</ion-label>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-margin-bottom">
-        <ion-col>
-          {{ remito.cantidadDeItems }}
-        </ion-col>
-      </ion-row>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-label style="color:gray">Cantidad de productos</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom">
+          <ion-col>
+            {{ remito.cantidadDeItems }}
+          </ion-col>
+        </ion-row>
 
-      <ion-row>
-        <ion-col>
-          <ion-label style="color:gray">Precio total</ion-label>
-        </ion-col>
-      </ion-row>
-      <ion-row class="ion-margin-bottom">
-        <ion-col>
-          $ {{ remito.total }}
-        </ion-col>
-      </ion-row>
+        <ion-row>
+          <ion-col>
+            <ion-label style="color:gray">Precio total</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom">
+          <ion-col>
+            $ {{ remito.total }}
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
       <ion-fab vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button color="warning" (click)="guardarRemito()">
@@ -170,7 +175,7 @@
               </ion-row>
             </ion-grid>
           </ion-item>
-          <ion-item *ngFor="let item of remito.productos" class="ion-margin-bottom">
+          <ion-item *ngFor="let item of remito.productosDelRemito" class="ion-margin-bottom">
             <ion-grid>
               <ion-row>
                 <ion-col class="ion-align-self-center">

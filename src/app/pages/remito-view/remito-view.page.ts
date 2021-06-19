@@ -21,11 +21,11 @@ import { Estado } from 'src/app/models/estado.models';
 export class RemitoViewPage implements OnInit {
   idRemito: string;
   remito: Remito;
-  
+
   /** Props de fecha */
   mesesCustomizados = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiempre', 'Octubre', 'Noviembre', 'Diciembre'];
   fechaDeHoy: string = new Date().toISOString();
-  
+
   /** Props de objetos necesarios */
   user: Usuario;
   clientes: Cliente[];
@@ -80,20 +80,20 @@ export class RemitoViewPage implements OnInit {
         this.cambiarWebEstado(false, false, true);
 
         const nuevoRemito = {} as Remito; //Manera de instanciar un objeto del tipo interfaz
-        var estadoRemito = {} as Estado
-        estadoRemito.nombre = "Pendiente"
-        estadoRemito.tipo = "Remito"
+        const estadoRemito = {} as Estado;
+        estadoRemito.nombre = 'Pendiente';
+        estadoRemito.tipo = 'Remito';
 
         nuevoRemito.total = 0;
         nuevoRemito.cantidadDeItems = 0;
         nuevoRemito.fechaDeCreacion = new Date().toLocaleDateString();
         nuevoRemito.productosDelRemito = [];
-        nuevoRemito.estado = estadoRemito
-        
-        var diezMinutos = new Date();
-        diezMinutos.setHours(0,0,0);
-        nuevoRemito.tiempo_espera = diezMinutos.toLocaleTimeString();
-        
+        nuevoRemito.estado = estadoRemito;
+
+        const tiempoDeEsperaDefault = new Date();
+        tiempoDeEsperaDefault.setHours(0, 0, 0);
+        nuevoRemito.tiempo_espera = tiempoDeEsperaDefault.toISOString();
+
         this.remito = nuevoRemito;
       }
     });
@@ -112,7 +112,7 @@ export class RemitoViewPage implements OnInit {
           text: 'Borrar',
           handler: async () => {
             //  this.remitoService.delete(this.remito.id);
-            await this.remitoService.cancelarRemito(this.idRemito)
+            await this.remitoService.cancelarRemito(this.idRemito);
             this.router.navigate(['/remitos']);
           }
         }
@@ -139,11 +139,10 @@ export class RemitoViewPage implements OnInit {
 
   async presentModal() {
     /* Transformo la lista de PRs ya seleccionados en productos seleccionados */
-    var productosSeleccionados: Producto[] = [];
+    const productosSeleccionados: Producto[] = [];
     this.remito.productosDelRemito.forEach(pr => {
-      if (pr.producto !== undefined)
-        productosSeleccionados.push(pr.producto);
-    })
+      if (pr.producto !== undefined) { productosSeleccionados.push(pr.producto); }
+    });
 
     const modal = await this.modalController.create({
       component: ModalPage,
@@ -157,15 +156,15 @@ export class RemitoViewPage implements OnInit {
       console.log(respuestaModal);
       if (respuestaModal.role !== 'cancelar' && respuestaModal.role !== 'backdrop') {
         // this.remito.productosDelRemito = respuestaModal.data;
-        
+
         this.remito.productosDelRemito = []; // Vacio la lista de pr porque solamente voy a hacer push
         /* Quiero setear cada uno de los productos en el remito.ProductosDelRemito */
         respuestaModal.data.forEach(producto => {
-          var productoDelRemito = {} as ProductoRemito // Instancio un pr
+          const productoDelRemito = {} as ProductoRemito; // Instancio un pr
           productoDelRemito.producto = producto;
           // productoDelRemito.remito.id_remito = this.remito.id_remito;
           productoDelRemito.precio_unitario = producto.precio_unitario;
-          
+
           this.remito.productosDelRemito.push(productoDelRemito);
         });
         this.remito.productosDelRemito.forEach(pr => {
@@ -179,9 +178,25 @@ export class RemitoViewPage implements OnInit {
 
   async guardarRemito() {
     console.log(this.remito);
-    
+
+    this.remito.fechaDeCreacion = this.formatearFecha(this.remito.fechaDeCreacion);
+    this.remito.tiempo_espera = this.formatearHora(this.remito.tiempo_espera);
+
     await this.remitoService.guardarRemito(this.remito);
     this.router.navigate(['/remitos']);
+  }
+
+  formatearFecha(fecha: string) {
+    const date = new Date(fecha);
+    return date.getFullYear() + '-' +
+      ('00' + (date.getMonth() + 1)).slice(-2) + '-' +
+      ('00' + date.getDate()).slice(-2);
+  }
+
+  formatearHora(hora: string) {
+    const date = new Date(hora);
+    return ('00' + date.getHours()).slice(-2) + ':' +
+      ('00' + date.getMinutes()).slice(-2);
   }
 
 }
@@ -199,7 +214,7 @@ export class RemitoViewPage implements OnInit {
           this.categoria.setValue(""+this.subasta.categoria.id);
           this.fechaIni.setValue(this.subasta.fecha_ini);
           this.fechaFin.setValue(this.subasta.fecha_fin);
- 
+
         } catch (error) {
           this.toastService.presentToast('Ha ocurrido un error cargando subasta a editar, reintente.');
         }
