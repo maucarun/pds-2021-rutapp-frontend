@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,6 +27,7 @@ export class ClienteViewPage implements OnInit {
   idCliente: string;
   cliente: Cliente;
   user: Usuario;
+  disponibilidadesNuevas: Disponibilidad[];
 
   viewMode = true;
   /* editMode = false;
@@ -49,6 +51,10 @@ export class ClienteViewPage implements OnInit {
 
   get contactos() {
     return this.clienteForm.get('contactos');
+  }
+
+  get disponibilidades() {
+    return this.clienteForm.get('disponibilidades');
   }
 
   public errorMessages = {
@@ -89,9 +95,11 @@ export class ClienteViewPage implements OnInit {
       cuit: ['', [Validators.required]],
       observaciones: ['', [Validators.required]],
       promedio_espera: ['', [Validators.required]],
-      contactos: this.formBuilder.array([])
+      contactos: this.formBuilder.array([]),
+      disponibilidades: this.formBuilder.array([])
     });
-    console.log(this.clienteForm);
+
+
 
     /* Verificando si la página tiene id */
 
@@ -104,6 +112,9 @@ export class ClienteViewPage implements OnInit {
         this.viewMode = false;
 
         console.log('entramos al cliente nuevo');
+
+        this.disponibilidadesNuevas = await this.clienteService.getDisponibilidades();
+        this.disponibilidadesNuevas.forEach((d: any) => d.seleccionado = false);
 
         this.cliente = {
           idCliente: 0,
@@ -118,6 +129,27 @@ export class ClienteViewPage implements OnInit {
           contactos: {} as Contacto[],
           urlImagenPerfil: '',
         };
+
+        this.disponibilidadesNuevas.forEach((d: any) => {
+          console.log(d);
+          const controls = this.clienteForm.controls.disponibilidades as FormArray;
+          console.log(d.diaSemana.diaSemana)
+          controls.push(
+            this.formBuilder.group({
+              disponibilidadDiaSemana: [d.diaSemana.diaSemana],
+              disponibilidadSeleccionado: [d.seleccionado, [Validators.required]],
+              disponibilidadHoraApertura: [d.hora_apertura, [Validators.required]],
+              disponibilidadHoraCierre: [d.hora_cierre, [Validators.required]],
+            })
+          );
+        });
+
+        this.clienteForm.patchValue({
+          disponibilidades: this.disponibilidadesNuevas,
+        });
+
+        console.log(this.clienteForm);
+        //console.log(this.disponibilidadesNuevas)
 
         return this.loading.dismiss();
       }
@@ -140,26 +172,46 @@ export class ClienteViewPage implements OnInit {
         disponibilidades: this.cliente.disponibilidades,
         urlImagenPerfil: this.cliente.urlImagenPerfil
       });
+
       this.cliente.contactos.forEach(contacto => {
-        console.log(contacto);
+        //console.log(contacto);
         const controls = this.clienteForm.controls.contactos as FormArray;
         controls.push(
           this.formBuilder.group({
-            contactoNombre: [contacto.nombre, [Validators.required]]
+            contactoNombre: [contacto.nombre, [Validators.required]],
+            contactoApellido: [contacto.apellido, [Validators.required]],
+            contactoTelefono: [contacto.telefonos[0].telefono, [Validators.required]],
+            contactoEmail: [contacto.emails[0].direccion, [Validators.required]],
           })
         );
       });
+
       this.clienteForm.disable();
+
       this.loading.dismiss();
     });
+  }
+
+  obtenerDisponibilidadForm() {
+    //const arrays = [];
+    //for (let i = 0; i < 7; i++) {
+    //arrays.push(
+    return this.formBuilder.group({
+      disponibilidadSeleccionado: ['', [Validators.required]],
+      disponibilidadHoraApertura: ['', [Validators.required]],
+      disponibilidadHoraCierre: ['', [Validators.required]],
+    });
+    //);}
+    //console.log(arrays)
+    //return arrays;
   }
 
   obtenerContactoForm() {
     return this.formBuilder.group({
       contactoNombre: ['', [Validators.required]],
-      /* apellido: string,
-      emails: Email[],
-      telefonos: Telefono[] */
+      contactoApellido: ['', [Validators.required]],
+      contactoEmail: ['', [Validators.required]],
+      contactoTelefono: ['', [Validators.required]],
     });
   }
 
@@ -183,7 +235,7 @@ export class ClienteViewPage implements OnInit {
     } catch (error) {
       console.log("Ha ocurrido un error cargando el cliente, reintente.")
     }
-
+  
     if (this.editMode) { */
 
   //Habilito las propiedades para editar en el formulario

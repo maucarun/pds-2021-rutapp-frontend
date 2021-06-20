@@ -1,5 +1,5 @@
 <ion-list>
-  <ion-list-header>Seleccione estado</ion-list-header>
+  <ion-list-header><strong>Seleccione estado</strong></ion-list-header>
   <ion-item *ngFor="let estado of estados" button (click)="seleccionar(estado)">{{estado}}</ion-item>
   <ion-item button (click)="cancelar()">Todos</ion-item>
 </ion-list>

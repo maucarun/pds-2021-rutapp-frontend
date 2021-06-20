@@ -43,7 +43,7 @@ const disponibilidad1 = {
     idDisponibilidad: 1,
     diaSemana: {
         id_dia_semana: 1,
-        dia_semana: 'Lunes',
+        diaSemana: 'Lunes',
     },
     hora_apertura: '9',
     hora_cierre: '18'
@@ -53,7 +53,7 @@ const disponibilidad2 = {
     idDisponibilidad: 2,
     diaSemana: {
         id_dia_semana: 2,
-        dia_semana: 'Martes',
+        diaSemana: 'Martes',
     },
     hora_apertura: '9',
     hora_cierre: '18'
@@ -148,7 +148,7 @@ const disponibilidad3 = {
     idDisponibilidad: 3,
     diaSemana: {
         id_dia_semana: 1,
-        dia_semana: 'Lunes',
+        diaSemana: 'Lunes',
     },
     hora_apertura: '9',
     hora_cierre: '18'
@@ -158,7 +158,7 @@ const disponibilidad4 = {
     idDisponibilidad: 4,
     diaSemana: {
         id_dia_semana: 2,
-        dia_semana: 'Martes',
+        diaSemana: 'Martes',
     },
     hora_apertura: '9',
     hora_cierre: '18'
@@ -254,7 +254,7 @@ const disponibilidad5 = {
     idDisponibilidad: 5,
     diaSemana: {
         id_dia_semana: 1,
-        dia_semana: 'Lunes',
+        diaSemana: 'Lunes',
     },
     hora_apertura: '9',
     hora_cierre: '18'
@@ -264,7 +264,7 @@ const disponibilidad6 = {
     idDisponibilidad: 6,
     diaSemana: {
         id_dia_semana: 2,
-        dia_semana: 'Martes',
+        diaSemana: 'Martes',
     },
     hora_apertura: '9',
     hora_cierre: '20'

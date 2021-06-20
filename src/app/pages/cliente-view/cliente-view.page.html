@@ -41,7 +41,8 @@
         </ion-item>
 
         <ion-item>
-          <ion-input formControlName="calle" size="auto" class="search-input" type="text" name="calle" placeholder="Calle">
+          <ion-input formControlName="calle" size="auto" class="search-input" type="text" name="calle"
+            placeholder="Calle">
           </ion-input>
           <ion-input formControlName="altura" type="text" name="altura" placeholder="Altura"></ion-input>
         </ion-item>
@@ -57,19 +58,31 @@
           </agm-map>
         </ion-item> -->
 
-        <div class="" formArrayName="contactos">
-          <ion-button class="btn btn-secondary mr-2" type="button" (click)="addContactoFormRow($event)">Agregar Contacto
-          </ion-button>
-          <div class="p-5" *ngFor="let contacto of clienteForm.get('contactos')['controls']; let i = index">
-            <div [formGroupName]="i" class="">
-              <ion-item>
-                <ion-input placeholder="Contacto" type="text" required formControlName="contactoNombre"></ion-input>
+        <div formArrayName="contactos">
+          <ion-item lines="none">
+            <ion-label>Contactos</ion-label>
+            <ion-button *ngIf="!viewMode" type="button" (click)="addContactoFormRow($event)" slot="end" fill="clear">
+              <ion-icon name="add-circle"></ion-icon>
+            </ion-button>
+          </ion-item>
+          <div *ngFor="let contacto of clienteForm.get('contactos')['controls']; let i = index">
+            <div [formGroupName]="i">
+              <ion-item-group>
+                <ion-item lines="none" style="vertical-align: middle;" class="ion-text-center">
+                  <ion-label>Contacto N°{{i+1}}</ion-label>
+                  <ion-button *ngIf="!viewMode" fill="clear" color="danger" slot="end"
+                    (click)="removeContactoFormRow(i)">
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </ion-button>
+                </ion-item>
+                <ion-input placeholder="Nombre" type="text" required formControlName="contactoNombre"></ion-input>
+                <ion-input placeholder="Apellido" type="text" required formControlName="contactoApellido"></ion-input>
+                <ion-input placeholder="Teléfono" type="text" required formControlName="contactoTelefono"></ion-input>
+                <ion-input placeholder="Email" type="email" required formControlName="contactoEmail">
+                </ion-input>
                 <!-- <ion-checkbox slot="start" placeholder="Correcta" checked="false" formControlName="correcta">
                 </ion-checkbox> -->
-                <ion-button (click)="removeContactoFormRow(i)" class="btn btn-link p-0">
-                  <ion-icon name="trash-outline"></ion-icon>
-                </ion-button>
-              </ion-item>
+              </ion-item-group>
               <!--
               <div *ngFor="let error of errorMessages.opciones">
                 <ng-container *ngIf="i.opcion.hasError(error.type) && (i.opcion.dirty || i.opcion.touched)">
@@ -80,6 +93,41 @@
             </div>
           </div>
         </div>
+
+        <ion-list formArrayName="disponibilidades">
+
+          <ion-item *ngFor="let disponibilidad of clienteForm.get('disponibilidades')['controls']; let i = index"
+            style="width: 100%;" lines="none">
+            <ion-grid [formGroupName]="i">
+              <ion-row class="ion-align-items-center">
+
+                <ion-col size="1">
+                  <ion-checkbox formControlName="disponibilidadSeleccionado"></ion-checkbox>
+                  <!-- <ion-input required="true" type="number" placeholder="Cant." [min]="1" [(ngModel)]="pr.cantidad"
+                    (ionChange)="calcularTotal()">
+                  </ion-input> -->
+                </ion-col>
+
+                <ion-col size="5">
+                  <!-- <ion-label>Lunes</ion-label> -->
+                  <!-- <ion-label formControlName="disponibilidadDiaSemana">#</ion-label> -->
+                  <ion-input formControlName="disponibilidadDiaSemana" disabled="true"></ion-input>
+                </ion-col>
+
+                <ion-col size="3">
+                  <ion-datetime formControlName="disponibilidadHoraApertura" displayFormat="HH:mm"></ion-datetime>
+                </ion-col>
+
+                <ion-col size="3">
+                  <ion-datetime formControlName="disponibilidadHoraCierre" displayFormat="HH:mm"></ion-datetime>
+                </ion-col>
+
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+
+
+        </ion-list>
 
 
 
