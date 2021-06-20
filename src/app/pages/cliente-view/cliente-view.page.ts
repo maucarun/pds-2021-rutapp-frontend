@@ -76,6 +76,7 @@ export class ClienteViewPage implements OnInit {
   ) { }
 
   async ngOnInit() {
+    this.loading.present();//si la carga es demasiado rápida, eliminarlo
     const user = this.authService.getUser();
     this.user = JSON.parse(user);
 
@@ -88,8 +89,7 @@ export class ClienteViewPage implements OnInit {
       cuit: ['', [Validators.required]],
       observaciones: ['', [Validators.required]],
       promedio_espera: ['', [Validators.required]],
-      //contactos: ['', [Validators.required]],
-      contactos: this.formBuilder.array([this.obtenerContactoForm()])
+      contactos: this.formBuilder.array([])
     });
     console.log(this.clienteForm);
 
@@ -116,8 +116,9 @@ export class ClienteViewPage implements OnInit {
           direccion: {} as Direccion,
           disponibilidades: {} as Disponibilidad[],
           contactos: {} as Contacto[],
-          urlImagenPerfil: ''
+          urlImagenPerfil: '',
         };
+
         return this.loading.dismiss();
       }
 
@@ -137,8 +138,6 @@ export class ClienteViewPage implements OnInit {
         localidad: this.cliente.direccion.localidad,
         provincia: this.cliente.direccion.provincia,
         disponibilidades: this.cliente.disponibilidades,
-        //contactos: this.cliente.contactos,
-        //contactoNombre: this.cliente.contactos[0].nombre,
         urlImagenPerfil: this.cliente.urlImagenPerfil
       });
       this.cliente.contactos.forEach(contacto => {
