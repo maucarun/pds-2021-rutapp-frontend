@@ -245,13 +245,13 @@
 
       <ion-fab *ngIf="remito.estado.nombre === 'Pendiente'" vertical="bottom" horizontal="start" slot="fixed">
         <ion-fab-button color="warning" (click)="editarRemito()">
-          <ion-icon name="create"></ion-icon>
+          <ion-icon name="create-outline"></ion-icon>
         </ion-fab-button>
       </ion-fab>
 
       <ion-fab *ngIf="remito.estado.nombre === 'Pendiente'" vertical="bottom" horizontal="end" slot="fixed">
         <ion-fab-button color="danger" (click)="borrarRemito()">
-          <ion-icon name="trash"></ion-icon>
+          <ion-icon name="trash-outline"></ion-icon>
         </ion-fab-button>
       </ion-fab>
 
