@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
@@ -5,7 +6,11 @@ import { Cliente } from 'src/app/models/cliente.models';
 import { ClienteService } from 'src/app/services/cliente.service';
 import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Direccion } from 'src/app/models/direccion.models';
+import { Disponibilidad } from 'src/app/models/disponibilidad.models';
+import { Contacto } from 'src/app/models/contacto.models';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-cliente-view',
@@ -15,16 +20,16 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 export class ClienteViewPage implements OnInit {
   lat = -34.5770106;
   lng = -58.5406398;
- 
+
   clienteForm: FormGroup;
   clienteSubmit: Cliente;
   idCliente: string;
   cliente: Cliente;
   user: Usuario;
 
-  viewMode = false;
-  editMode = false;
-  createMode = false;
+  viewMode = true;
+  /* editMode = false;
+  createMode = false; */
 
   get nombre() {
     return this.clienteForm.get('nombre');
@@ -33,7 +38,7 @@ export class ClienteViewPage implements OnInit {
   get calle() {
     return this.clienteForm.get('calle');
   }
-  
+
   get altura() {
     return this.clienteForm.get('altura');
   }
@@ -42,27 +47,32 @@ export class ClienteViewPage implements OnInit {
     return this.clienteForm.get('localidad');
   }
 
+  get contactos() {
+    return this.clienteForm.get('contactos');
+  }
+
   public errorMessages = {
     nombre: [
-      { type: 'required', message: 'El nombre es requerido'}
+      { type: 'required', message: 'El nombre es requerido' }
     ],
     calle: [
-      { type: 'required', message: 'La calle es requerida'}
+      { type: 'required', message: 'La calle es requerida' }
     ],
     altura: [
-      { type: 'required', message: 'La altura es requerida'}
+      { type: 'required', message: 'La altura es requerida' }
     ],
     localidad: [
-      { type: 'required', message: 'La localidad es requerida'}
+      { type: 'required', message: 'La localidad es requerida' }
     ]
   };
   constructor(
     private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private clienteSev: ClienteService,
+    private clienteService: ClienteService,
     private authService: AuthenticationService,
     private alertCtrl: AlertController,
+    public loading: LoadingService,
   ) { }
 
   async ngOnInit() {
@@ -73,49 +83,133 @@ export class ClienteViewPage implements OnInit {
       nombre: ['', [Validators.required]],
       calle: ['', [Validators.required]],
       altura: ['', [Validators.required]],
-      localidad: ['', [Validators.required]]
+      localidad: ['', [Validators.required]],
+      provincia: ['', [Validators.required]],
+      cuit: ['', [Validators.required]],
+      observaciones: ['', [Validators.required]],
+      promedio_espera: ['', [Validators.required]],
+      //contactos: ['', [Validators.required]],
+      contactos: this.formBuilder.array([this.obtenerContactoForm()])
     });
     console.log(this.clienteForm);
 
     /* Verificando si la página tiene id */
 
     this.activatedRoute.paramMap.subscribe(async paramMap => {
-      this.idCliente = paramMap.get('idCliente');
-      this.editMode = this.router.url.includes('/clientes/editar/');
+      this.idCliente = paramMap.get('id');
 
-      if (this.idCliente) {
-        /* Como tiene id, completo el formulario con los datos del BE */
-        try {
-          this.clienteSubmit = await this.clienteSev.get(this.user.idUsuario, this.idCliente);
-        } catch (error) {
-          console.log("Ha ocurrido un error cargando el cliente, reintente.")
-        }
+      //this.editMode = this.router.url.includes('/clientes/editar/');
 
-        if (this.editMode) {
+      if (this.idCliente === 'nuevo') {
+        this.viewMode = false;
 
-          //Habilito las propiedades para editar en el formulario
-          console.log('Como está en modo edición, completo el formulario con los datos del BE ');
-          this.cambiarWebEstado(false, true, false);
-          // this.clienteForm.patchValue(this.clienteSubmit)
-          /* El patch value solo se puede usar si son las mismas propiedades del objeto */
-          this.calle.setValue(this.clienteSubmit.direccion.calle)
-          console.log(this.clienteSubmit);
-        } else {
+        console.log('entramos al cliente nuevo');
 
-          //Habilito las propiedades ver en el formulario
-          console.log('Como está en modo vista, completo el formulario con los datos del BE ');
-          this.cambiarWebEstado(true, false, false);
-          this.cliente = await this.clienteSev.get(this.user.idUsuario, this.idCliente);
-          console.log(this.cliente);
-        }
-      } else {
-
-        //Habilito las propiedades para crear en el formulario
-        console.log('Como está en modo creación, dejo el formulario vacío');
-        this.cambiarWebEstado(false, false, true);
+        this.cliente = {
+          idCliente: 0,
+          nombre: '',
+          observaciones: '',
+          cuit: '',
+          promedio_espera: 0,
+          activo: true,
+          propietario: this.user,
+          direccion: {} as Direccion,
+          disponibilidades: {} as Disponibilidad[],
+          contactos: {} as Contacto[],
+          urlImagenPerfil: ''
+        };
+        return this.loading.dismiss();
       }
+
+      this.cliente = await this.clienteService.get(this.user.idUsuario, this.idCliente);
+
+      console.log(this.cliente);
+
+      this.clienteForm.patchValue({
+        nombre: this.cliente.nombre,
+        observaciones: this.cliente.observaciones,
+        cuit: this.cliente.cuit,
+        promedio_espera: this.cliente.promedio_espera,
+        activo: this.cliente.activo,
+        propietario: this.user,
+        calle: this.cliente.direccion.calle,
+        altura: this.cliente.direccion.altura,
+        localidad: this.cliente.direccion.localidad,
+        provincia: this.cliente.direccion.provincia,
+        disponibilidades: this.cliente.disponibilidades,
+        //contactos: this.cliente.contactos,
+        //contactoNombre: this.cliente.contactos[0].nombre,
+        urlImagenPerfil: this.cliente.urlImagenPerfil
+      });
+      this.cliente.contactos.forEach(contacto => {
+        console.log(contacto);
+        const controls = this.clienteForm.controls.contactos as FormArray;
+        controls.push(
+          this.formBuilder.group({
+            contactoNombre: [contacto.nombre, [Validators.required]]
+          })
+        );
+      });
+      this.clienteForm.disable();
+      this.loading.dismiss();
     });
   }
+
+  obtenerContactoForm() {
+    return this.formBuilder.group({
+      contactoNombre: ['', [Validators.required]],
+      /* apellido: string,
+      emails: Email[],
+      telefonos: Telefono[] */
+    });
+  }
+
+  addContactoFormRow(e: any) {
+    e.preventDefault();
+    const controls = this.clienteForm.controls.contactos as FormArray;
+    controls.push(this.obtenerContactoForm());
+  }
+
+  removeContactoFormRow(i: number) {
+    const controls = this.clienteForm.controls.contactos as FormArray;
+    if (window.confirm('¿Está seguro que desea borrar esta contacto?')) {
+      controls.removeAt(i);
+    }
+  }
+
+
+  /* Como tiene id, completo el formulario con los datos del BE */
+  /*   try {
+      this.clienteSubmit = await this.clienteSev.get(this.user.idUsuario, this.idCliente);
+    } catch (error) {
+      console.log("Ha ocurrido un error cargando el cliente, reintente.")
+    }
+
+    if (this.editMode) { */
+
+  //Habilito las propiedades para editar en el formulario
+  /*        console.log('Como está en modo edición, completo el formulario con los datos del BE ');
+         this.cambiarWebEstado(false, true, false); */
+  // this.clienteForm.patchValue(this.clienteSubmit)
+  /* El patch value solo se puede usar si son las mismas propiedades del objeto */
+  /*         this.calle.setValue(this.clienteSubmit.direccion.calle)
+          console.log(this.clienteSubmit);
+        } else { */
+
+  //Habilito las propiedades ver en el formulario
+  /*      console.log('Como está en modo vista, completo el formulario con los datos del BE ');
+       this.cambiarWebEstado(true, false, false);
+       this.cliente = await this.clienteSev.get(this.user.idUsuario, this.idCliente);
+       console.log(this.cliente);
+     }
+   } else { */
+
+  //Habilito las propiedades para crear en el formulario
+  //console.log('Como está en modo creación, dejo el formulario vacío');
+  //this.cambiarWebEstado(false, false, true);
+  /*    }
+     }); */
+  //}
 
   // async ionViewWillEnter() {
   //   let user = this.authService.getUser()
@@ -152,11 +246,11 @@ export class ClienteViewPage implements OnInit {
     await msjConfirmacion.present();
   }
 
-  cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
-    this.viewMode = view;
-    this.editMode = edit;
-    this.createMode = create;
-  }
+  /*  cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
+     this.viewMode = view;
+     this.editMode = edit;
+     this.createMode = create;
+   } */
 
   async onSubmit(form: FormGroup, e: any) {
     // e.preventDefault();

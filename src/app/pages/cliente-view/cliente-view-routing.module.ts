@@ -7,10 +7,6 @@ const routes: Routes = [
   {
     path: '',
     component: ClienteViewPage
-  },
-  {
-    path: ':id',
-    component: ClienteViewPage
   }
 ];
 
@@ -18,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ClienteViewPageRoutingModule {}
+export class ClienteViewPageRoutingModule { }

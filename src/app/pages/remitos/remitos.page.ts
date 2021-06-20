@@ -11,7 +11,7 @@ import { PopoverComponent } from 'src/app/component/popover/popover.component';
 @Component({
   selector: 'app-remitos',
   templateUrl: './remitos.page.html',
-  styleUrls: ['./remitos.page.scss'],
+  styleUrls: ['./remitos.page.scss', './../../app.component.scss'],
 })
 export class RemitosPage {
 
@@ -35,6 +35,7 @@ export class RemitosPage {
   async ionViewWillEnter() {
     const user = await this.authService.getUser();
     this.user = JSON.parse(user);
+    this.buscarRemito = '';
 
     this.remitoService.getAll(this.user.idUsuario).then(
       (data: Remito[]) => this.remitos = data

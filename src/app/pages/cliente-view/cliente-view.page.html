@@ -1,4 +1,4 @@
-<div class="ion-page" id="main-content">
+<div *ngIf="!!cliente" class="ion-page" id="main-content">
 
   <ion-header [translucent]="true">
     <ion-toolbar color="secondary">
@@ -8,51 +8,112 @@
       <ion-buttons slot="end">
         <ion-menu-button color="light"></ion-menu-button>
       </ion-buttons>
+      <ion-title> Cliente </ion-title>
+      <!-- 
       <ion-title *ngIf="viewMode && cliente!!">{{ cliente.nombre }}</ion-title>
       <ion-title *ngIf="editMode">Editar Cliente</ion-title>
-      <ion-title *ngIf="createMode">Crear Cliente</ion-title>
+      <ion-title *ngIf="createMode">Crear Cliente</ion-title> -->
     </ion-toolbar>
   </ion-header>
 
   <ion-content>
 
-    <ion-item id="formCliente" *ngIf="createMode">
+    <!-- <ion-item id="formCliente" *ngIf="createMode"> -->
 
-      <form [formGroup]="clienteForm" (ngSubmit)="onSubmit(clienteForm,$event)">
-        <div class="buscador">
-          <ion-item color="secondary">
-            <ion-input formControlName="nombre" type="text" name="nombre" placeholder="Nombre"></ion-input>
-          </ion-item>
-          <ion-item color="secondary">
-            <ion-input formControlName="calle" class="search-input" type="text" name="calle"
-              placeholder="Calle"></ion-input>
-          </ion-item>
-          <ion-item color="secondary">
-            <ion-input formControlName="altura" type="text" name="altura" placeholder="Altura"></ion-input>
-          </ion-item>
-          <ion-item color="secondary">
-            <ion-input formControlName="localidad" type="text" name="localidad" placeholder="Localidad"></ion-input>
-          </ion-item>
-          <ion-item color="secondary">
-            <agm-map [zoom]="15" [latitude]="lat" [longitude]="lng">
-              <agm-marker  [latitude]="lat" [longitude]="lng"></agm-marker>
-            </agm-map>
-          </ion-item>
+    <form [formGroup]="clienteForm" (ngSubmit)="onSubmit(clienteForm,$event)">
+      <div class="buscador">
 
-          <div *ngFor="let error of errorMessages.cliente">
-            <ng-container *ngIf="cliente.hasError(error.type) && (cliente.dirty || cliente.touched)">
-              <small class="error-message">{{ error.message }}</small>
-            </ng-container>
+        <ion-item>
+          <ion-input formControlName="nombre" type="text" name="nombre" placeholder="Nombre">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input formControlName="cuit" type="text" name="cuit" placeholder="Cuit">
+          </ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Promedio de espera</ion-label>
+          <ion-datetime formControlName="promedio_espera" name="promedio_espera" displayFormat="HH:mm"></ion-datetime>
+        </ion-item>
+        <ion-item>
+          <ion-input formControlName="observaciones" type="text" name="observaciones" placeholder="Observaciones">
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input formControlName="calle" size="auto" class="search-input" type="text" name="calle" placeholder="Calle">
+          </ion-input>
+          <ion-input formControlName="altura" type="text" name="altura" placeholder="Altura"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input formControlName="localidad" type="text" name="localidad" placeholder="Localidad"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input formControlName="provincia" type="text" name="provincia" placeholder="Provincia"></ion-input>
+        </ion-item>
+        <!--  <ion-item>
+          <agm-map [zoom]="15" [latitude]="lat" [longitude]="lng">
+            <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
+          </agm-map>
+        </ion-item> -->
+
+        <div class="" formArrayName="contactos">
+          <ion-button class="btn btn-secondary mr-2" type="button" (click)="addContactoFormRow($event)">Agregar Contacto
+          </ion-button>
+          <div class="p-5" *ngFor="let contacto of clienteForm.get('contactos')['controls']; let i = index">
+            <div [formGroupName]="i" class="">
+              <ion-item>
+                <ion-input placeholder="Contacto" type="text" required formControlName="contactoNombre"></ion-input>
+                <!-- <ion-checkbox slot="start" placeholder="Correcta" checked="false" formControlName="correcta">
+                </ion-checkbox> -->
+                <ion-button (click)="removeContactoFormRow(i)" class="btn btn-link p-0">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+              </ion-item>
+              <!--
+              <div *ngFor="let error of errorMessages.opciones">
+                <ng-container *ngIf="i.opcion.hasError(error.type) && (i.opcion.dirty || i.opcion.touched)">
+                  <small class="error-message">{{ error.message }}</small>
+                </ng-container>
+              </div>
+              -->
+            </div>
           </div>
         </div>
-        <ion-item>
-          <ion-button class="btn btn-primary" type="submit" [disabled]="clienteForm.invalid">Guardar</ion-button>
+
+
+
+        <!-- <ion-item *ngFor="let contacto of cliente.contactos; let idx = index">
+          <ion-label color="primary">{{cliente.contacto.nombre}}{{idx+1}}</ion-label>
+          <ion-input type="text" text-right [(ngModel)]="cliente.contactos[idx].nombre"></ion-input>
+          <ion-input type="text" text-right [(ngModel)]="cliente.contactos[idx].apellido"></ion-input>
         </ion-item>
-      </form>
+        <ion-button (click)="Add()">Add More</ion-button>
+        <ion-button full (click)="goTo()">let's go</ion-button>
 
-    </ion-item>
+        <ion-card *ngIf="data">
+          <ion-item *ngFor="let contacto of cliente.contactos">
+            <div class="card-title">{{contacto.nombre}}</div>
+          </ion-item>
+        </ion-card> -->
 
-    <ion-item id="clienteView" *ngIf="viewMode && cliente!!">
+
+        <!-- <div *ngFor="let error of errorMessages.cliente">
+          <ng-container *ngIf="cliente.hasError(error.type) && (cliente.dirty || cliente.touched)">
+            <small class="error-message">{{ error.message }}</small>
+          </ng-container>
+        </div> -->
+
+      </div>
+
+      <!-- <ion-item>
+        <ion-button class="btn btn-primary" type="submit" [disabled]="clienteForm.invalid">Guardar</ion-button>
+      </ion-item> -->
+    </form>
+
+    <!--  </ion-item> -->
+
+    <!--  <ion-item id="clienteView" *ngIf="viewMode && cliente!!">
       <ion-grid>
         <ion-row>
           <ion-col>
@@ -105,16 +166,16 @@
           <ion-icon name="trash"></ion-icon>
         </ion-fab-button>
       </ion-fab>
-    </ion-item>
+    </ion-item> -->
 
   </ion-content>
 
 
-  <ion-footer>
+  <!--  <ion-footer>
     <ion-toolbar color="light">
       <ion-buttons color="light" slot="start">
         <a class="waves-effect waves-light btn-small">button</a>
       </ion-buttons>
     </ion-toolbar>
-  </ion-footer>
+  </ion-footer> -->
 </div>

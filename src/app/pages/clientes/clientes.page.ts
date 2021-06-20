@@ -10,12 +10,14 @@ import { AvatarService } from 'src/app/services/avatar.service';
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.page.html',
-  styleUrls: ['./clientes.page.scss'],
+  styleUrls: ['./clientes.page.scss', './../../app.component.scss'],
 })
 export class ClientesPage {
 
   clientes: Cliente[];
+  clientesBackup: Cliente[];
   user: Usuario;
+  buscarCliente: string;
 
   constructor(private clieServ: ClienteService,
     private router: Router,
@@ -32,18 +34,32 @@ export class ClientesPage {
   async ionViewWillEnter() {
     const user = await this.authService.getUser();
     this.user = JSON.parse(user);
+    this.buscarCliente = '';
 
     this.clieServ.getAll(this.user.idUsuario).then(
       (data: Cliente[]) => this.clientes = data
     ).then(
       () => {
-        for ( const cliente of this.clientes) {
+        for (const cliente of this.clientes) {
           cliente.urlImagenPerfil = this.avatarService.getAvatar(cliente.nombre);
         }
+        this.clientesBackup = this.clientes;
       }
     );
-    
+
     this.menu.enable(true);
+  }
+
+  async getClientesBusqueda(ev: any) {
+    this.clientes = await this.clientesBackup;
+
+    const val = ev.target.value;
+
+    if (val && val.trim() != '') {
+      this.clientes = this.clientes.filter((cliente) => {
+        return (cliente.nombre.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      });
+    }
   }
 
   agregarNuevoCliente() {

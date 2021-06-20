@@ -9,12 +9,12 @@ import { ClientesPageRoutingModule } from './clientes-routing.module';
 import { ClientesPage } from './clientes.page';
 
 @NgModule({
-  imports: [ 
-    CommonModule, 
+  imports: [
+    CommonModule,
     FormsModule,
     IonicModule,
     ClientesPageRoutingModule
   ],
   declarations: [ClientesPage]
 })
-export class ClientesPageModule {}
+export class ClientesPageModule { }

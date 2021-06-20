@@ -1,16 +1,23 @@
 <div class="ion-page" id="main-content">
-<ion-header [translucent]="true">
-  <ion-toolbar color="secondary">
-    <ion-buttons slot="start">
-      <ion-menu-button color="light"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Clientes</ion-title>
-  </ion-toolbar>
-</ion-header>
 
-<ion-content>
-  <ion-list id="inbox-list">
-      <ion-item *ngFor="let cliente of clientes" [routerLink]="['/clientes/',cliente.idCliente]" routerDirection="forward" >
+  <ion-header [translucent]="true">
+    <ion-toolbar color="secondary">
+      <ion-buttons slot="end">
+        <ion-menu-button autoHide="false" color="light"></ion-menu-button>
+      </ion-buttons>
+      <ion-title class="large-title">Clientes</ion-title>
+    </ion-toolbar>
+    <ion-toolbar color="secondary">
+      <ion-searchbar (ionInput)="getClientesBusqueda($event)" autocomplete="on" placeholder="Buscar Cliente"
+        color="primary" [(ngModel)]="buscarCliente">
+      </ion-searchbar>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list id="inbox-list">
+      <ion-item *ngFor="let cliente of clientes" [routerLink]="['/clientes/',cliente.idCliente]"
+        routerDirection="forward">
         <ion-avatar slot="start">
           <ion-img [src]="cliente.urlImagenPerfil"></ion-img>
         </ion-avatar>
@@ -24,17 +31,18 @@
           </ion-row>
           <ion-row>
             <ion-col>
-              <ion-text><small>{{cliente.direccion.calle}} {{cliente.direccion.altura}}, {{cliente.direccion.localidad}}</small></ion-text>
+              <ion-text><small>{{cliente.direccion.calle}} {{cliente.direccion.altura}},
+                  {{cliente.direccion.localidad}}</small></ion-text>
             </ion-col>
           </ion-row>
         </ion-grid>
       </ion-item>
-  </ion-list>
+    </ion-list>
 
-  <ion-fab vertical="bottom" horizontal="end"  slot="fixed">
-    <ion-fab-button color="primary" (click)="agregarNuevoCliente()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
-</ion-content>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button color="primary" (click)="agregarNuevoCliente()">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </ion-content>
 </div>
