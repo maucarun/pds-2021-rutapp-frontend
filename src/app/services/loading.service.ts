@@ -13,13 +13,13 @@ export class LoadingService {
   async present() {
     this.isLoading = true;
     return await this.loadingController.create({
-        message: 'Please wait...',
+        message: 'Cargando...',
       // duration: 5000,
     }).then(a => {
       a.present().then(() => {
         console.log('presented');
         if (!this.isLoading) {
-          a.dismiss().then(() => console.log('abort presenting'));
+          a.dismiss().then(() => console.log('Cerrando carga de datos'));
         }
       });
     });
