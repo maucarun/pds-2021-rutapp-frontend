@@ -9,7 +9,8 @@ import { ModalController } from '@ionic/angular';
 export class ModalPage implements OnInit {
 
   @Input() elementos: any;
-  @Input() elementosSeleccionados: any;
+
+  elementosSeleccionados: any;
 
   constructor(
     private modalController: ModalController,
@@ -21,11 +22,6 @@ export class ModalPage implements OnInit {
 
   async agregarPropSeleccionado() {
     this.elementos.forEach(e => e.seleccionado = false);
-    if (this.elementosSeleccionados !== undefined || this.elementosSeleccionados.length) {
-      this.elementosSeleccionados.forEach(e => e.seleccionado = true);
-      this.elementos.filter(e => this.elementosSeleccionados.some(es => es.idProducto === e.idProducto))
-      .forEach(e => e.seleccionado = true);
-    }
   }
 
   getSeleccionados() {

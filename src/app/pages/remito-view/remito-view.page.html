@@ -41,8 +41,8 @@
       <ion-item style="width: 100%;">
         <ion-label>Cliente</ion-label>
         <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
-        <ion-select required="true" interface="action-sheet" [selectedText]="remito.cliente.nombre" [(ngModel)]="remito.cliente"
-          placeholder="Seleccione el cliente" okText="Aceptar" cancelText="Cancelar">
+        <ion-select required="true" interface="action-sheet" [selectedText]="remito.cliente.nombre"
+          [(ngModel)]="remito.cliente" placeholder="Seleccione el cliente" okText="Aceptar" cancelText="Cancelar">
           <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
           <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }}
           </ion-select-option>
@@ -63,22 +63,49 @@
       </ion-item>
 
       <ion-list>
+
+        <ion-item>
+          <ion-grid>
+            <ion-row style="background-color: lightgrey;" class="ion-align-items-center">
+              <ion-col size="2">
+                <ion-text color="primary">Cant.</ion-text>
+              </ion-col>
+              <ion-col size="5">
+                <ion-text color="primary">Descripción</ion-text>
+              </ion-col>
+              <ion-col size="3">
+                <ion-text color="primary">% Desc.</ion-text>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+
         <ion-item *ngFor="let pr of remito.productosDelRemito" style="width: 100%;">
           <ion-grid>
             <ion-row class="ion-align-items-center">
+
+              <ion-col size="2">
+                <ion-input required="true" type="number" placeholder="Cant." [min]="1" [(ngModel)]="pr.cantidad"
+                  (ionChange)="calcularTotal()">
+                </ion-input>
+              </ion-col>
+
               <ion-col size="5">
                 <ion-label>{{ pr.producto.nombre }}</ion-label>
               </ion-col>
+
               <ion-col size="3">
-                <ion-input required="true" type="number" placeholder="Cant." min="1" [(ngModel)]="pr.cantidad"
-                  (change)="calcularTotal()">
+                <ion-input required="true" type="number" placeholder="% Desc." [min]="0" [max]="100"
+                  [(ngModel)]="pr.descuento" (ionChange)="calcularTotal()">
                 </ion-input>
               </ion-col>
-              <ion-col size="2">
-                <ion-button (click)="eliminarProducto(pr)" color="danger">
+
+              <ion-col class="ion-align-self-end" size="2">
+                <ion-button fill="clear" (click)="eliminarProducto(pr)" color="danger">
                   <ion-icon name="trash"></ion-icon>
                 </ion-button>
               </ion-col>
+
             </ion-row>
           </ion-grid>
         </ion-item>
@@ -118,7 +145,7 @@
 
 
     <ion-content id="remitoView" *ngIf="viewMode && remito!!">
-      <ion-grid>
+      <ion-grid style="margin-bottom: 50px">
 
         <ion-row>
           <ion-col>

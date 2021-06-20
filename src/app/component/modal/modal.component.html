@@ -1,7 +1,7 @@
 <ion-content padding>
   <ion-list>
     <ion-item *ngFor="let elemento of elementos; let i= index">
-      <ion-label>{{elemento.nombre}}</ion-label>
+      <ion-label>{{elemento.producto.nombre}}</ion-label>
       <ion-checkbox [(ngModel)]="elemento.seleccionado"></ion-checkbox>
     </ion-item>
   </ion-list>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { IdProductoRemito } from './idproductoremito.models';
 import { Producto } from './producto.models';
 import { Remito } from './remito.models';

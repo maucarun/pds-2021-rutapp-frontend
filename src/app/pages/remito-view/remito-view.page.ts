@@ -8,7 +8,6 @@ import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Cliente } from 'src/app/models/cliente.models';
 import { ClienteService } from 'src/app/services/cliente.service';
-import { Producto } from 'src/app/models/producto.models';
 import { ProductoService } from 'src/app/services/producto.service';
 import { ModalPage } from 'src/app/component/modal/modal.component';
 import { ProductoRemito } from 'src/app/models/productoRemito.models';
@@ -30,7 +29,7 @@ export class RemitoViewPage implements OnInit {
   /** Props de objetos necesarios */
   user: Usuario;
   clientes: Cliente[];
-  productos: Producto[];
+  prsDisponibles: ProductoRemito[];
 
   /** Props de vista */
   viewMode = false;
@@ -52,7 +51,7 @@ export class RemitoViewPage implements OnInit {
     const user = this.authService.getUser();
     this.user = JSON.parse(user);
     this.clientes = await this.clienteService.getAll(this.user.idUsuario);
-    this.productos = await this.productoService.getAll();
+    await this.convertirProductosEnPr();
 
     /* Verificando si la página tiene id */
     this.activatedRoute.paramMap.subscribe(async paramMap => {
@@ -75,7 +74,6 @@ export class RemitoViewPage implements OnInit {
           console.log('Como está en modo vista, completo el formulario con los datos del BE ');
           this.cambiarWebEstado(true, false, false);
           this.remito = await this.remitoService.get(this.idRemito);
-          // console.log(this.remito);
         }
       } else {
         console.log('Como está en modo creación, dejo el formulario vacío');
@@ -103,6 +101,20 @@ export class RemitoViewPage implements OnInit {
     });
   }
 
+  async convertirProductosEnPr() {
+    const productos = await this.productoService.getAll();
+    this.prsDisponibles = [];
+    productos.forEach(p => {
+      const productoDelRemito = {} as ProductoRemito; // Instancio un pr
+      productoDelRemito.producto = p;
+      productoDelRemito.precio_unitario = p.precio_unitario;
+      productoDelRemito.cantidad = 1;
+      productoDelRemito.descuento = 0;
+
+      this.prsDisponibles.push(productoDelRemito);
+    });
+  }
+
   async borrarRemito() {
     const msjConfirmacion = await this.alertCtrl.create({
       header: 'Confirme',
@@ -115,7 +127,6 @@ export class RemitoViewPage implements OnInit {
         {
           text: 'Borrar',
           handler: async () => {
-            //  this.remitoService.delete(this.remito.id);
             await this.remitoService.cancelarRemito(this.idRemito);
             this.router.navigate(['/remitos']);
           }
@@ -132,7 +143,7 @@ export class RemitoViewPage implements OnInit {
 
   calcularTotal() {
     this.remito.cantidadDeItems = this.remito.productosDelRemito.length;
-    this.remito.total = this.remito.productosDelRemito.reduce((total, pr) => total + (pr.precio_unitario * pr.cantidad), 0);
+    this.remito.total = this.remito.productosDelRemito.reduce((total, pr) => total + (pr.precio_unitario * pr.cantidad * (1 - pr.descuento / 100)), 0);
   }
 
   cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
@@ -142,39 +153,23 @@ export class RemitoViewPage implements OnInit {
   }
 
   async presentModal() {
-    /* Transformo la lista de PRs ya seleccionados en productos seleccionados */
-    const productosSeleccionados: Producto[] = [];
-    this.remito.productosDelRemito.forEach(pr => {
-      if (pr.producto !== undefined) { productosSeleccionados.push(pr.producto); }
-    });
-    console.log(productosSeleccionados);
+    /* Filtramos los productos del back no presentes en el remito */
+
+    const elementosSinSeleccionar = this.prsDisponibles.filter(p => !this.remito.productosDelRemito.some(pr => pr.producto.idProducto === p.producto.idProducto))
 
     const modal = await this.modalController.create({
       component: ModalPage,
       componentProps: {
-        elementos: this.productos,
-        elementosSeleccionados: productosSeleccionados
+        elementos: elementosSinSeleccionar
       }
     });
     await modal.present();
     await modal.onWillDismiss().then((respuestaModal) => {
       console.log(respuestaModal);
+      console.log(this.remito.productosDelRemito);
       if (respuestaModal.role !== 'cancelar' && respuestaModal.role !== 'backdrop') {
-        // this.remito.productosDelRemito = respuestaModal.data;
-
-        this.remito.productosDelRemito = []; // Vacio la lista de pr porque solamente voy a hacer push
         /* Quiero setear cada uno de los productos en el remito.ProductosDelRemito */
-        respuestaModal.data.forEach(producto => {
-          const productoDelRemito = {} as ProductoRemito; // Instancio un pr
-          productoDelRemito.producto = producto;
-          // productoDelRemito.remito.idRemito = this.remito.idRemito;
-          productoDelRemito.precio_unitario = producto.precio_unitario;
-
-          this.remito.productosDelRemito.push(productoDelRemito);
-        });
-        this.remito.productosDelRemito.forEach(pr => {
-          if (pr.cantidad === undefined) { pr.cantidad = 1; }
-        });
+        respuestaModal.data.forEach(producto => this.remito.productosDelRemito.push(producto));
         this.calcularTotal();
         console.log(this.remito);
       }
