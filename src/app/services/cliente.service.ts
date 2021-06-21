@@ -52,4 +52,8 @@ export class ClienteService {
     });
     return await this.http.put<Cliente>(this.url, cliente, { headers }).toPromise()
   }
+
+  async delete(id: string) {
+    console.log("Eliminado el cliente id " + id);
+  }
 }

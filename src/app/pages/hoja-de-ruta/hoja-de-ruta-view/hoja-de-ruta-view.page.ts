@@ -5,9 +5,9 @@ import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RoutificService } from 'src/app/services/routific.service';
-import { HojaDeRuta } from 'src/app/models/hojaderuta.models';
 import { HojaDeRutaService } from 'src/app/services/hojaDeRuta.service';
 import { RutaDeNavegacion } from 'src/app/models/routific.models';
+import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
 
 declare var google: any
 

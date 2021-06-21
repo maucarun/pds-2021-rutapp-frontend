@@ -282,11 +282,33 @@ export class ClienteViewPage implements OnInit {
     controls.push(this.obtenerContactoForm());
   }
 
-  removeContactoFormRow(i: number) {
+  async removeContactoFormRow(i: number) {
     const controls = this.clienteForm.controls.contactos as FormArray;
-    if (window.confirm('¿Está seguro que desea borrar esta contacto?')) {
-      controls.removeAt(i);
-    }
+
+
+    const msjConfirmacion = await this.alertCtrl.create({
+      header: 'Confirme',
+      message: '¿Esta seguro de eliminar este contacto?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Borrar',
+          handler: async () => {
+            controls.removeAt(i);
+          }
+        }
+      ]
+    });
+    await msjConfirmacion.present();
+  }
+
+  async editarProducto() {
+    /** Habilito la edición de los campos */
+    this.viewMode = false;
+    this.clienteForm.enable();
   }
 
   async borrarCliente() {
@@ -300,9 +322,16 @@ export class ClienteViewPage implements OnInit {
         },
         {
           text: 'Borrar',
-          handler: () => {
-            //  this.clienteSev.delete(this.cliente.id);
-            this.router.navigate(['']);
+          handler: async () => {
+            await this.clienteService.delete(this.idCliente)
+              .then(() => {
+                this.toastService.presentToast('Eliminado el cliente ' + this.idCliente);
+                this.router.navigate(['clientes']);
+              })
+              .catch(err => {
+                console.log(err)
+                this.toastService.presentToast(err.error.message);
+              });
           }
         }
       ]
@@ -314,39 +343,37 @@ export class ClienteViewPage implements OnInit {
     e.preventDefault();
     //console.log(form);
     const dispSeleccionadas = this.clienteForm.get('disponibilidades').value;
-    const contactosAgregados = this.clienteForm.get('contactos').value;
     const disponibilidadesFiltradas = dispSeleccionadas.filter(dsp => dsp.disponibilidadSeleccionado == true);
+    const contactosAgregados = this.clienteForm.get('contactos').value;
     //console.log(contactosAgregados.length)
     if (disponibilidadesFiltradas.length < 1)
       this.toastService.presentToast('Debe seleccionar al menos una disponibilidad');
     else if (contactosAgregados.length < 1)
       this.toastService.presentToast('Debe añadir al menos un contacto');
     else {
-      disponibilidadesFiltradas.forEach(d => {
-        d.hora_apertura = this.formatearHora(d.hora_apertura);
-        d.hora_cierre = this.formatearHora(d.hora_cierre);
-        this.disponibilidadesNuevas.forEach(disp => {
-          if (d.diaSemana === disp.diaSemana.diaSemana) {
-            d.diaSemana = disp.diaSemana;
-          }
-        });
-      });
-      //console.log(this.cliente)
+      
+      /** Como el objeto cliente está vacío, tenemos que setetarle cada una de las propiedades del form */
       this.cliente.nombre = this.clienteForm.get('nombreCliente').value;
       this.cliente.observaciones = this.clienteForm.get('observaciones').value;
       this.cliente.cuit = this.clienteForm.get('cuit').value;
       this.cliente.promedio_espera = this.clienteForm.get('promedio_espera').value;
-      //this.cliente.activo = true
-      //this.cliente.propietario = this.user
       this.cliente.direccion.calle = this.clienteForm.get('calle').value;
       this.cliente.direccion.altura = this.clienteForm.get('altura').value;
       this.cliente.direccion.localidad = this.clienteForm.get('localidad').value;
       this.cliente.direccion.provincia = this.clienteForm.get('provincia').value;
+      this.cliente.disponibilidades = disponibilidadesFiltradas;
+      /**Deberiamos llamar al servicio de Google */
       this.cliente.direccion.latitud = 0.0;
       this.cliente.direccion.longitud = 0.0;
-      this.cliente.disponibilidades = disponibilidadesFiltradas;
+      
+      /** 
+       * Seteamos las props de contactos.
+       * Como el contacto por ahora tiene un solo telefono y un solo email
+       *  no hacemos un forEach para setear una lista de telefonos e emails
+       *  al contacto.
+       */
       this.cliente.contactos = [];
-      this.clienteForm.get('contactos').value.forEach(c => {
+      this.clienteForm.get('contactos').value.forEach(cf => {
         //const telefonos = {} as Telefono[];
         //const emails = {} as Email[];
         const contacto = {} as Contacto;
@@ -354,32 +381,81 @@ export class ClienteViewPage implements OnInit {
         contacto.emails = [];
         //c.telefonos.forEach(t => {
         const telefono = {} as Telefono;
-        telefono.telefono = c.telefono;
+        telefono.telefono = cf.telefono;
         //telefonos.push(telefono);
         //});
         //c.emails.forEach(em => {
         const email = {} as Email;
-        email.direccion = c.email;
+        email.direccion = cf.email;
         //emails.push(email);
         //});
-        contacto.nombre = c.nombre;
-        contacto.apellido = c.apellido;
+        contacto.nombre = cf.nombre;
+        contacto.apellido = cf.apellido;
         contacto.telefonos.push(telefono);
         contacto.emails.push(email);
         this.cliente.contactos.push(contacto);
       });
+      
       console.log(this.cliente);
+      
       try {
+        
         if (this.idCliente === 'nuevo') {
+          /** Seteamos las props de disponibilidades */
+          disponibilidadesFiltradas.forEach(d => {
+            d.hora_apertura = this.formatearHora(d.hora_apertura);
+            d.hora_cierre = this.formatearHora(d.hora_cierre);
+            /** Volvemos a transformar el dia de la semana en un objeto DiaSemana */
+            this.disponibilidadesNuevas.forEach(disp => {
+              if (d.diaSemana === disp.diaSemana.diaSemana) {
+                d.diaSemana = disp.diaSemana;
+              }
+            });
+          });
+
+          /** Como es un nuevo cliente hago el llamado al POST */
           await this.clienteService.create(this.cliente)
             .then(() => {
-              this.toastService.presentToast('Cliente creado');
+              this.toastService.presentToast('Cliente creado exitosamente!');
               this.router.navigate(['clientes']);
             })
             .catch(err => {
-              console.log(err)
+              console.log(err);
               this.toastService.presentToast(err.error.message);
+              this.clienteForm.disable();
             });
+        }
+        else {
+          
+          var idCliente = Number(this.idCliente) /** Transformo el id a number para comparar con el id que recibí del BE */
+          if (idCliente === this.cliente.idCliente) {
+            /** Seteamos las props de disponibilidades */
+            disponibilidadesFiltradas.forEach(d => {
+              d.hora_apertura = d.hora_apertura;
+              d.hora_cierre = d.hora_cierre;
+              /** Volvemos a transformar el dia de la semana en un objeto DiaSemana */
+              this.disponibilidadesNuevas.forEach(disp => {
+                if (d.diaSemana === disp.diaSemana.diaSemana) {
+                  d.diaSemana = disp.diaSemana;
+                }
+              });
+            });
+
+            /** Como estoy editando un cliente hago el llamado al PUT */
+            await this.clienteService.update(this.cliente)
+              .then(() => {
+                this.toastService.presentToast('Cliente editado exitosamente!');
+                this.router.navigate(['clientes']);
+              })
+              .catch(err => {
+                console.log(err);
+                this.toastService.presentToast(err.error.message);
+                this.clienteForm.disable();
+              });
+          } else {
+            this.toastService.presentToast('El id del cliente obtenido ' + this.cliente.idCliente + ' no coincide con el de la URL ' + idCliente)
+            this.clienteForm.disable();
+          }
         }
       }
       catch {

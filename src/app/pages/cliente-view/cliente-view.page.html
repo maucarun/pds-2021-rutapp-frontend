@@ -3,7 +3,7 @@
   <ion-header [translucent]="true">
     <ion-toolbar color="secondary">
       <ion-buttons slot="start">
-        <ion-back-button defaultHref=""></ion-back-button>
+        <ion-back-button defaultHref="clientes"></ion-back-button>
       </ion-buttons>
       <ion-buttons slot="end">
         <ion-menu-button color="light"></ion-menu-button>
@@ -164,7 +164,7 @@
       </div>
 
       <!-- <ion-fab vertical="bottom" horizontal="end" > -->
-      <ion-fab *ngIf="!viewMode" bottom rigth edge>
+      <ion-fab *ngIf="!viewMode && clienteForm.enabled" bottom rigth edge>
         <!-- <ion-button [disabled]="clienteForm.invalid" type="submit" color="warning"> -->
         <ion-button type="submit" color="warning">
           <ion-icon name="save-outline"></ion-icon>
@@ -175,62 +175,18 @@
       </ion-item> -->
     </form>
 
-    <!--  </ion-item> -->
+    <ion-fab *ngIf='viewMode' vertical="bottom" horizontal="start" slot="fixed">
+      <ion-fab-button  color="warning" (click)="editarProducto()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
 
-    <!--  <ion-item id="clienteView" *ngIf="viewMode && cliente!!">
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <small style="color:gray">Nombre</small>
-          </ion-col>
-        </ion-row>
-        <ion-row class="ion-margin-bottom">
-          <ion-col>
-            {{ cliente.nombre }}
-          </ion-col>
-        </ion-row>
+    <ion-fab *ngIf="viewMode" vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button color="danger" (click)="borrarCliente()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
 
-        <ion-row>
-          <ion-col>
-            <small style="color:gray">Calle</small>
-          </ion-col>
-        </ion-row>
-        <ion-row class="ion-margin-bottom">
-          <ion-col>
-            {{ cliente.direccion.calle }}
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>
-            <small style="color:gray">Altura</small>
-          </ion-col>
-        </ion-row>
-        <ion-row class="ion-margin-bottom">
-          <ion-col>
-            {{ cliente.direccion.altura }}
-          </ion-col>
-        </ion-row>
-
-        <ion-row>
-          <ion-col>
-            <small style="color:gray">Localidad</small>
-          </ion-col>
-        </ion-row>
-        <ion-row class="ion-margin-bottom">
-          <ion-col>
-            {{ cliente.direccion.localidad }}
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-
-
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button color="warning" (click)="borrarCliente()">
-          <ion-icon name="trash"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
-    </ion-item> -->
 
   </ion-content>
 
