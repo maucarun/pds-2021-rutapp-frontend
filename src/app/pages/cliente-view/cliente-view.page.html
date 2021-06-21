@@ -21,19 +21,21 @@
     <!-- <ion-item id="formCliente" *ngIf="createMode"> -->
 
     <form [formGroup]="clienteForm" (ngSubmit)="onSubmit(clienteForm,$event)">
-      <div class="buscador">
+      <div>
 
         <ion-item>
-          <ion-input formControlName="nombre" type="text" name="nombre" placeholder="Nombre">
+          <ion-input formControlName="nombre" maxlength="100" type="text" name="nombre" placeholder="Nombre">
           </ion-input>
         </ion-item>
+        <div *ngFor="let error of errorMessages.nombre">
+          <ng-container *ngIf="nombre.hasError(error.type) && (nombre.dirty || nombre.touched)">
+            <small class="error-message">{{ error.message }}</small>
+          </ng-container>
+        </div>
         <ion-item>
-          <ion-input formControlName="cuit" type="text" name="cuit" placeholder="Cuit">
-          </ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label>Promedio de espera</ion-label>
-          <ion-datetime formControlName="promedio_espera" name="promedio_espera" displayFormat="HH:mm"></ion-datetime>
+          <ion-input formControlName="cuit" maxlength="11" type="string" name="cuit" placeholder="CUIT"></ion-input>
+          <ion-datetime placeholder="Promedio de espera" style="width: 50%;" formControlName="promedio_espera"
+            name="promedio_espera" displayFormat="HH:mm"></ion-datetime>
         </ion-item>
         <ion-item>
           <ion-input formControlName="observaciones" type="text" name="observaciones" placeholder="Observaciones">
@@ -80,56 +82,61 @@
                 <ion-input placeholder="Teléfono" type="text" required formControlName="contactoTelefono"></ion-input>
                 <ion-input placeholder="Email" type="email" required formControlName="contactoEmail">
                 </ion-input>
-                <!-- <ion-checkbox slot="start" placeholder="Correcta" checked="false" formControlName="correcta">
-                </ion-checkbox> -->
               </ion-item-group>
-              <!--
-              <div *ngFor="let error of errorMessages.opciones">
-                <ng-container *ngIf="i.opcion.hasError(error.type) && (i.opcion.dirty || i.opcion.touched)">
-                  <small class="error-message">{{ error.message }}</small>
-                </ng-container>
-              </div>
-              -->
             </div>
+          </div>
+          <div *ngFor="let error of errorMessages.contacto">
+            <ng-container *ngIf="contacto.hasError(error.type) && (contacto.dirty || contacto.touched)">
+              <small class="error-message">{{ error.message }}</small>
+            </ng-container>
           </div>
         </div>
 
         <ion-list formArrayName="disponibilidades">
-
           <ion-item *ngFor="let disponibilidad of clienteForm.get('disponibilidades')['controls']; let i = index"
             style="width: 100%;" lines="none">
-            <ion-grid [formGroupName]="i">
+            <!-- <ion-grid [formGroupName]="i">
+               <ion-input formControlName="disponibilidadDiaSemana" readonly></ion-input> 
               <ion-row class="ion-align-items-center">
 
                 <ion-col size="1">
                   <ion-checkbox formControlName="disponibilidadSeleccionado"></ion-checkbox>
-                  <!-- <ion-input required="true" type="number" placeholder="Cant." [min]="1" [(ngModel)]="pr.cantidad"
-                    (ionChange)="calcularTotal()">
-                  </ion-input> -->
                 </ion-col>
 
                 <ion-col size="5">
-                  <!-- <ion-label>Lunes</ion-label> -->
-                  <!-- <ion-label formControlName="disponibilidadDiaSemana">#</ion-label> -->
-                  <ion-input formControlName="disponibilidadDiaSemana" disabled="true"></ion-input>
+                  <ion-input formControlName="disponibilidadDiaSemana" readonly></ion-input>
                 </ion-col>
 
                 <ion-col size="3">
-                  <ion-datetime formControlName="disponibilidadHoraApertura" displayFormat="HH:mm"></ion-datetime>
+                  <ion-datetime placeholder="Apert." formControlName="disponibilidadHoraApertura" displayFormat="HH:mm">
+                  </ion-datetime>
                 </ion-col>
 
                 <ion-col size="3">
-                  <ion-datetime formControlName="disponibilidadHoraCierre" displayFormat="HH:mm"></ion-datetime>
+                  <ion-datetime placeholder="Cierre" formControlName="disponibilidadHoraCierre" displayFormat="HH:mm">
+                  </ion-datetime>
                 </ion-col>
 
               </ion-row>
-            </ion-grid>
+            </ion-grid> -->
+            <div [formGroupName]="i">
+              <!-- <ion-input formControlName="disponibilidadDiaSemana" readonly></ion-input> -->
+              <ion-item style="width: 100%;">
+
+                <ion-checkbox style="width: 20px;" formControlName="disponibilidadSeleccionado"></ion-checkbox>
+
+                <ion-input style="width: 50%; margin-left: 20px;" formControlName="disponibilidadDiaSemana" readonly></ion-input>
+
+                <ion-datetime style="width: 25%;" placeholder="Apertura" formControlName="disponibilidadHoraApertura" displayFormat="HH:mm:ss">
+                </ion-datetime>
+
+                <ion-datetime style="width: 25%; margin-left: 20px;" placeholder="Cierre" formControlName="disponibilidadHoraCierre" displayFormat="HH:mm:ss">
+                </ion-datetime>
+
+              </ion-item>
+            </div>
           </ion-item>
-
-
         </ion-list>
-
-
 
         <!-- <ion-item *ngFor="let contacto of cliente.contactos; let idx = index">
           <ion-label color="primary">{{cliente.contacto.nombre}}{{idx+1}}</ion-label>
@@ -154,6 +161,13 @@
 
       </div>
 
+      <!-- <ion-fab vertical="bottom" horizontal="end" > -->
+      <ion-fab bottom rigth edge>
+        <!-- <ion-button [disabled]="clienteForm.invalid" type="submit" color="warning"> -->
+        <ion-button type="submit" color="warning">
+          <ion-icon name="save-outline"></ion-icon>
+        </ion-button>
+      </ion-fab>
       <!-- <ion-item>
         <ion-button class="btn btn-primary" type="submit" [disabled]="clienteForm.invalid">Guardar</ion-button>
       </ion-item> -->
