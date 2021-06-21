@@ -39,7 +39,12 @@ const routes: Routes = [
     path: 'remitos/:id',
     loadChildren: () => import('./pages/remito-view/remito-view.module').then(m => m.RemitoViewPageModule),
     //canLoad: [AuthGuard]
+  },
+  {
+    path: 'hojasderuta',
+    loadChildren: () => import('./pages/hoja-de-ruta/hoja-de-ruta.module').then( m => m.HojaDeRutaPageModule)
   }
+
 ];
 
 @NgModule({

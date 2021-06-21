@@ -1,0 +1,83 @@
+<div class="ion-page" id="main-content">
+
+  <ion-header [translucent]="true">
+    <ion-toolbar color="secondary">
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref=""></ion-back-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-menu-button color="light"></ion-menu-button>
+      </ion-buttons>
+      <ion-title *ngIf="viewMode && hoja!!">Hoja de ruta{{ hoja.id_hoja_de_ruta }}</ion-title>
+      <ion-title *ngIf="editMode">Editar Hoja de Ruta</ion-title>
+      <ion-title *ngIf="createMode">Crear Hoja de Ruta</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+
+    <ion-item id="formHoja" *ngIf="createMode">
+
+      <form [formGroup]="hojaForm" (ngSubmit)="onSubmit(hojaForm,$event)">
+
+      </form>
+
+    </ion-item>
+
+    <ion-item id="hojaView" *ngIf="viewMode && hoja!!">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <small style="color:gray">Numero</small>
+          </ion-col>
+          <ion-col size="6">
+            <small style="color:gray">Estado</small>
+          </ion-col>
+          <ion-col size="6">
+            {{ hoja.id_hoja_de_ruta }}
+          </ion-col>
+          <ion-col size="6">
+            {{ hoja.estado.nombre }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="rutaNavigation">
+          <ion-col>
+            <small style="color:gray">Próxima entrega</small>
+          </ion-col>
+        </ion-row>
+        <ion-row class="ion-margin-bottom" *ngIf="rutaNavigation">
+          <ion-col>
+            {{ proximaVisita }}
+          </ion-col>
+        </ion-row>
+
+        <ion-row class="ion-margin-bottom" [hidden]="!rutaNavigation">
+          <ion-col>
+            <div #map id="map"></div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+
+      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+        <ion-fab-button color="warning" (click)="borrarCliente()">
+          <ion-icon name="trash"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+    </ion-item>
+
+  </ion-content>
+
+
+  <ion-footer>
+    <ion-toolbar color="light">
+      <ion-buttons color="primary" *ngIf="!rutaNavigation">
+        <a  href="/hojasderuta" class="waves-effect waves-light btn-large">Volver</a>
+      </ion-buttons>
+      <ion-buttons color="primary" *ngIf="rutaNavigation">
+        <a id="btnnav" (click)="navegarClick()" class="waves-effect waves-light btn-large">Iniciar Navegación</a>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-footer>
+</div>
