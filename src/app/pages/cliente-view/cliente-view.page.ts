@@ -13,6 +13,8 @@ import { Disponibilidad } from 'src/app/models/disponibilidad.models';
 import { Contacto } from 'src/app/models/contacto.models';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { Telefono } from 'src/app/models/telefono.models';
+import { Email } from 'src/app/models/email.models';
 
 @Component({
   selector: 'app-cliente-view',
@@ -32,20 +34,20 @@ export class ClienteViewPage implements OnInit {
 
   viewMode = true;
 
-  get nombre() {
-    return this.clienteForm.get('nombre');
+  get nombreCliente() {
+    return this.clienteForm.get('nombreCliente');
   }
 
   get cuit() {
-    return this.clienteForm.get('cuit')
+    return this.clienteForm.get('cuit');
   }
 
   get promedio_espera() {
-    return this.clienteForm.get('promedio_espera')
+    return this.clienteForm.get('promedio_espera');
   }
 
   get observaciones() {
-    return this.clienteForm.get('observaciones')
+    return this.clienteForm.get('observaciones');
   }
 
   get calle() {
@@ -73,7 +75,7 @@ export class ClienteViewPage implements OnInit {
   }
 
   public errorMessages = {
-    nombre: [
+    nombreCliente: [
       { type: 'required', message: 'El nombre es requerido' }
     ],
     cuit: [
@@ -117,7 +119,7 @@ export class ClienteViewPage implements OnInit {
 
     /** Creando formulario con sus propiedades */
     this.clienteForm = this.formBuilder.group({
-      nombre: ['', [Validators.required]],
+      nombreCliente: ['', [Validators.required]],
       calle: ['', [Validators.required]],
       altura: ['', [Validators.required]],
       localidad: ['', [Validators.required]],
@@ -140,10 +142,9 @@ export class ClienteViewPage implements OnInit {
         this.viewMode = false;
         console.log('Solicitud de cliente nuevo');
 
-
         /** Inicializamos las propiedades del cliente */
         this.cliente = {
-          idCliente: 0,
+          idCliente: null,
           nombre: '',
           observaciones: '',
           cuit: '',
@@ -164,13 +165,13 @@ export class ClienteViewPage implements OnInit {
         this.disponibilidadesNuevas.forEach((d: any) => {
           console.log(d);
           const controls = this.clienteForm.controls.disponibilidades as FormArray;
-          console.log(d.diaSemana.diaSemana)
+          console.log(d.diaSemana.diaSemana);
           controls.push(
             this.formBuilder.group({
-              disponibilidadDiaSemana: [d.diaSemana.diaSemana],
+              diaSemana: [d.diaSemana.diaSemana],
               disponibilidadSeleccionado: [d.seleccionado, []],
-              disponibilidadHoraApertura: [d.hora_apertura, []],
-              disponibilidadHoraCierre: [d.hora_cierre, []],
+              hora_apertura: [d.hora_apertura, []],
+              hora_cierre: [d.hora_cierre, []],
             })
           );
         });
@@ -186,7 +187,7 @@ export class ClienteViewPage implements OnInit {
 
       /** Pegamos las props del cliente en el formulario */
       this.clienteForm.patchValue({
-        nombre: this.cliente.nombre,
+        nombreCliente: this.cliente.nombre,
         observaciones: this.cliente.observaciones,
         cuit: this.cliente.cuit,
         promedio_espera: this.cliente.promedio_espera,
@@ -206,10 +207,10 @@ export class ClienteViewPage implements OnInit {
         const controls = this.clienteForm.controls.contactos as FormArray;
         controls.push(
           this.formBuilder.group({
-            contactoNombre: [contacto.nombre, [Validators.required]],
-            contactoApellido: [contacto.apellido, [Validators.required]],
-            contactoTelefono: [contacto.telefonos[0].telefono, [Validators.required]],
-            contactoEmail: [contacto.emails[0].direccion, [Validators.required]],
+            nombre: [contacto.nombre, [Validators.required]],
+            apellido: [contacto.apellido, [Validators.required]],
+            telefono: [contacto.telefonos[0].telefono, [Validators.required]],
+            email: [contacto.emails[0].direccion, [Validators.required]],
           })
         );
       });
@@ -217,13 +218,13 @@ export class ClienteViewPage implements OnInit {
       /** Reemplazamos los dias de la semana con los datos del BE en disponibilidadesNuevas */
       this.cliente.disponibilidades.forEach((dispCliente: Disponibilidad) => {
         this.disponibilidadesNuevas.forEach((disp: any) => {
-          
+
           if (disp.diaSemana.diaSemana == dispCliente.diaSemana.diaSemana) {
             disp.hora_apertura = dispCliente.hora_apertura;
             disp.hora_cierre = dispCliente.hora_cierre;
             disp.seleccionado = true;
           }
-        })
+        });
 
       });
 
@@ -231,13 +232,13 @@ export class ClienteViewPage implements OnInit {
       this.disponibilidadesNuevas.forEach((d: any) => {
         console.log(d);
         const controls = this.clienteForm.controls.disponibilidades as FormArray;
-        console.log(d.diaSemana.diaSemana)
+        console.log(d.diaSemana.diaSemana);
         controls.push(
           this.formBuilder.group({
-            disponibilidadDiaSemana: [d.diaSemana.diaSemana],
+            diaSemana: [d.diaSemana.diaSemana],
             disponibilidadSeleccionado: [d.seleccionado, []],
-            disponibilidadHoraApertura: [d.hora_apertura, []],
-            disponibilidadHoraCierre: [d.hora_cierre, []],
+            hora_apertura: [d.hora_apertura, []],
+            hora_cierre: [d.hora_cierre, []],
           })
         );
       });
@@ -257,8 +258,8 @@ export class ClienteViewPage implements OnInit {
   obtenerDisponibilidadForm() {
     return this.formBuilder.group({
       disponibilidadSeleccionado: ['', []],
-      disponibilidadHoraApertura: ['', []],
-      disponibilidadHoraCierre: ['', []],
+      hora_apertura: ['', []],
+      hora_cierre: ['', []],
     });
   }
 
@@ -268,10 +269,10 @@ export class ClienteViewPage implements OnInit {
 
   obtenerContactoForm() {
     return this.formBuilder.group({
-      contactoNombre: ['', [Validators.required]],
-      contactoApellido: ['', [Validators.required]],
-      contactoEmail: ['', [Validators.required]],
-      contactoTelefono: ['', [Validators.required]],
+      nombre: ['', [Validators.required]],
+      apellido: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      telefono: ['', [Validators.required]],
     });
   }
 
@@ -311,29 +312,83 @@ export class ClienteViewPage implements OnInit {
 
   async onSubmit(form: FormGroup, e: any) {
     e.preventDefault();
-    console.log(form);
+    //console.log(form);
     const dispSeleccionadas = this.clienteForm.get('disponibilidades').value;
     const contactosAgregados = this.clienteForm.get('contactos').value;
-    console.log(dispSeleccionadas.filter(dsp => dsp.disponibilidadSeleccionado == true).length)
-    console.log(contactosAgregados.length)
-    if (dispSeleccionadas.filter(dsp => dsp.disponibilidadSeleccionado == true).length < 1)
+    const disponibilidadesFiltradas = dispSeleccionadas.filter(dsp => dsp.disponibilidadSeleccionado == true);
+    //console.log(contactosAgregados.length)
+    if (disponibilidadesFiltradas.length < 1)
       this.toastService.presentToast('Debe seleccionar al menos una disponibilidad');
     else if (contactosAgregados.length < 1)
       this.toastService.presentToast('Debe añadir al menos un contacto');
     else {
-      console.log(this.clienteForm.getRawValue())
+      disponibilidadesFiltradas.forEach(d => {
+        d.hora_apertura = this.formatearHora(d.hora_apertura);
+        d.hora_cierre = this.formatearHora(d.hora_cierre);
+        this.disponibilidadesNuevas.forEach(disp => {
+          if (d.diaSemana === disp.diaSemana.diaSemana) {
+            d.diaSemana = disp.diaSemana;
+          }
+        });
+      });
+      //console.log(this.cliente)
+      this.cliente.nombre = this.clienteForm.get('nombreCliente').value;
+      this.cliente.observaciones = this.clienteForm.get('observaciones').value;
+      this.cliente.cuit = this.clienteForm.get('cuit').value;
+      this.cliente.promedio_espera = this.clienteForm.get('promedio_espera').value;
+      //this.cliente.activo = true
+      //this.cliente.propietario = this.user
+      this.cliente.direccion.calle = this.clienteForm.get('calle').value;
+      this.cliente.direccion.altura = this.clienteForm.get('altura').value;
+      this.cliente.direccion.localidad = this.clienteForm.get('localidad').value;
+      this.cliente.direccion.provincia = this.clienteForm.get('provincia').value;
+      this.cliente.direccion.latitud = 0.0;
+      this.cliente.direccion.longitud = 0.0;
+      this.cliente.disponibilidades = disponibilidadesFiltradas;
+      this.cliente.contactos = [];
+      this.clienteForm.get('contactos').value.forEach(c => {
+        //const telefonos = {} as Telefono[];
+        //const emails = {} as Email[];
+        const contacto = {} as Contacto;
+        contacto.telefonos = [];
+        contacto.emails = [];
+        //c.telefonos.forEach(t => {
+        const telefono = {} as Telefono;
+        telefono.telefono = c.telefono;
+        //telefonos.push(telefono);
+        //});
+        //c.emails.forEach(em => {
+        const email = {} as Email;
+        email.direccion = c.email;
+        //emails.push(email);
+        //});
+        contacto.nombre = c.nombre;
+        contacto.apellido = c.apellido;
+        contacto.telefonos.push(telefono);
+        contacto.emails.push(email);
+        this.cliente.contactos.push(contacto);
+      });
+      console.log(this.cliente);
+      try {
+        if (this.idCliente === 'nuevo') {
+          await this.clienteService.create(this.cliente)
+            .then(() => {
+              this.toastService.presentToast('Cliente creado');
+              this.router.navigate(['clientes']);
+            })
+            .catch(err => {
+              console.log(err)
+              this.toastService.presentToast(err.error.message);
+            });
+        }
+      }
+      catch {
 
+      }
     }
-    // this.preguntaSubmit = new Pregunta(
-    //   this.pregunta.value,
-    //   this.preguntaForm.get('opciones').value.filter(opt => opt.correcta == true).map(opt => opt.opcion).toString(),
-    //   new Date(),
-    //   new Date(),
-    //   this.preguntaForm.get('opciones').value.map(opt => opt.opcion),
-    //   this.user,
-    //   this.tipo.value,
-    //   this.puntosDonados.value
-    // );
+
+
+
     //   console.log(this.preguntaSubmit)
     //   try {
     //     if(this.editMode){

@@ -24,7 +24,7 @@
       <div>
 
         <ion-item>
-          <ion-input formControlName="nombre" maxlength="100" type="text" name="nombre" placeholder="Nombre">
+          <ion-input formControlName="nombreCliente" maxlength="100" type="text" name="nombre" placeholder="Nombre">
           </ion-input>
         </ion-item>
         <div *ngFor="let error of errorMessages.nombre">
@@ -34,8 +34,8 @@
         </div>
         <ion-item>
           <ion-input formControlName="cuit" maxlength="11" type="string" name="cuit" placeholder="CUIT"></ion-input>
-          <ion-datetime placeholder="Promedio de espera" style="width: 50%;" formControlName="promedio_espera"
-            name="promedio_espera" displayFormat="HH:mm"></ion-datetime>
+          <ion-input formControlName="promedio_espera" placeholder="% Minutos de espera" name="promedio_espera">
+          </ion-input>
         </ion-item>
         <ion-item>
           <ion-input formControlName="observaciones" type="text" name="observaciones" placeholder="Observaciones">
@@ -77,10 +77,10 @@
                     <ion-icon name="trash-outline"></ion-icon>
                   </ion-button>
                 </ion-item>
-                <ion-input placeholder="Nombre" type="text" required formControlName="contactoNombre"></ion-input>
-                <ion-input placeholder="Apellido" type="text" required formControlName="contactoApellido"></ion-input>
-                <ion-input placeholder="Teléfono" type="text" required formControlName="contactoTelefono"></ion-input>
-                <ion-input placeholder="Email" type="email" required formControlName="contactoEmail">
+                <ion-input placeholder="Nombre" type="text" required formControlName="nombre"></ion-input>
+                <ion-input placeholder="Apellido" type="text" required formControlName="apellido"></ion-input>
+                <ion-input placeholder="Teléfono" type="text" required formControlName="telefono"></ion-input>
+                <ion-input placeholder="Email" type="email" required formControlName="email">
                 </ion-input>
               </ion-item-group>
             </div>
@@ -125,12 +125,14 @@
 
                 <ion-checkbox style="width: 20px;" formControlName="disponibilidadSeleccionado"></ion-checkbox>
 
-                <ion-input style="width: 50%; margin-left: 20px;" formControlName="disponibilidadDiaSemana" readonly></ion-input>
+                <ion-input style="width: 50%; margin-left: 20px;" formControlName="diaSemana" readonly></ion-input>
 
-                <ion-datetime style="width: 25%;" placeholder="Apertura" formControlName="disponibilidadHoraApertura" displayFormat="HH:mm:ss">
+                <ion-datetime style="width: 25%;" placeholder="Apertura" formControlName="hora_apertura"
+                  displayFormat="HH:mm">
                 </ion-datetime>
 
-                <ion-datetime style="width: 25%; margin-left: 20px;" placeholder="Cierre" formControlName="disponibilidadHoraCierre" displayFormat="HH:mm:ss">
+                <ion-datetime style="width: 25%; margin-left: 20px;" placeholder="Cierre" formControlName="hora_cierre"
+                  displayFormat="HH:mm">
                 </ion-datetime>
 
               </ion-item>
@@ -162,7 +164,7 @@
       </div>
 
       <!-- <ion-fab vertical="bottom" horizontal="end" > -->
-      <ion-fab bottom rigth edge>
+      <ion-fab *ngIf="!viewMode" bottom rigth edge>
         <!-- <ion-button [disabled]="clienteForm.invalid" type="submit" color="warning"> -->
         <ion-button type="submit" color="warning">
           <ion-icon name="save-outline"></ion-icon>

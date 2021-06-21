@@ -9,7 +9,7 @@ export interface Remito {
     fechaDeCreacion: string;
     total: number;
     motivo: string;
-    tiempo_espera: string;
+    tiempo_espera: number;
     cliente: Cliente;
     estado: Estado;
     productosDelRemito: ProductoRemito[];

@@ -92,9 +92,9 @@ export class RemitoViewPage implements OnInit {
         nuevoRemito.estado = estadoRemito;
         nuevoRemito.cliente = this.clientes[0];
 
-        const tiempoDeEsperaDefault = new Date();
-        tiempoDeEsperaDefault.setHours(0, 0, 0);
-        nuevoRemito.tiempo_espera = tiempoDeEsperaDefault.toISOString();
+        //const tiempoDeEsperaDefault = new Date();
+        //tiempoDeEsperaDefault.setHours(0, 0, 0);
+        //nuevoRemito.tiempo_espera = 0; //tiempoDeEsperaDefault.toISOString();
 
         this.remito = nuevoRemito;
       }
@@ -180,7 +180,6 @@ export class RemitoViewPage implements OnInit {
     this.remito.fechaDeCreacion = this.formatearFecha(this.remito.fechaDeCreacion);
     console.log(this.remito);
     if (this.createMode) {
-      this.remito.tiempo_espera = this.formatearHora(this.remito.tiempo_espera);
       console.log(this.remito);
       await this.remitoService.guardarRemito(this.remito);
     } else {
