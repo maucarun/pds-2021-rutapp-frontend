@@ -1,0 +1,57 @@
+<!-- -->
+<ion-content padding class="animated fadeIn login auth-page background">
+  <div class="login-content">
+
+    <!-- Logo -->
+    <div padding-horizontal text-center class="animated fadeInDown">
+      <div class="logo"></div>
+      <h2 ion-text class="text-primary">
+        <!-- <strong>Rutapp</strong>  -->
+        Iniciar sesión
+      </h2>
+    </div>
+
+    <!-- Login form -->
+    <form class="list-form" (ngSubmit)="login()" [formGroup]="credentials">
+      
+      <ion-item class="input-login">
+        <ion-label floating>
+          <ion-icon name="mail" item-start class="text-primary"></ion-icon>
+          <!-- Nombre de usuario -->
+          <!-- Email -->
+        </ion-label>
+        <ion-input  type="email" placeholder="Nombre de usuario"  formControlName="username"></ion-input>
+      </ion-item>
+      <!-- <p text-center ion-text style="color: red; ">El nombre de usuario es requerido</p> -->
+
+      <ion-item>
+        <ion-label floating>
+          <ion-icon name="lock-closed" item-start class="text-primary"></ion-icon>
+          <!-- Password -->
+        </ion-label>
+        <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+      </ion-item>
+    </form>
+
+    <p text-right ion-text class="p-forgot" style="color: #4c6df9" tappable (click)="forgotPass()"><strong>Forgot Password?</strong></p>
+    <!-- Botones -->
+    <button ion-button icon-start block class="btn-singin"  tappable (click)="login()">
+      <ion-icon name="log-in"></ion-icon>
+      LOGIN
+    </button>
+    <p text-center ion-text style="color: #4c6df9">O iniciar sesión con:</p>
+
+    <div class="botonera">
+
+      <button ion-button icon-only block class="btn-facebook " (click)="loginFacebook()">
+        <ion-icon name="logo-facebook"></ion-icon>
+      </button>
+      <button ion-button icon-only block class="btn-gplus" (click)="loginGoogle()">
+        <ion-icon name="logo-google"></ion-icon>
+      </button>
+
+    </div>
+
+    <p text-center ion-text style="color: #4c6df9" tappable (click)="registro()" >Nuevo aquí? <strong>Registrarse</strong></p>
+  </div>
+</ion-content>

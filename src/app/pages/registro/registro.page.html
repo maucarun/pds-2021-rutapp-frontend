@@ -1,0 +1,68 @@
+<!-- -->
+<ion-content class="animated fadeIn login auth-page background">
+    <div class="login-content">
+  
+      <!-- Logo -->
+      <div padding text-center>
+        <div class="logo"></div>
+        <h2 ion-text class="text-primary">
+          <!-- <strong>Rutapp</strong>  -->
+          Registrarse
+        </h2>
+      </div>
+  
+      <!-- Login form -->
+      <form class="list-form" (ngSubmit)="registro()" [formGroup]="formularioDeRegistro">
+        <ion-item>
+          <ion-label floating>
+            <ion-icon name="person" item-start class="text-primary"></ion-icon>
+            Nombre
+          </ion-label>
+          <ion-input type="text" formControlName="nombre"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label floating>
+            <ion-icon name="person" item-start class="text-primary"></ion-icon>
+            Apellido
+          </ion-label>
+          <ion-input type="text" formControlName="apellido"></ion-input>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label floating>
+            <ion-icon name="mail" item-start class="text-primary"></ion-icon>
+            Email
+          </ion-label>
+          <ion-input type="email" formControlName="email"></ion-input>
+        </ion-item>
+  
+        <ion-item>
+          <ion-label floating>
+            <ion-icon name="lock-closed" item-start class="text-primary"></ion-icon>
+            Password
+          </ion-label>
+          <ion-input type="password" formControlName="password"></ion-input>
+        </ion-item>
+      </form>
+  
+
+      <button ion-button icon-start block class="btn-singin"  tappable (click)="register()">
+        <ion-icon name="log-in"></ion-icon>
+        REGISTRAR
+      </button>
+
+      <p text-center ion-text style="color: #4c6df9; font-size: small;">O registrarse con:</p>
+      <div class="botonera">
+        <button ion-button icon-only block class="btn-facebook " (click)="registroConFacebook()">
+          <ion-icon name="logo-facebook"></ion-icon>
+        </button>
+        <button ion-button icon-only block class="btn-gplus" (click)="registroConGoogle()">
+          <ion-icon name="logo-google"></ion-icon>
+        </button>
+  
+      </div>
+
+      <p text-center ion-text style="color: #4c6df9" tappable (click)="irAlogin()" >Tengo una cuenta</p>
+
+    </div>
+  </ion-content>

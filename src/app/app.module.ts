@@ -12,7 +12,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { IonicStorageModule } from '@ionic/storage-angular';
-
+// Firebase
+import { firebaseConfig } from '../environments/environment';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
@@ -26,7 +30,10 @@ import { IonicStorageModule } from '@ionic/storage-angular';
     AppRoutingModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyBYuqCbjDgzChAwAhj_pMVA-3bE2wpdhuQ'
-    })
+    }),
+    AngularFireModule.initializeApp(firebaseConfig, 'angular-auth-firebase'),
+    AngularFireAuthModule,
+    AngularFirestoreModule
   ],
   providers: [
     Platform,

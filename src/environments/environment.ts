@@ -15,3 +15,12 @@ export const environment = {
  * on performance if an error is thrown.
  */
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+export const firebaseConfig = {
+  apiKey: 'AIzaSyDNZZsx5SoIYN6BHorLq3kgDpAuCmvLBsw',
+  authDomain: 'rutapp-2021.firebaseapp.com',
+  projectId: 'rutapp-2021',
+  storageBucket: 'rutapp-2021.appspot.com',
+  messagingSenderId: '102831843420',
+  appId: '1:102831843420:web:9a8a2d428c4384c5ad5e99',
+  measurementId: 'G-XWGK78WLF8'
+};

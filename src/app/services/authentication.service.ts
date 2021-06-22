@@ -10,6 +10,7 @@ import { map, tap, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { Usuario } from '../models/usuario.models';
 import { environment } from '../../environments/environment';
+import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,10 @@ export class AuthenticationService {
   private userData = new BehaviorSubject(null);
   url = environment.apiUrl + '/usuario';
 
-  constructor(private http: HttpClient) { 
+  constructor(
+    private http: HttpClient,
+    private serviceUser: UsuarioService,
+    ) {
     this.loadsData();
   }
 
@@ -31,7 +35,7 @@ export class AuthenticationService {
   }
 
   async loadUser() {
-    const user = await Storage.get({ key: USER });    
+    const user = await Storage.get({ key: USER });
     if (user && user.value) {
       console.log('set user: ', user.value);
       this.userData.next(user.value);
@@ -41,7 +45,7 @@ export class AuthenticationService {
   }
 
   async loadToken() {
-    const token = await Storage.get({ key: TOKEN_KEY });    
+    const token = await Storage.get({ key: TOKEN_KEY });
     if (token && token.value) {
       console.log('set token: ', token.value);
       this.token = token.value;
@@ -51,7 +55,10 @@ export class AuthenticationService {
     }
   }
 
-  login(credentials: {username, password}): Observable<any> {
+  login(credentials: {username; password}): Observable<any> {
+    //login de usuario
+    // return this.serviceUser.login(credentials).pipe(
+    console.log('autenticacion login: ', credentials);
     return this.http.post(this.url + '/login', credentials).pipe(
       map((data: any) => data),
       switchMap(data => {
@@ -62,7 +69,7 @@ export class AuthenticationService {
         this.loadUser();
         this.isAuthenticated.next(true);
       })
-    )
+    );
   }
 
   logout(): Promise<void> {
@@ -72,12 +79,12 @@ export class AuthenticationService {
 
   getUser() {
     // await this.loadUser()
-    console.log(this.userData)
+    console.log(this.userData);
     return this.userData.getValue();
   }
 
   setSessionUser(user: Usuario) {
-    console.log('actualizo sesion')
+    console.log('actualizo sesion');
     Storage.set({key: USER, value: JSON.stringify(user) });
     this.loadUser();
   }

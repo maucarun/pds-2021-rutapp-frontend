@@ -7,9 +7,21 @@ const routes: Routes = [
   { path: '', redirectTo: 'clientes', pathMatch: 'full' },
   {
     path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule),
+    // loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule),
+    loadChildren: () => import('./pages/login2/login2.module').then(m => m.Login2PageModule),
+
     canLoad: [AutoLoginGuard]
   },
+  {
+    path: 'registro',
+    loadChildren: () => import('./pages/registro/registro.module').then(m => m.RemitosPageModule),
+    canLoad: [AutoLoginGuard]
+  },
+  // {
+  //   path: 'login2',
+  //   loadChildren: () => import('./pages/login2/login2.module').then(m => m.Login2PageModule),
+  //   canLoad: [AutoLoginGuard]
+  // },
   {
     path: 'clientes',
     loadChildren: () => import('./pages/clientes/clientes.module').then(m => m.ClientesPageModule),
@@ -43,7 +55,12 @@ const routes: Routes = [
   {
     path: 'hojasderuta',
     loadChildren: () => import('./pages/hoja-de-ruta/hoja-de-ruta.module').then( m => m.HojaDeRutaPageModule)
+  },
+  {
+    path: 'perfil',
+    loadChildren: () => import('./pages/perfil/perfil.module').then( m => m.PerfilPageModule)
   }
+
 
 ];
 

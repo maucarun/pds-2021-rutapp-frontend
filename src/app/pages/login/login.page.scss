@@ -3,3 +3,9 @@
         visibility: hidden;
         display: none !important;
     }
+
+    ion-content {
+        .buttonsContainer {
+            margin-top: 15%;
+        }
+    }

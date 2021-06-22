@@ -1,0 +1,162 @@
+// page-login, 
+ion-content{
+}
+.login-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    padding: 0%;
+}
+.list-form{
+  width: 100%;
+}
+
+.p-forgot{
+  font-size: x-small;
+  align-self: end;
+}
+
+.btn-singin{
+  background-color: #0039a2;/*dark*/
+  color: aliceblue;
+  width: 100%;
+  padding: 0.45rem 0;
+  border-radius: 0.2rem;
+}
+
+.botonera{
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+  // buttons configs
+.btn-facebook {
+    background-color: #3B5999;
+    padding: 0.45rem 0;
+    width: 48%;
+    border-radius: 0.2rem;
+    color: white;
+}
+.btn-twitter {
+    background-color: #00ACEE;
+  }
+  
+.btn-gplus {
+  background-color: #E04006;
+  padding: 0.45rem 0;
+  width: 48%;
+  border-radius: 0.2rem;
+  color: white;
+  }  
+
+// Animate CSS
+.animated {
+    animation-duration: 1s;
+    animation-fill-mode: both;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+  
+    to {
+      opacity: 1;
+    }
+  }
+  
+  .fadeIn {
+    animation-name: fadeIn;
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -100%, 0);
+    }
+  
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  
+  .fadeInDown {
+    animation-name: fadeInDown;
+  }
+
+.auth-page::after{
+    // background: url(../../../assets/img/bg.jpg) no-repeat;
+    //  ;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: 0;
+}
+// .auth-page 
+.scroll-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      // background-image: url(../../../assets/img/bg.jpg) no-repeat;
+      //background: rgba(50, 10, 92, .4);
+}
+ion-content.background{
+  --background: url(../../../assets/img/bg.jpg) 0 0/100% 100% no-repeat;
+}
+
+.login-content{
+    width: 86%;
+}
+
+
+.logo {
+    width: 60px;
+    height: 60px;
+    margin: 20px auto 0;
+    border-radius: 10%;
+//   background: url("../assets/img/ionic3-ico.png") no-repeat;
+    background-size: 100%;
+}
+.list-form {
+              padding: 0;
+              margin-bottom: 0;
+}
+ion-item {
+                background: none;
+                padding: 0;
+                &:first-child {
+                                  border-top: none;
+                                }
+                      
+                                &:after {
+                                  display: none;
+                                }
+                      
+                                ion-label {
+                                  font-size: 1em;
+                                  color: #4c6df9;
+                                  // color: color($colors, primary);
+                                }
+                                input {
+                                                  color: #4c6df9;//var(--primary);
+                                                  // color: color($colors, primary);
+                                                }
+}
+
+  //Estilos globales
+  .text-primary {
+    color: #4c6df9;//var(--primary);
+  }
+// .btn-gplus {
+//     background-color: #E04006;
+//     background: url('https://api.iconify.design/ion-logo-googleplus.svg') no-repeat center center / contain;
+//   }  
