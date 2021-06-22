@@ -54,6 +54,10 @@ export class ClienteService {
   }
 
   async delete(id: string) {
-    console.log("Eliminado el cliente id " + id);
+    const headers = new HttpHeaders({
+      usuario: this.username,
+      password: this.password,
+    });
+    return await this.http.delete<Cliente>(this.url + '/' + id, { headers }).toPromise()
   }
 }
