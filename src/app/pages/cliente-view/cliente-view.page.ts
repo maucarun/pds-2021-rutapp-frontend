@@ -34,8 +34,8 @@ export class ClienteViewPage implements OnInit {
 
   viewMode = true;
 
-  get nombreCliente() {
-    return this.clienteForm.get('nombreCliente');
+  get nombre() {
+    return this.clienteForm.get('nombre');
   }
 
   get cuit() {
@@ -66,8 +66,17 @@ export class ClienteViewPage implements OnInit {
     return this.clienteForm.get('provincia');
   }
 
-  get contactos() {
-    return this.clienteForm.get('contactos');
+  /** cForm hace referencia a clienteForm */
+  contactos(cForm) {
+    return cForm.controls.contactos.controls;
+  }
+
+  telefonos(cForm) {
+    return cForm.controls.telefonos.controls;
+  }
+
+  emails(cForm) {
+    return cForm.controls.emails.controls;
   }
 
   get disponibilidades() {
@@ -75,7 +84,7 @@ export class ClienteViewPage implements OnInit {
   }
 
   public errorMessages = {
-    nombreCliente: [
+    nombre: [
       { type: 'required', message: 'El nombre es requerido' }
     ],
     cuit: [
@@ -108,8 +117,8 @@ export class ClienteViewPage implements OnInit {
     private clienteService: ClienteService,
     private authService: AuthenticationService,
     private alertCtrl: AlertController,
-    public loading: LoadingService,
-    public toastService: ToastService,
+    private loading: LoadingService,
+    private toastService: ToastService,
   ) { }
 
   async ngOnInit() {
@@ -117,19 +126,39 @@ export class ClienteViewPage implements OnInit {
     const user = this.authService.getUser();
     this.user = JSON.parse(user);
 
+    /** Inicializamos las propiedades del cliente */
+    this.cliente = {
+      idCliente: null,
+      nombre: '',
+      observaciones: '',
+      cuit: '',
+      promedio_espera: 0,
+      activo: true,
+      propietario: this.user,
+      direccion: {} as Direccion,
+      disponibilidades: {} as Disponibilidad[],
+      urlImagenPerfil: '',
+      contactos: {} as Contacto[],
+    };
+
+
     /** Creando formulario con sus propiedades */
     this.clienteForm = this.formBuilder.group({
-      nombreCliente: ['', [Validators.required]],
-      calle: ['', [Validators.required]],
-      altura: ['', [Validators.required]],
-      localidad: ['', [Validators.required]],
-      provincia: ['', [Validators.required]],
+      nombre: ['', [Validators.required]],
       cuit: ['', [Validators.required]],
       observaciones: ['', [Validators.required]],
       promedio_espera: ['', [Validators.required]],
+      direccion: this.formBuilder.group({
+        calle: ['', [Validators.required]],
+        altura: ['', [Validators.required]],
+        localidad: ['', [Validators.required]],
+        provincia: ['', [Validators.required]],
+      }),
       contactos: this.formBuilder.array([]),
       disponibilidades: this.formBuilder.array([])
     });
+    console.log(this.clienteForm);
+
 
     /* Verificando si la página tiene id */
     this.activatedRoute.paramMap.subscribe(async paramMap => {
@@ -142,20 +171,6 @@ export class ClienteViewPage implements OnInit {
         this.viewMode = false;
         console.log('Solicitud de cliente nuevo');
 
-        /** Inicializamos las propiedades del cliente */
-        this.cliente = {
-          idCliente: null,
-          nombre: '',
-          observaciones: '',
-          cuit: '',
-          promedio_espera: 0,
-          activo: true,
-          propietario: this.user,
-          direccion: {} as Direccion,
-          disponibilidades: {} as Disponibilidad[],
-          contactos: {} as Contacto[],
-          urlImagenPerfil: '',
-        };
 
         // this.clienteForm.patchValue({
         //   disponibilidades: this.disponibilidadesNuevas,
@@ -163,9 +178,9 @@ export class ClienteViewPage implements OnInit {
 
         /** Inyectamos el batch de disponibilidades en el clienteForm */
         this.disponibilidadesNuevas.forEach((d: any) => {
-          console.log(d);
+          // console.log(d);
           const controls = this.clienteForm.controls.disponibilidades as FormArray;
-          console.log(d.diaSemana.diaSemana);
+          // console.log(d.diaSemana.diaSemana);
           controls.push(
             this.formBuilder.group({
               diaSemana: [d.diaSemana.diaSemana],
@@ -176,44 +191,53 @@ export class ClienteViewPage implements OnInit {
           );
         });
 
-        console.log(this.clienteForm);
         return this.loading.dismiss();
       }
 
       console.log('Obtuve el cliente id ' + this.idCliente);
       this.cliente = await this.clienteService.get(this.user.idUsuario, this.idCliente);
-
       console.log(this.cliente);
 
       /** Pegamos las props del cliente en el formulario */
       this.clienteForm.patchValue({
-        nombreCliente: this.cliente.nombre,
+        nombre: this.cliente.nombre,
         observaciones: this.cliente.observaciones,
         cuit: this.cliente.cuit,
         promedio_espera: this.cliente.promedio_espera,
         activo: this.cliente.activo,
         propietario: this.user,
-        calle: this.cliente.direccion.calle,
-        altura: this.cliente.direccion.altura,
-        localidad: this.cliente.direccion.localidad,
-        provincia: this.cliente.direccion.provincia,
+        direccion: this.cliente.direccion,
+        contactos: this.cliente.contactos,
         disponibilidades: this.cliente.disponibilidades,
         urlImagenPerfil: this.cliente.urlImagenPerfil
       });
 
+      // this.clienteForm.patchValue(this.cliente)
+      
       /** Pegamos los contactos del cliente en el formulario */
-      this.cliente.contactos.forEach(contacto => {
-        //console.log(contacto);
-        const controls = this.clienteForm.controls.contactos as FormArray;
-        controls.push(
-          this.formBuilder.group({
-            nombre: [contacto.nombre, [Validators.required]],
-            apellido: [contacto.apellido, [Validators.required]],
-            telefono: [contacto.telefonos[0].telefono, [Validators.required]],
-            email: [contacto.emails[0].direccion, [Validators.required]],
-          })
-        );
-      });
+      if (this.cliente.contactos.length >= 1) {
+        this.cliente.contactos.forEach((contacto, i=0) => {
+          const controls = this.clienteForm.controls.contactos as FormArray;
+          controls.push(this.obtenerContactoForm(contacto.nombre, contacto.apellido));
+          console.log(<FormArray>controls.get(`${i}.telefonos`))
+          if (contacto.telefonos.length >= 1) {
+            contacto.telefonos.forEach((t) => {
+              const controlsTel = <FormArray>controls.get(`${i}.telefonos`)
+              controlsTel.removeAt(0)
+              controlsTel.push(this.obtenerTelefonoForm(t.telefono))
+            });
+          }
+          if (contacto.emails.length >= 1) {
+            contacto.emails.forEach((e) => {
+              const controlsEm = <FormArray>controls.get(`${i}.emails`)
+              controlsEm.removeAt(0)
+              controlsEm.push(this.obtenerEmailForm(e.direccion))
+            });
+          }
+
+        });
+      }
+      console.log(this.clienteForm)
 
       /** Reemplazamos los dias de la semana con los datos del BE en disponibilidadesNuevas */
       this.cliente.disponibilidades.forEach((dispCliente: Disponibilidad) => {
@@ -230,9 +254,9 @@ export class ClienteViewPage implements OnInit {
 
       /** Inyectamos disponibilidadesNuevas/disponibilidades del BE en el clienteForm */
       this.disponibilidadesNuevas.forEach((d: any) => {
-        console.log(d);
+        // console.log(d);
         const controls = this.clienteForm.controls.disponibilidades as FormArray;
-        console.log(d.diaSemana.diaSemana);
+        // console.log(d.diaSemana.diaSemana);
         controls.push(
           this.formBuilder.group({
             diaSemana: [d.diaSemana.diaSemana],
@@ -267,19 +291,42 @@ export class ClienteViewPage implements OnInit {
     this.cliente.disponibilidades = this.disponibilidadesNuevas.filter((e: any) => e.seleccionado);
   }
 
-  obtenerContactoForm() {
+  obtenerContactoForm(name?: string, apellido?: string) {
     return this.formBuilder.group({
-      nombre: ['', [Validators.required]],
-      apellido: ['', [Validators.required]],
-      email: ['', [Validators.required]],
-      telefono: ['', [Validators.required]],
+      nombre: [name, [Validators.required]],
+      apellido: [apellido, [Validators.required]],
+      telefonos: new FormArray([this.obtenerTelefonoForm()]),
+      emails: new FormArray([this.obtenerEmailForm()])
     });
   }
 
-  addContactoFormRow(e: any) {
-    e.preventDefault();
+  obtenerTelefonoForm(telefono?: string) {
+    return this.formBuilder.group({
+      // id_telefono: [],
+      telefono: [telefono, [Validators.required]],
+      // esPrincipal: []
+    });
+  }
+
+  obtenerEmailForm(email?: string) {
+    return this.formBuilder.group({
+      direccion: [email, [Validators.required]],
+    });
+  }
+
+  addContactoFormRow() {
     const controls = this.clienteForm.controls.contactos as FormArray;
     controls.push(this.obtenerContactoForm());
+  }
+
+  addTelefonoFormRow(i: number, telefono?: string) {
+    const control = this.clienteForm.get(`contactos.${i}.telefonos`) as FormArray
+    control.push(this.obtenerTelefonoForm(telefono));
+  }
+
+  addEmailFormRow(i: number) {
+    const control = this.clienteForm.get(`contactos.${i}.emails`) as FormArray
+    control.push(this.obtenerEmailForm());
   }
 
   async removeContactoFormRow(i: number) {
@@ -305,7 +352,17 @@ export class ClienteViewPage implements OnInit {
     await msjConfirmacion.present();
   }
 
-  async editarProducto() {
+  async removeTelefonoFormRow(i: number, j: number) {
+    const control = this.clienteForm.get(`contactos.${i}.telefonos`) as FormArray
+    control.removeAt(j);
+  }
+
+  async removeEmailFormRow(i: number, j: number) {
+    const control = this.clienteForm.get(`contactos.${i}.emails`) as FormArray
+    control.removeAt(j);
+  }
+
+  async editarCliente() {
     /** Habilito la edición de los campos */
     this.viewMode = false;
     this.clienteForm.enable();
@@ -351,55 +408,57 @@ export class ClienteViewPage implements OnInit {
     else if (contactosAgregados.length < 1)
       this.toastService.presentToast('Debe añadir al menos un contacto');
     else {
-      
+
       /** Como el objeto cliente está vacío, tenemos que setetarle cada una de las propiedades del form */
-      this.cliente.nombre = this.clienteForm.get('nombreCliente').value;
+      this.cliente.nombre = this.clienteForm.get('nombre').value;
       this.cliente.observaciones = this.clienteForm.get('observaciones').value;
       this.cliente.cuit = this.clienteForm.get('cuit').value;
       this.cliente.promedio_espera = this.clienteForm.get('promedio_espera').value;
-      this.cliente.direccion.calle = this.clienteForm.get('calle').value;
-      this.cliente.direccion.altura = this.clienteForm.get('altura').value;
-      this.cliente.direccion.localidad = this.clienteForm.get('localidad').value;
-      this.cliente.direccion.provincia = this.clienteForm.get('provincia').value;
+      // this.cliente.direccion.calle = this.clienteForm.get('calle').value;
+      // this.cliente.direccion.altura = this.clienteForm.get('altura').value;
+      // this.cliente.direccion.localidad = this.clienteForm.get('localidad').value;
+      // this.cliente.direccion.provincia = this.clienteForm.get('provincia').value;
+      this.cliente.direccion = this.clienteForm.get('direccion').value
+      console.log(this.cliente.direccion)
       this.cliente.disponibilidades = disponibilidadesFiltradas;
       /**Deberiamos llamar al servicio de Google */
       this.cliente.direccion.latitud = 0.0;
       this.cliente.direccion.longitud = 0.0;
-      
+
       /** 
        * Seteamos las props de contactos.
        * Como el contacto por ahora tiene un solo telefono y un solo email
        *  no hacemos un forEach para setear una lista de telefonos e emails
        *  al contacto.
        */
-      this.cliente.contactos = [];
-      this.clienteForm.get('contactos').value.forEach(cf => {
-        //const telefonos = {} as Telefono[];
-        //const emails = {} as Email[];
-        const contacto = {} as Contacto;
-        contacto.telefonos = [];
-        contacto.emails = [];
-        //c.telefonos.forEach(t => {
-        const telefono = {} as Telefono;
-        telefono.telefono = cf.telefono;
-        //telefonos.push(telefono);
-        //});
-        //c.emails.forEach(em => {
-        const email = {} as Email;
-        email.direccion = cf.email;
-        //emails.push(email);
-        //});
-        contacto.nombre = cf.nombre;
-        contacto.apellido = cf.apellido;
-        contacto.telefonos.push(telefono);
-        contacto.emails.push(email);
-        this.cliente.contactos.push(contacto);
-      });
-      
+      this.cliente.contactos = this.clienteForm.get('contactos').value;
+      // this.clienteForm.get('contactos').value.forEach(cf => {
+      //   //const telefonos = {} as Telefono[];
+      //   //const emails = {} as Email[];
+      //   const contacto = {} as Contacto;
+      //   contacto.telefonos = [];
+      //   contacto.emails = [];
+      //   //c.telefonos.forEach(t => {
+      //   const telefono = {} as Telefono;
+      //   telefono.telefono = cf.telefono;
+      //   //telefonos.push(telefono);
+      //   //});
+      //   //c.emails.forEach(em => {
+      //   const email = {} as Email;
+      //   email.direccion = cf.email;
+      //   //emails.push(email);
+      //   //});
+      //   contacto.nombre = cf.nombre;
+      //   contacto.apellido = cf.apellido;
+      //   contacto.telefonos.push(telefono);
+      //   contacto.emails.push(email);
+      //   this.cliente.contactos.push(contacto);
+      // });
+
       console.log(this.cliente);
-      
+
       try {
-        
+
         if (this.idCliente === 'nuevo') {
           /** Seteamos las props de disponibilidades */
           disponibilidadesFiltradas.forEach(d => {
@@ -426,7 +485,7 @@ export class ClienteViewPage implements OnInit {
             });
         }
         else {
-          
+
           var idCliente = Number(this.idCliente) /** Transformo el id a number para comparar con el id que recibí del BE */
           if (idCliente === this.cliente.idCliente) {
             /** Seteamos las props de disponibilidades */
