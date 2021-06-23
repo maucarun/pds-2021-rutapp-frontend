@@ -8,10 +8,12 @@ import { AuthenticationService } from './authentication.service';
   providedIn: 'root'
 })
 export class RemitoService {
+
   idUsuario: number;
-  //username: string;
-  //password: string;
+  username: string;
+  password: string;
   url = environment.apiUrl + '/remito';
+
   constructor(
     private http: HttpClient,
     private authService: AuthenticationService
@@ -19,17 +21,17 @@ export class RemitoService {
     this.authService.loadsData();
     const user = this.authService.getUser();
     this.idUsuario = JSON.parse(user).idUsuario;
-    //this.username = JSON.parse(user).username;
-    //this.password = JSON.parse(user).password;
+    this.username = JSON.parse(user).username;
+    this.password = JSON.parse(user).password;
   }
 
-  async getAll(idUsuario: number): Promise<Remito[]> {
-    console.log("Buscaré los remitos del usuario " + this.idUsuario)
-    return await this.http.get<Remito[]>(this.url + '/all/' + this.idUsuario).toPromise()
+  async getAll(): Promise<Remito[]> {
+    console.log('Buscaré los remitos del usuario ' + this.idUsuario);
+    return this.http.get<Remito[]>(this.url + '/all/' + this.idUsuario).toPromise();
   }
 
   async getAllRemitosPorCliente(idCliente: number, estado: string): Promise<Remito[]> {
-    console.log("Buscaré los remitos del cliente " + idCliente);
+    console.log('Buscaré los remitos del cliente ' + idCliente);
     return this.http.get<Remito[]>(`${this.url}/all/?idCliente=${idCliente}&estado=${estado}`).toPromise();
   }
 
@@ -39,28 +41,28 @@ export class RemitoService {
 
   async cancelarRemito(idRemito: string) {
     const headers = new HttpHeaders({
-      usuario: 'homer',
-      password: 'abcd1',
+      usuario: this.username,
+      password: this.password,
     });
-    return await this.http.delete<Remito>(this.url + '/' + idRemito, { headers }).toPromise();
+    return this.http.delete<Remito>(this.url + '/' + idRemito, { headers }).toPromise();
   }
 
   async guardarRemito(remito: Remito) {
     const headers = new HttpHeaders({
-      usuario: 'homer',
-      password: 'abcd1',
-      contentType: 'application/json',
+      usuario: this.username,
+      password: this.password,
+      //contentType: 'application/json',
     });
-    return await this.http.post<Remito>(this.url, remito, { headers }).toPromise();
+    return this.http.post<Remito>(this.url, remito, { headers }).toPromise();
   }
 
   async actualizarRemito(remito: Remito) {
     const headers = new HttpHeaders({
-      usuario: 'homer',
-      password: 'abcd1',
-      contentType: 'application/json',
+      usuario: this.username,
+      password: this.password,
+      //contentType: 'application/json',
     });
-    return await this.http.put<Remito>(this.url, remito, { headers }).toPromise();
+    return this.http.put<Remito>(this.url, remito, { headers }).toPromise();
   }
 
 }

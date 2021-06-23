@@ -4,14 +4,14 @@
     <ion-toolbar color="secondary">
 
       <ion-buttons slot="start">
-        <ion-back-button defaultHref=""></ion-back-button>
+        <ion-back-button (click)="volverAListaRemitos()" defaultHref="remitos"></ion-back-button>
       </ion-buttons>
 
       <ion-buttons slot="end">
         <ion-menu-button autoHide="false" color="light"></ion-menu-button>
       </ion-buttons>
 
-      <ion-title *ngIf="viewMode && remito!!">{{ remito.nombre }}</ion-title>
+      <ion-title *ngIf="viewMode && remito!!">Remito</ion-title>
       <ion-title *ngIf="editMode">Editar Remito</ion-title>
       <ion-title *ngIf="createMode">Crear Remito</ion-title>
     </ion-toolbar>
@@ -135,7 +135,7 @@
         </ion-row>
       </ion-grid>
 
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab vertical="bottom" horizontal="start" slot="fixed">
         <ion-fab-button color="warning" (click)="guardarRemito()">
           <ion-icon name="save-outline"></ion-icon>
         </ion-fab-button>
@@ -165,7 +165,7 @@
         </ion-row>
         <ion-row *ngIf="!!remito.hojaDeRuta" class="ion-margin-bottom">
           <ion-col>
-            {{ remito.hojaDeRuta.id }}
+            {{ remito.hojaDeRuta.id_hoja_de_ruta }}
           </ion-col>
         </ion-row>
 

@@ -3,6 +3,7 @@ import { Cliente } from './cliente.models';
 import { Estado } from './estado.models';
 import { ComprobanteEntrega } from './comprobanteEntrega.models';
 import { ProductoRemito } from './productoRemito.models';
+import { HojaDeRuta } from './hojaDeRuta.models';
 
 export interface Remito {
     idRemito: number;
@@ -15,5 +16,5 @@ export interface Remito {
     productosDelRemito: ProductoRemito[];
     comprobante: ComprobanteEntrega;
     cantidadDeItems: number;
-    /* hojaDeRuta: HojaDeRuta; */
+    hojaDeRuta: HojaDeRuta;
 }

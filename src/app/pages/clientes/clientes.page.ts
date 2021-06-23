@@ -19,7 +19,8 @@ export class ClientesPage {
   user: Usuario;
   buscarCliente: string;
 
-  constructor(private clieServ: ClienteService,
+  constructor(
+    private clieServ: ClienteService,
     private router: Router,
     private authService: AuthenticationService,
     private menu: MenuController,
@@ -51,14 +52,12 @@ export class ClientesPage {
   }
 
   async getClientesBusqueda(ev: any) {
-    this.clientes = await this.clientesBackup;
+    this.clientes = this.clientesBackup;
 
     const val = ev.target.value;
 
-    if (val && val.trim() != '') {
-      this.clientes = this.clientes.filter((cliente) => {
-        return (cliente.nombre.toLowerCase().indexOf(val.toLowerCase()) > -1);
-      });
+    if (val && val.trim() !== '') {
+      this.clientes = this.clientes.filter((cliente) => (cliente.nombre.toLowerCase().indexOf(val.toLowerCase()) > -1));
     }
   }
 

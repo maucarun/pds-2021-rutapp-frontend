@@ -3,35 +3,40 @@
     <ion-buttons slot="end">
       <ion-menu-button color="light"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Productos</ion-title>
+    <ion-title class="large-title">Productos</ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="secondary">
+    <ion-searchbar (ionInput)="getProductosBusqueda($event)" autocomplete="on" placeholder="Buscar Producto"
+      color="primary" [(ngModel)]="buscarProducto">
+    </ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list id="inbox-list">
-      <ion-item *ngFor="let producto of productos" [routerLink]="['/productos',producto.idProducto]" >
+    <ion-item *ngFor="let producto of productos" [routerLink]="['/productos',producto.idProducto]">
       <!--  (click)="verProducto(producto.idProducto)">-->
-        <ion-avatar slot="start">
-          <ion-img [src]="producto.url_imagen"></ion-img>
-        </ion-avatar>
-        <ion-grid>
-          <ion-row>
-            <ion-col>
-              <ion-label>
-                {{ producto.nombre }}
-              </ion-label>
-            </ion-col>
-          </ion-row>
-          <ion-row>
-            <ion-col>
-              <!-- <ion-text><small>{{cliente.direccion.calle}} {{cliente.direccion.altura}}, {{cliente.direccion.localidad}}</small></ion-text> -->
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-      </ion-item>
+      <ion-avatar slot="start">
+        <ion-img [src]="producto.url_imagen"></ion-img>
+      </ion-avatar>
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-label>
+              {{ producto.nombre }}
+            </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>
+            <!-- <ion-text><small>{{cliente.direccion.calle}} {{cliente.direccion.altura}}, {{cliente.direccion.localidad}}</small></ion-text> -->
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
   </ion-list>
 
-  <ion-fab vertical="bottom" horizontal="end"  slot="fixed">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button color="primary" (click)="agregarNuevoProducto()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

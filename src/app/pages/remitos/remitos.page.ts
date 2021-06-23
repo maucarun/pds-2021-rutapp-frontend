@@ -37,15 +37,15 @@ export class RemitosPage {
     this.user = JSON.parse(user);
     this.buscarRemito = '';
 
-    this.remitoService.getAll(this.user.idUsuario).then(
+    this.remitoService.getAll().then(
       (data: Remito[]) => this.remitos = data
     ).then(
       () => {
         for (const remito of this.remitos) {
           console.log(remito);
-          if (remito.estado.nombre == "Pendiente") {
+          if (remito.estado.nombre === 'Pendiente') {
             remito.cliente.urlImagenPerfil = this.avatarService.getAvatarPendiente(remito.cliente.nombre);
-          } else if (remito.estado.nombre == "Entregado") {
+          } else if (remito.estado.nombre === 'Entregado') {
             remito.cliente.urlImagenPerfil = this.avatarService.getAvatarEntregado(remito.cliente.nombre);
           } else {
             remito.cliente.urlImagenPerfil = this.avatarService.getAvatarCancelado(remito.cliente.nombre);
@@ -58,14 +58,12 @@ export class RemitosPage {
   }
 
   async getRemitosBusqueda(ev: any) {
-    this.remitos = await this.remitosBackup;
+    this.remitos = this.remitosBackup;
 
     const val = ev.target.value;
 
-    if (val && val.trim() != '') {
-      this.remitos = this.remitos.filter((remito) => {
-        return (remito.cliente.nombre.toLowerCase().indexOf(val.toLowerCase()) > -1);
-      });
+    if (val && val.trim() !== '') {
+      this.remitos = this.remitos.filter((remito) => (remito.cliente.nombre.toLowerCase().indexOf(val.toLowerCase()) > -1));
     }
   }
 
@@ -81,9 +79,7 @@ export class RemitosPage {
     const estado = this.estadoSeleccionado;
     this.remitos = this.remitosBackup;
     if (estado !== null) {
-      this.remitos = this.remitos.filter((remito) => {
-        return (remito.estado.nombre == estado)
-      }
+      this.remitos = this.remitos.filter((remito) => (remito.estado.nombre === estado)
       );
     }
   }

@@ -7,17 +7,19 @@ import { HojaDeRutaService } from 'src/app/services/hojaDeRuta.service';
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.page.html',
-  styleUrls: ['./productos.page.scss'],
+  styleUrls: ['./productos.page.scss', './../../app.component.scss'],
 })
 export class ProductosPage implements OnInit {
 
   productos: Producto[];
+  productosBackup: Producto[];
+  buscarProducto: string;
+
   constructor(
     private productoService: ProductoService,
     private router: Router,
     private hojaDeRutaService: HojaDeRutaService,
-    ) {
-  }
+  ) { }
 
   ngOnInit() {
     // this.productos = [];
@@ -33,25 +35,38 @@ export class ProductosPage implements OnInit {
 
   ionViewWillEnter() {
     this.productos = [];
+
+    this.buscarProducto = '';
     this.productoService.getAll().then(
-      (productos: Producto[])=> this.productos = productos
+      (productos: Producto[]) => this.productos = productos
     )
-    .then( ()=>{
-      this.corregirURL();
-    })
-    .catch(e =>console.error(e));
+      .then(() => {
+        this.corregirURL();
+        this.productosBackup = this.productos;
+      })
+      .catch(e => console.error(e));
   }
 
-  corregirURL(){
-    if (this.productos.length){
+  corregirURL() {
+    if (this.productos.length) {
       this.productos.forEach(producto => {
-        if(producto.url_imagen.indexOf('|')!==-1){
+        if (producto.url_imagen.indexOf('|') !== -1) {
           producto.url_imagen = producto.url_imagen.split('|')[1];
         }
       });
       console.log('Buscando |');
-    }else{
+    } else {
       console.log('No hay imagen');
+    }
+  }
+
+  async getProductosBusqueda(ev: any) {
+    this.productos = this.productosBackup;
+
+    const val = ev.target.value;
+
+    if (val && val.trim() !== '') {
+      this.productos = this.productos.filter((producto) => (producto.nombre.toLowerCase().indexOf(val.toLowerCase()) > -1));
     }
   }
 
