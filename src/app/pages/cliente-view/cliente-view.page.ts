@@ -122,7 +122,7 @@ export class ClienteViewPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.loading.present();//si la carga es demasiado rápida, eliminarlo
+    this.loading.present('Cargando...');//si la carga es demasiado rápida, eliminarlo
     const user = this.authService.getUser();
     this.user = JSON.parse(user);
 

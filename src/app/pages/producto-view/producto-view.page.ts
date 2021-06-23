@@ -31,7 +31,7 @@ export class ProductoViewPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.loading.present();//si la carga es demasiado rápida, eliminarlo
+    this.loading.present('Cargando...');//si la carga es demasiado rápida, eliminarlo
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       this.productoId = paramMap.get('id');
 
@@ -84,7 +84,7 @@ export class ProductoViewPage implements OnInit {
   async guardarProducto() {
     try {
       if (this.productoId === 'nuevo') {
-        this.loading.present();
+        this.loading.present('Cargando...');
         this.productoService.create(this.producto.idProducto.toString(), this.producto)
           .then(
             () => {
@@ -100,7 +100,7 @@ export class ProductoViewPage implements OnInit {
       } else {
         //public_id viejo | imagen nueva
         this.producto.url_imagen = this.public_id + '|' + this.producto.url_imagen;
-        this.loading.present();
+        this.loading.present('Cargando...');
         this.productoService.update(this.producto)
           .then(
             () => {

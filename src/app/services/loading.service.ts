@@ -10,14 +10,19 @@ export class LoadingService {
 
   constructor(public loadingController: LoadingController) { }
 
-  async present() {
+  /**
+   *
+   * @param message Es el mensaje que se quiere mostrar.
+   * @returns {*} Retorna un modal loading.
+   */
+  async present(message: string) {
     this.isLoading = true;
     return await this.loadingController.create({
-        message: 'Cargando...',
+        message: message||'Cargando...',
       // duration: 5000,
     }).then(a => {
       a.present().then(() => {
-        console.log('presented');
+        // console.log('presented');
         if (!this.isLoading) {
           a.dismiss().then(() => console.log('Cerrando carga de datos'));
         }

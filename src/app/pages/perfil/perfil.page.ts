@@ -67,7 +67,8 @@ export class PerfilPage implements OnInit {
   async guardarPerfil() {
     //Verificar que no queden los campos vacios
     console.log('Guardando perfil...');
-    this.loading.present();
+    // const loading = await this.loadingController.create({message: 'Espere un momento'});
+    this.loading.present('Cargando...');
     this.usuarioService.actualizarUsuario(this.usuario.idUsuario, this.usuario)
       .then(
         () => {
