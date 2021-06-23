@@ -27,9 +27,13 @@
             [(ngModel)]="producto.nombre" 
             required
             [disabled]="isView"
+            name="nombre"
+            (ionChange)="handlerChange($event)"
             >
             </ion-input>
+            
           </ion-item>
+          <p *ngIf="errorFormularioProducto?.nombre" class="p-error">{{errorFormularioProducto?.nombre}}</p>
         </ion-col>
       </ion-row>
 
@@ -47,9 +51,13 @@
             [(ngModel)]="producto.precio_unitario" 
             required
             [disabled]="isView"
+            name="nombre"
+            (ionChange)="handlerChange($event)"
             >
             </ion-input>
+            
           </ion-item>
+          <p *ngIf="errorFormularioProducto?.precio_unitario" class="p-error">{{errorFormularioProducto?.precio_unitario}}</p>
         </ion-col>
       </ion-row>
 
@@ -65,8 +73,9 @@
             placeholder="descripcion" 
             type="text" 
             [(ngModel)]="producto.descripcion" 
-            required
             [disabled]="isView"
+            name="descripcion"
+            (ionChange)="handlerChange($event)"
             >
             </ion-input>
           </ion-item>
@@ -92,17 +101,17 @@
 
 
     <ion-fab *ngIf='isView' vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button color="warning" (click)="borrarProducto()">
+      <ion-fab-button color="danger" (click)="borrarProducto()">
         <ion-icon name="trash"></ion-icon>
       </ion-fab-button>
     </ion-fab>
     <ion-fab *ngIf='isView'vertical="bottom" horizontal="start" slot="fixed">
-      <ion-fab-button  color="warning" (click)="editarProducto()">
+      <ion-fab-button  color="success" (click)="editarProducto()">
         <ion-icon name="create-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
     <ion-fab *ngIf='!isView'vertical="bottom" horizontal="start" slot="fixed">
-      <ion-fab-button color="warning" (click)="guardarProducto()">
+      <ion-fab-button color="success" (click)="guardarProducto()">
           <ion-icon name="save-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>

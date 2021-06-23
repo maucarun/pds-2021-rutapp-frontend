@@ -24,7 +24,9 @@ export class LoadingService {
       a.present().then(() => {
         // console.log('presented');
         if (!this.isLoading) {
-          a.dismiss().then(() => console.log('Cerrando carga de datos'));
+          a.dismiss().then(() => {
+            // console.log('Cerrando carga de datos')
+          });
         }
       });
     });
@@ -32,6 +34,8 @@ export class LoadingService {
 
   async dismiss() {
     this.isLoading = false;
-    return await this.loadingController.dismiss().then(() => console.log('dismissed'));
+    return await this.loadingController.dismiss().then(() =>{
+      //  console.log('dismissed')
+      });
   }
 }

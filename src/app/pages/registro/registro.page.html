@@ -18,31 +18,37 @@
             <ion-icon name="person" item-start class="text-primary"></ion-icon>
             <!-- Nombre -->
           </ion-label>
-          <ion-input type="text" placeholder="Nombre" formControlName="nombre"></ion-input>
+          <ion-input type="text" placeholder="Nombre" formControlName="nombre" (ionChange)="handlerChange($event)"></ion-input>
         </ion-item>
+        <p *ngIf="errorRegistro?.nombre" class="p-error">{{errorRegistro?.nombre}}</p>
+        
         <ion-item>
           <ion-label floating>
             <ion-icon name="person" item-start class="text-primary"></ion-icon>
             <!-- Apellido -->
           </ion-label>
-          <ion-input type="text" placeholder="Apellido" formControlName="apellido"></ion-input>
+          <ion-input type="text" placeholder="Apellido" formControlName="apellido" (ionChange)="handlerChange($event)"></ion-input>
         </ion-item>
-  
+        <p *ngIf="errorRegistro?.apellido" class="p-error">{{errorRegistro?.apellido}}</p>
+        
         <ion-item>
           <ion-label floating>
             <ion-icon name="mail" item-start class="text-primary"></ion-icon>
             <!-- Email -->
           </ion-label>
-          <ion-input type="email" placeholder="Correo electrónico" formControlName="email"></ion-input>
+          <ion-input type="email" placeholder="Correo electrónico" formControlName="email" (ionChange)="handlerChange($event)"></ion-input>
         </ion-item>
+        <p *ngIf="errorRegistro?.email" class="p-error">{{errorRegistro?.email}}</p>
   
         <ion-item>
           <ion-label floating>
             <ion-icon name="lock-closed" item-start class="text-primary"></ion-icon>
             <!-- Password -->
           </ion-label>
-          <ion-input type="password" placeholder="password" formControlName="password"></ion-input>
+          <ion-input type="password" placeholder="password" formControlName="password" (ionChange)="handlerChange($event)"></ion-input>
         </ion-item>
+        <p *ngIf="errorRegistro?.password" class="p-error">{{errorRegistro?.password}}</p>
+
       </form>
   
 

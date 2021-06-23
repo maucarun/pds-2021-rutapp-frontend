@@ -160,3 +160,9 @@ ion-item {
 //     background-color: #E04006;
 //     background: url('https://api.iconify.design/ion-logo-googleplus.svg') no-repeat center center / contain;
 //   }  
+//<p *ngIf="errorRegistro?.apellido" style="color: red; font-size: x-small;">{{errorRegistro?.apellido}}</p>
+.p-error{
+  color: red;
+  font-size: x-small;
+  margin: 0;
+}

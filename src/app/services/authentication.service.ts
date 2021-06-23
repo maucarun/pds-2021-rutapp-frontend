@@ -56,9 +56,6 @@ export class AuthenticationService {
   }
 
   login(credentials: {username; password}): Observable<any> {
-    //login de usuario
-    // return this.serviceUser.login(credentials).pipe(
-    console.log('autenticacion login: ', credentials);
     return this.http.post(this.url + '/login', credentials).pipe(
       map((data: any) => data),
       switchMap(data => {

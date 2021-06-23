@@ -1,6 +1,9 @@
 // page-login, 
 ion-content{
 }
+// .logo{
+//   --background: url(../../../assets/Logo.png) 0 0/100% 100% no-repeat;
+// }
 .login-content {
     display: flex;
     flex-direction: column;
@@ -166,4 +169,10 @@ ion-item {
   //Estilos globales
   .text-primary {
     color: #4c6df9;//var(--primary);
+  }
+  //Error debajo del input
+  .p-error{
+    color: red;
+    font-size: x-small;
+    margin: 0;
   }

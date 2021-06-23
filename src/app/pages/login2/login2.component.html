@@ -5,6 +5,9 @@
     <!-- Logo -->
     <div padding-horizontal text-center class="animated fadeInDown">
       <div class="logo"></div>
+      <!-- <ion-toolbar translucent>
+        <ion-img src="assets/Logo-transparente.jpg" style="padding: 20px;"></ion-img>
+      </ion-toolbar> -->
       <h2 ion-text class="text-primary">
         <!-- <strong>Rutapp</strong>  -->
         Iniciar sesión
@@ -12,7 +15,7 @@
     </div>
 
     <!-- Login form -->
-    <form class="list-form" (ngSubmit)="login()" [formGroup]="credentials">
+    <form class="list-form" (ngSubmit)="login()" [formGroup]="credenciales">
       
       <ion-item class="input-login">
         <ion-label floating>
@@ -20,20 +23,22 @@
           <!-- Nombre de usuario -->
           <!-- Email -->
         </ion-label>
-        <ion-input  type="email" placeholder="Nombre de usuario"  formControlName="username"></ion-input>
+        <ion-input  type="email" placeholder="Nombre de usuario"  formControlName="username" name="email" (ionChange)="handlerChange($event)"></ion-input>
       </ion-item>
-      <!-- <p text-center ion-text style="color: red; ">El nombre de usuario es requerido</p> -->
+        <p *ngIf="errorCredenciales?.username" class="p-error">{{errorCredenciales?.username}}</p>
 
       <ion-item>
         <ion-label floating>
           <ion-icon name="lock-closed" item-start class="text-primary"></ion-icon>
           <!-- Password -->
         </ion-label>
-        <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+        <ion-input type="password" placeholder="Password" formControlName="password" (ionChange)="handlerChange($event)"></ion-input>
       </ion-item>
+      <p *ngIf="errorCredenciales?.password" class="p-error">{{errorCredenciales?.password}}</p>
     </form>
 
     <p text-right ion-text class="p-forgot" style="color: #4c6df9" tappable (click)="forgotPass()"><strong>Forgot Password?</strong></p>
+    
     <!-- Botones -->
     <button ion-button icon-start block class="btn-singin"  tappable (click)="login()">
       <ion-icon name="log-in"></ion-icon>
@@ -52,6 +57,6 @@
 
     </div>
 
-    <p text-center ion-text style="color: #4c6df9" tappable (click)="registro()" >Nuevo aquí? <strong>Registrarse</strong></p>
+    <p text-center ion-text style="color: #4c6df9" tappable (click)="irAregistro()" >Nuevo aquí? <strong>Registrarse</strong></p>
   </div>
 </ion-content>

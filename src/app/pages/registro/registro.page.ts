@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -16,6 +17,7 @@ import firebase from 'firebase/app';
 
 export class RegistroPage implements OnInit {
   formularioDeRegistro: FormGroup;
+  errorRegistro: any;
 
   constructor(
     private nav: NavController,
@@ -39,9 +41,21 @@ export class RegistroPage implements OnInit {
     });
     this.menu.enable(false);
   }
-  // register and go to home page
-  register() {
-    // console.log('HomePage');
+  // Registrarse e ir a login
+  async register() {
+    //Verifico que los campos estén llenos
+    this.errorRegistro = this.validarForm(this.formularioDeRegistro);
+    //verifico que no haya ningún error en el formulario
+    if (Object.keys(this.errorRegistro).length){
+      const alert = await this.alertController.create({
+        header: 'Faltan completar campos',
+        buttons: ['OK'],
+      });
+      return await alert.present();
+    };
+    const loading = await this.loadingController.create({message: 'Cargando datos...'});
+    await loading.present();
+
     const usuario = {
       idUsuario: null,
       nombre: this.formularioDeRegistro.value.nombre,
@@ -50,19 +64,35 @@ export class RegistroPage implements OnInit {
       password: this.formularioDeRegistro.value.password,
       email: this.formularioDeRegistro.value.email,
       activo: true,
-    };//);
+    };
     this.userService.registrarUsuario(usuario)
-      .then(() => {
-        alert('Usuario registrado correctamente');
-        this.router.navigateByUrl('login', { replaceUrl: true });
-      }
-      )
-      .catch(e => console.error(e));
+        .then(async () => {
+          await loading.dismiss();
+          this.presentToast('Usuario registrado correctamente!');
+          this.irAlogin();
+        }
+        )
+        .catch(async (e) => {
+          console.error(e);
+          await loading.dismiss();
+          const alert = await this.alertController.create({
+            header: 'Falló el registro',
+            buttons: ['OK'],
+          });
+
+          await alert.present();
+        });
+    // this.userService.registrarUsuario(usuario)
+    //   .then(() => {
+    //     this.presentToast('Usuario registrado correctamente');
+    //     this.irAlogin();
+    //   }
+    //   )
+    //   .catch(e => console.error(e));
   }
 
-  // go to login page
+  // Ir a login
   irAlogin() {
-    // console.log('LoginPage');
     this.router.navigateByUrl('login', { replaceUrl: true });
   }
 
@@ -75,9 +105,19 @@ export class RegistroPage implements OnInit {
   }
 
   async registroConGoogleOFacebook(proveedorDeDatos){
+    //verifico que no haya ningún error en el formulario
+    if (Object.keys(this.errorRegistro).length){
+      const alert = await this.alertController.create({
+        header: 'Faltan completar campos',
+        buttons: ['OK'],
+      });
+      return await alert.present();
+    };
+
     const loading = await this.loadingController.create({message: 'Cargando datos...'});
     await loading.present();
 
+    //Traigo los datos de firebase
     this.afAuth.signInWithPopup(proveedorDeDatos)
     .then((res) => {
       const user = res.user;
@@ -94,18 +134,19 @@ export class RegistroPage implements OnInit {
         // telefono: user.phoneNumber,
         // foto: user.photoURL,
       };//);
+      // Registro al usuario
       this.userService.registrarUsuario(usuario)
         .then(async () => {
           await loading.dismiss();
           this.presentToast('Usuario registrado correctamente!');
-          this.router.navigateByUrl('login', { replaceUrl: true });
+          this.irAlogin();
         }
         )
         .catch(async (e) => {
           console.error(e);
           await loading.dismiss();
           const alert = await this.alertController.create({
-            header: 'Login failed',
+            header: 'Falló el registro',
             buttons: ['OK'],
           });
 
@@ -121,5 +162,56 @@ export class RegistroPage implements OnInit {
       color: 'success',
     });
     toast.present();
+  }
+
+  handlerChange(evento: any): void {
+    // const { name, value } = evento.target;
+    this.errorRegistro = this.validarForm(this.formularioDeRegistro);
+  }
+
+  validarForm(credencial: any) {
+    const errors = {};//{username:'', password:''};
+
+    if (!credencial.value.nombre) {
+      errors['nombre'] = 'El nombre es requerido';
+    }
+
+    if (!credencial.value.apellido) {
+      errors['apellido'] = 'El apellido es requerido';
+    }
+    // else if (!this.validateEmail(credencial.value.username)) {
+    //   errors['username'] = 'El username es invalido';
+    // }
+
+    if (!credencial.value.email) {
+      errors['email'] = 'El email es requerido';
+    } else if (!this.validateEmail(credencial.value.email)) {
+      errors['email'] = 'El email es invalido';
+    }
+
+    if (!credencial.value.password) {
+      errors['password'] = 'El password es requerido';
+    } else if (!this.validarPassword(credencial.value.password)) {
+      errors['password'] = 'El password es invalido';
+    }
+
+    console.log('error: ', errors);
+    return errors;
+  }
+
+  validateEmail(email: string): boolean {
+    // eslint-disable-next-line max-len
+    const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regex.test(String(email).toLowerCase());
+  }
+
+  validarPassword(password: string): boolean{
+    // Contain at least 8 characters
+    // contain at least 1 number
+    // contain at least 1 lowercase character (a-z)
+    // contain at least 1 uppercase character (A-Z)
+    // contains only 0-9a-zA-Z
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+    return regex.test(String(password));
   }
 }

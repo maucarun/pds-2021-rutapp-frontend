@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -12,11 +13,9 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
   styleUrls: ['./login2.component.scss'],
 })
 export class Login2Component implements OnInit {
-  credentials: FormGroup;
-  picture: string;
-  name: string;
-  email: string;
-
+  credenciales: FormGroup;
+  errorCredenciales: any;
+  // errorCredenciales= {username:'', password:''};
   constructor(
     public nav: NavController,
     public forgotCtrl: AlertController,
@@ -30,27 +29,44 @@ export class Login2Component implements OnInit {
     private afAuth: AngularFireAuth,
   ) {
     this.menu.swipeGesture(false);
+    this.errorCredenciales={};
   }
   ngOnInit() {
-    this.credentials = this.fb.group({
-      username: ['', [Validators.required]],//['homer', [Validators.required]],
-      password: ['', [Validators.required]],//['abcd1', [Validators.required]],
+    this.credenciales = this.fb.group({
+      username: ['', [Validators.required]],
+      // email: ['', [Validators.required]],
+      password: ['', [Validators.required]],
     });
     this.menu.enable(false);
   }
 
-  // go to register page
-  registro() {
-    // console.log('ir a RegisterPage');
+  // Redirige a registro
+  irAregistro() {
     this.router.navigateByUrl('registro', { replaceUrl: true });
   }
 
-  // login and go to home page
-  async login() {
-    const loading = await this.loadingController.create();
+  //Anota todos los cambios de los input y valida
+  handlerChange(evento: any): void {
+    // const { name, value } = evento.target;
+    this.errorCredenciales = this.validarForm(this.credenciales);
+  }
+  // Iniciar sesión
+  async login(): Promise<void> {
+    //verifico que los campos esten llenos
+    this.errorCredenciales = this.validarForm(this.credenciales);
+    // console.log('this.credenciales.value: ', this.credenciales.value);
+    if (Object.keys(this.errorCredenciales).length){
+      const alert = await this.alertController.create({
+        header: 'Faltan completar campos',
+        buttons: ['OK'],
+      });
+      return await alert.present();
+    }
+
+    const loading = await this.loadingController.create({message:'Verificando datos'});
     await loading.present();
 
-    this.authService.login(this.credentials.value).subscribe(
+    this.authService.login(this.credenciales.value).subscribe(
       async (res) => {
         await loading.dismiss();
         this.router.navigateByUrl('', { replaceUrl: true });
@@ -58,7 +74,6 @@ export class Login2Component implements OnInit {
         await loading.dismiss();
         const alert = await this.alertController.create({
           header: 'Login failed',
-          // message: res.error,
           buttons: ['OK'],
         });
 
@@ -67,61 +82,13 @@ export class Login2Component implements OnInit {
     );
   }
 
-  async loginGoogle() {
-    //loginGoogle es registrarse también
-    this.loginGoogleOFacebook(new firebase.auth.GoogleAuthProvider());
-
-    // const loading = await this.loadingController.create();
-    // await loading.present();
-
-    // try {
-    //   const resDeFirebase = await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-
-    //   this.credentials = this.fb.group({
-    //     username: [resDeFirebase.user.displayName.split(' ')[0].toString(), [Validators.required]],
-    //     password: [resDeFirebase.user.uid.toString(), [Validators.required]],
-    //   });
-
-    //   // console.log('***Usuario google: ', this.credentials.value);
-    //   this.authService.login(this.credentials.value).subscribe(
-    //     async (res) => {
-    //       await loading.dismiss();
-    //       this.router.navigateByUrl('', { replaceUrl: true });
-    //     }, async (res) => {
-    //       await loading.dismiss();
-    //       const alert = await this.alertController.create({
-    //         header: 'Login failed',
-    //         // message: res.error,
-    //         buttons: ['OK'],
-    //       });
-
-    //       await alert.present();
-    //     }
-    //   );
-    // } catch (error) {
-    //   console.error(error);
-    // }
-
+  async loginGoogle(): Promise<void> {
+    await this.loginGoogleOFacebook(new firebase.auth.GoogleAuthProvider());
   }
 
-  // loginFacebook() {
-  //   console.log('Login con Facebook');
-  // }
-  async loginFacebook() {
-    this.loginGoogleOFacebook(new firebase.auth.FacebookAuthProvider());
-    // const res = await this.afAuth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
-
-    // const user = res.user;
-
-    // console.log('Usuario de Facebook: ', user);
-
-    // this.picture = user.photoURL;
-
-    // this.name = user.displayName;
-
-    // this.email = user.email;
-
-}
+  async loginFacebook(): Promise<void> {
+    await this.loginGoogleOFacebook(new firebase.auth.FacebookAuthProvider());
+  }
   forgotPass() {
     //enviar un mail con la contraseña
     console.log('Se olvidó la contraseña');
@@ -162,21 +129,21 @@ export class Login2Component implements OnInit {
     // forgot.present();
   }
 
-  async loginGoogleOFacebook(proveedorDeDatos){
-    const loading = await this.loadingController.create();
+  async loginGoogleOFacebook(proveedorDeDatos): Promise<void> {
+    const loading = await this.loadingController.create({message:'Verificando datos'});
     await loading.present();
 
     try {
       const resDeFirebase = await this.afAuth.signInWithPopup(proveedorDeDatos);
       // const resDeFirebase = await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
 
-      this.credentials = this.fb.group({
+      this.credenciales = this.fb.group({
         username: [resDeFirebase.user.displayName.split(' ')[0].toString(), [Validators.required]],
         password: [resDeFirebase.user.uid.toString(), [Validators.required]],
       });
 
-      // console.log('***Usuario google: ', this.credentials.value);
-      this.authService.login(this.credentials.value).subscribe(
+      // console.log('***Usuario google: ', this.credenciales.value);
+      this.authService.login(this.credenciales.value).subscribe(
         async (res) => {
           await loading.dismiss();
           this.router.navigateByUrl('', { replaceUrl: true });
@@ -184,7 +151,6 @@ export class Login2Component implements OnInit {
           await loading.dismiss();
           const alert = await this.alertController.create({
             header: 'Login failed',
-            // message: res.error,
             buttons: ['OK'],
           });
 
@@ -195,4 +161,20 @@ export class Login2Component implements OnInit {
       console.error(error);
     }
   }
+
+  validarForm(credencial: any) {
+    const errors = {};
+
+    if (!credencial.value.username) {
+      errors['username'] = 'El username es requerido';
+    }
+
+    if (!credencial.value.password) {
+      errors['password'] = 'El password es requerido';
+    }
+
+    // console.log('error: ', errors);
+    return errors;
+  }
+
 }
