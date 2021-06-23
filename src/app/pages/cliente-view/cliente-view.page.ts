@@ -13,6 +13,7 @@ import { Disponibilidad } from 'src/app/models/disponibilidad.models';
 import { Contacto } from 'src/app/models/contacto.models';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { GoogleService } from 'src/app/services/google.service';
 
 @Component({
   selector: 'app-cliente-view',
@@ -20,8 +21,6 @@ import { ToastService } from 'src/app/services/toast.service';
   styleUrls: ['./cliente-view.page.scss'],
 })
 export class ClienteViewPage implements OnInit {
-  lat = -34.5770106;
-  lng = -58.5406398;
 
   clienteForm: FormGroup;
   clienteSubmit: Cliente;
@@ -68,6 +67,7 @@ export class ClienteViewPage implements OnInit {
     private alertCtrl: AlertController,
     private loading: LoadingService,
     private toastService: ToastService,
+    private googleService: GoogleService,
   ) { }
 
   get nombre() {
@@ -401,10 +401,10 @@ export class ClienteViewPage implements OnInit {
       this.cliente.direccion = this.clienteForm.get('direccion').value;
       console.log(this.cliente.direccion);
       this.cliente.disponibilidades = disponibilidadesFiltradas;
-      /**Deberiamos llamar al servicio de Google */
-      this.cliente.direccion.latitud = 0.0;
-      this.cliente.direccion.longitud = 0.0;
-
+      /** Llamamos al servicio de Google para obtener lat y long de la direccion */
+      const geoLocalizacion = await this.googleService.getGeoLocation(this.cliente.direccion);
+      this.cliente.direccion.latitud = geoLocalizacion.lat;
+      this.cliente.direccion.longitud = geoLocalizacion.lng;
       /**
        * Seteamos las props de contactos.
        * Como el contacto por ahora tiene un solo telefono y un solo email
