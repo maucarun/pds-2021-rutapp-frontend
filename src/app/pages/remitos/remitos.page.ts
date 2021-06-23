@@ -37,7 +37,7 @@ export class RemitosPage {
     this.user = JSON.parse(user);
     this.buscarRemito = '';
 
-    this.remitoService.getAll(this.user.idUsuario).then(
+    this.remitoService.getAll().then(
       (data: Remito[]) => this.remitos = data
     ).then(
       () => {

@@ -128,7 +128,7 @@ export class RemitoViewPage implements OnInit {
           text: 'Borrar',
           handler: async () => {
             await this.remitoService.cancelarRemito(this.idRemito);
-            this.router.navigate(['/remitos']);
+            this.volverAListaRemitos();
           }
         }
       ]
@@ -155,7 +155,7 @@ export class RemitoViewPage implements OnInit {
   async presentModal() {
     /* Filtramos los productos del back no presentes en el remito */
 
-    const elementosSinSeleccionar = this.prsDisponibles.filter(p => !this.remito.productosDelRemito.some(pr => pr.producto.idProducto === p.producto.idProducto))
+    const elementosSinSeleccionar = this.prsDisponibles.filter(p => !this.remito.productosDelRemito.some(pr => pr.producto.idProducto === p.producto.idProducto));
 
     const modal = await this.modalController.create({
       component: ModalPage,
@@ -186,7 +186,7 @@ export class RemitoViewPage implements OnInit {
       delete this.remito.comprobante;
       await this.remitoService.actualizarRemito(this.remito);
     }
-    this.router.navigate(['/remitos']);
+    this.volverAListaRemitos();
   }
 
   formatearFecha(fecha: string) {
@@ -206,6 +206,9 @@ export class RemitoViewPage implements OnInit {
     this.router.navigate(['remitos/editar/' + this.idRemito]);
   }
 
+  volverAListaRemitos() {
+    this.router.navigate(['/remitos']);
+  }
 }
 
 /**

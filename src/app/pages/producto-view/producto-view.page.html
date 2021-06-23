@@ -1,4 +1,4 @@
-<div  *ngIf="!!producto" class="ion-page" id="main-content">
+<div *ngIf="!!producto" class="ion-page" id="main-content">
   <ion-header [translucent]="true">
     <ion-toolbar color="secondary">
       <ion-buttons slot="start">
@@ -15,98 +15,77 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <small style="color:gray">Nombre</small>
+          <ion-label style="color:gray">Nombre</ion-label>
         </ion-col>
       </ion-row>
       <ion-row class="ion-margin-bottom">
         <ion-col>
-          <ion-item class="newitem2">
-            <ion-input 
-            placeholder="nombre" 
-            type="text" 
-            [(ngModel)]="producto.nombre" 
-            required
-            [disabled]="isView"
-            >
-            </ion-input>
-          </ion-item>
+          <ion-input placeholder="Ingrese nombre" type="text" [(ngModel)]="producto.nombre" required
+            [disabled]="isView">
+          </ion-input>
         </ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col>
-          <small style="color:gray">Precio</small>
+          <ion-label style="color:gray">Precio</ion-label>
         </ion-col>
       </ion-row>
       <ion-row class="ion-margin-bottom">
         <ion-col>
-          <ion-item class="newitem2">
-            <ion-input 
-            placeholder="precio" 
-            type="number" 
-            [(ngModel)]="producto.precio_unitario" 
-            required
-            [disabled]="isView"
-            >
-            </ion-input>
-          </ion-item>
+          <ion-input placeholder="precio" type="number" [(ngModel)]="producto.precio_unitario" required
+            [disabled]="isView">
+          </ion-input>
         </ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col>
-          <small style="color:gray">Descripcion</small>
+          <ion-label style="color:gray">Descripcion</ion-label>
         </ion-col>
       </ion-row>
       <ion-row class="ion-margin-bottom">
         <ion-col>
-          <ion-item class="newitem2">
-            <ion-input 
-            placeholder="descripcion" 
-            type="text" 
-            [(ngModel)]="producto.descripcion" 
-            required
-            [disabled]="isView"
-            >
-            </ion-input>
-          </ion-item>
+          <ion-input placeholder="Ingrese descripcion" type="text" [(ngModel)]="producto.descripcion" required
+            [disabled]="isView">
+          </ion-input>
         </ion-col>
       </ion-row>
 
       <ion-row>
         <ion-col>
-          <small style="color:gray">Imagen</small>
+          <ion-label style="color:gray">Imagen</ion-label>
         </ion-col>
       </ion-row>
       <ion-row class="ion-margin-bottom">
         <ion-col>
-            <!-- se muestra al crear o editar un producto  -->
-            <ion-item *ngIf='!isView'>
-              <ion-input type="file" accept="image/*" (change)="changeListener($event)"></ion-input>
-            </ion-item>
-            <!-- Imagen que siempre se muestra -->
-            <ion-img  [src]="producto.url_imagen" alt='photo'></ion-img>
+          <!-- se muestra al crear o editar un producto  -->
+          <ion-item *ngIf='!isView'>
+            <ion-input type="file" accept="image/*" (change)="changeListener($event)"></ion-input>
+          </ion-item>
+          <!-- se muestra cuando el producto tiene imagen -->
+          <ion-img *ngIf='producto.url_imagen' [src]="producto.url_imagen" alt='photo'></ion-img>
         </ion-col>
       </ion-row>
     </ion-grid>
 
 
     <ion-fab *ngIf='isView' vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button color="warning" (click)="borrarProducto()">
-        <ion-icon name="trash"></ion-icon>
+      <ion-fab-button color="danger" (click)="borrarProducto()">
+        <ion-icon name="trash-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-fab *ngIf='isView'vertical="bottom" horizontal="start" slot="fixed">
-      <ion-fab-button  color="warning" (click)="editarProducto()">
+    <ion-fab *ngIf='isView' vertical="bottom" horizontal="start" slot="fixed">
+      <ion-fab-button color="warning" (click)="editarProducto()">
         <ion-icon name="create-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    <ion-fab *ngIf='!isView'vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab *ngIf='!isView' vertical="bottom" horizontal="start" slot="fixed">
       <ion-fab-button color="warning" (click)="guardarProducto()">
-          <ion-icon name="save-outline"></ion-icon>
+        <ion-icon name="save-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
-    </ion-content>
+  </ion-content>
 
 
 </div>

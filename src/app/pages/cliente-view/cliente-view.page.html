@@ -20,7 +20,7 @@
 
     <!-- <ion-item id="formCliente" *ngIf="createMode"> -->
 
-    <form [formGroup]="clienteForm" (ngSubmit)="onSubmit(clienteForm,$event)">
+    <form [formGroup]="clienteForm" (ngSubmit)="onSubmit(clienteForm,$event)" style="margin-bottom: 65px">
       <div>
         <ion-card>
           <ion-card-header>
@@ -75,7 +75,8 @@
             <ion-card-header>
               <ion-item class="ion-text-left" lines="none">
                 <ion-label style="font-size: 15px;" color="primary">Contactos</ion-label>
-                <ion-button *ngIf="!viewMode" type="button" (click)="addContactoFormRow($event)" slot="end" fill="clear">
+                <ion-button *ngIf="!viewMode" type="button" (click)="addContactoFormRow($event)" slot="end"
+                  fill="clear">
                   <ion-icon name="add-circle"></ion-icon>
                 </ion-button>
               </ion-item>
@@ -85,7 +86,7 @@
               <div [formGroupName]="i">
                 <ion-card>
 
-                  <ion-card-header >
+                  <ion-card-header>
                     <ion-item lines="none">
                       <ion-label color="primary"><small>Contacto N°{{i+1}}</small></ion-label>
                       <ion-button *ngIf="!viewMode" fill="clear" color="danger" slot="end"
@@ -197,7 +198,7 @@
 
       <ion-fab *ngIf="!viewMode && clienteForm.enabled" bottom rigth edge>
         <ion-button [disabled]="clienteForm.invalid" type="submit" color="warning">
-        <!-- <ion-button type="submit" color="warning"> -->
+          <!-- <ion-button type="submit" color="warning"> -->
           <ion-icon name="save-outline"></ion-icon>
         </ion-button>
       </ion-fab>
