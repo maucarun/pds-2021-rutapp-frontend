@@ -10,28 +10,27 @@ import { map, tap, switchMap } from 'rxjs/operators';
 import { BehaviorSubject, Observable, from } from 'rxjs';
 import { Usuario } from '../models/usuario.models';
 import { environment } from '../../environments/environment';
-import { UsuarioService } from './usuario.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
+  user: Usuario;
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
   token = '';
-  private userData = new BehaviorSubject(null);
   url = environment.apiUrl + '/usuario';
+  private userData = new BehaviorSubject(null);
 
   constructor(
     private http: HttpClient,
-    private serviceUser: UsuarioService,
-    ) {
+  ) {
     this.loadsData();
   }
 
   async loadsData() {
-    this.loadToken();
-    this.loadUser();
+    await this.loadToken();
+    await this.loadUser();
   }
 
   async loadUser() {
@@ -42,6 +41,8 @@ export class AuthenticationService {
     } else {
       this.userData.next(false);
     }
+    this.user = JSON.parse(this.userData.getValue());
+    console.log(this.user);
   }
 
   async loadToken() {
@@ -55,12 +56,12 @@ export class AuthenticationService {
     }
   }
 
-  login(credentials: {username; password}): Observable<any> {
+  login(credentials: { username; password }): Observable<any> {
     return this.http.post(this.url + '/login', credentials).pipe(
       map((data: any) => data),
       switchMap(data => {
-        Storage.set({key: USER, value: JSON.stringify(data) });
-        return from(Storage.set({key: TOKEN_KEY, value: 'test_token'}));
+        Storage.set({ key: USER, value: JSON.stringify(data) });
+        return from(Storage.set({ key: TOKEN_KEY, value: 'test_token' }));
       }),
       tap(_ => {
         this.loadUser();
@@ -69,20 +70,30 @@ export class AuthenticationService {
     );
   }
 
-  logout(): Promise<void> {
+  async logout(): Promise<void> {
     this.isAuthenticated.next(false);
-    return Storage.remove({key: TOKEN_KEY});
+    this.userData.next(null);
+    await Storage.remove({ key: TOKEN_KEY });
+    return Storage.remove({ key: USER });
+    //const token = await Storage.get({ key: TOKEN_KEY });
+    //console.log('set token: ', token.value);
+    //console.log(await Storage.get({ key: USER }));
+    //console.log(this.userData.getValue());
   }
 
   getUser() {
     // await this.loadUser()
-    console.log(this.userData);
+    //console.log(this.userData);
     return this.userData.getValue();
+  }
+
+  getUsuario() {
+    return this.user;
   }
 
   setSessionUser(user: Usuario) {
     console.log('actualizo sesion');
-    Storage.set({key: USER, value: JSON.stringify(user) });
+    Storage.set({ key: USER, value: JSON.stringify(user) });
     this.loadUser();
   }
 }

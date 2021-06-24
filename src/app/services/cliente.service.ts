@@ -5,59 +5,76 @@ import { environment } from 'src/environments/environment';
 import { UsuarioService } from './usuario.service';
 import { AuthenticationService } from './authentication.service';
 import { Disponibilidad } from '../models/disponibilidad.models';
+import { Usuario } from '../models/usuario.models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClienteService {
 
+  /*
   idUsuario: number;
   username: string;
   password: string;
+  */
   url = environment.apiUrl + '/cliente';
+  user: Usuario;
 
-  constructor(private http: HttpClient, private usuarioService: UsuarioService, private authService: AuthenticationService) {
+  constructor(
+    private http: HttpClient,
+    private authService: AuthenticationService,
+    private usuarioService: UsuarioService,
+  ) {
+    /*
     this.authService.loadsData();
-    const user = this.authService.getUser();
-    this.idUsuario = JSON.parse(user).idUsuario;
-    this.username = JSON.parse(user).username;
-    this.password = JSON.parse(user).password;
+    this.user = this.authService.getUser();
+    this.idUsuario = JSON.parse(this.user).idUsuario;
+    this.username = JSON.parse(this.user).username;
+    this.password = JSON.parse(this.user).password;
+    */
   }
 
   async getAll(idUsuario: number): Promise<Cliente[]> {
-    console.log('Buscaré los clientes del usuario ' + this.idUsuario)
-    return await this.http.get<Cliente[]>(this.url + '/activo/usuario/' + this.idUsuario).toPromise()
+    /*
+    this.user = this.authService.getUser();
+    this.idUsuario = JSON.parse(this.user).idUsuario;
+    this.username = JSON.parse(this.user).username;
+    this.password = JSON.parse(this.user).password;
+    */
+    this.user = this.authService.getUsuario();
+    console.log('Buscaré los clientes del usuario ' + this.user.idUsuario);
+    return this.http.get<Cliente[]>(this.url + '/activo/usuario/' + this.user.idUsuario).toPromise();
   }
 
   async get(idUsuario: number, id: string): Promise<Cliente> {
-    return await this.http.get<Cliente>(this.url + '/usuario/' + idUsuario + '/cliente/' + id).toPromise()
+    return this.http.get<Cliente>(this.url + '/usuario/' + this.user.idUsuario + '/cliente/' + id).toPromise();
   }
 
   async getDisponibilidades(): Promise<Disponibilidad[]> {
-    return await this.http.get<Disponibilidad[]>(this.url + '/disponibilidades').toPromise()
+    return this.http.get<Disponibilidad[]>(this.url + '/disponibilidades').toPromise();
   }
 
   async create(cliente: Cliente): Promise<Cliente> {
     const headers = new HttpHeaders({
-      usuario: this.username,
-      password: this.password,
+      usuario: this.user.username,
+      password: this.user.password,
     });
-    return await this.http.post<Cliente>(this.url, cliente, { headers }).toPromise()
+    return this.http.post<Cliente>(this.url, cliente, { headers }).toPromise();
   }
 
   async update(cliente: Cliente): Promise<Cliente> {
     const headers = new HttpHeaders({
-      usuario: this.username,
-      password: this.password,
+      usuario: this.user.username,
+      password: this.user.password,
     });
-    return await this.http.put<Cliente>(this.url, cliente, { headers }).toPromise()
+    return this.http.put<Cliente>(this.url, cliente, { headers }).toPromise();
   }
 
   async delete(id: string) {
     const headers = new HttpHeaders({
-      usuario: this.username,
-      password: this.password,
+      usuario: this.user.username,
+      password: this.user.password,
     });
-    return await this.http.delete<Cliente>(this.url + '/' + id, { headers }).toPromise()
+    return this.http.delete<Cliente>(this.url + '/' + id, { headers }).toPromise();
   }
 }
