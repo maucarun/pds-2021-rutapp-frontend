@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HojaDeRuta } from '../models/hojaDeRuta.models';
 import { Estado } from '../models/estado.models';
 import { Remito } from '../models/remito.models';
+import { Usuario } from '../models/usuario.models';
 
 /* Servicios */
 @Injectable({
@@ -14,23 +15,28 @@ import { Remito } from '../models/remito.models';
 
 export class HojaDeRutaService {
 
-    idUsuario: number;
-    username: string;
-    password: string;
+    user: Usuario
+    idUsuario: number
+    username: string
+    password: string
     url = environment.apiUrl + '/hojaDeRuta'
 
     constructor(private http: HttpClient, private authService: AuthenticationService) {
         this.authService.loadsData();
-        const user = this.authService.getUser()
-        this.idUsuario = JSON.parse(user).idUsuario
-        this.username = JSON.parse(user).username;
-        this.password = JSON.parse(user).password;
+        this.autenticar()
+    }
+
+    autenticar(){
+        this.user = this.authService.getUsuario()
+        this.idUsuario= this.user.idUsuario
+        this.username= this.user.username
+        this.password= this.user.password
     }
 
     async getAll(): Promise<PaginacionService> {
+        this.autenticar()
         const headers = new HttpHeaders({
-            usuario: this.username,
-            password: this.password,
+            usuario: this.username, password: this.password
         });
         return await this.http.get<PaginacionService>(
             this.url, { headers }
@@ -38,6 +44,7 @@ export class HojaDeRutaService {
     }
 
     async get(id: string): Promise<HojaDeRuta> {
+        this.autenticar()
         const headers = new HttpHeaders({
             usuario: this.username, password: this.password,
         });
@@ -47,6 +54,7 @@ export class HojaDeRutaService {
     }
 
     async getRemitosDisponibles(): Promise<PaginacionService> {
+        this.autenticar()
         const headers = new HttpHeaders({
             usuario: this.username, password: this.password,
         });
@@ -56,6 +64,7 @@ export class HojaDeRutaService {
     }
 
     async save(hoja: HojaDeRuta): Promise<HojaDeRuta> {
+        this.autenticar()
         const headers = new HttpHeaders({
             usuario: this.username, password: this.password,
         });
@@ -65,6 +74,7 @@ export class HojaDeRutaService {
     }
 
     async update(hoja: HojaDeRuta): Promise<HojaDeRuta> {
+        this.autenticar()
         let jsonStr = JSON.stringify(hoja)
         const strHoja = JSON.parse(jsonStr, this.formatearFecha);
         const headers = new HttpHeaders({
@@ -76,6 +86,7 @@ export class HojaDeRutaService {
     }
 
     async getEstados(): Promise<Estado[]> {
+        this.autenticar()
         const headers = new HttpHeaders({
             usuario: this.username, password: this.password,
         });
@@ -85,6 +96,7 @@ export class HojaDeRutaService {
     }
 
     async delete(id: number, motivo: string): Promise<void> {
+        this.autenticar()
         const headers = new HttpHeaders({
             usuario: this.username, password: this.password, 'Content-Type': 'application/json'
         });

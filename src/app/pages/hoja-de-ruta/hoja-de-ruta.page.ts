@@ -24,9 +24,8 @@ export class HojaDeRutaPage {
   ) { }
 
   async ionViewWillEnter() {
-    
-    
-    const user = await this.authService.getUsuario()
+    this.user = null
+    let user = this.authService.getUsuario()
     this.user = user;
     this.hojasderuta = null
 
