@@ -53,21 +53,9 @@ export class HojaDeRutaViewPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const user = this.authService.getUser();
-    this.user = JSON.parse(user);
-  }
-
-  async cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
-    this.viewMode = view;
-    this.editMode = edit;
-    this.createMode = create;
-  }
-
-  async ionViewWillEnter() {
+    this.user = this.authService.getUsuario();
     this.directionsService = new google.maps.DirectionsService()
     this.directionsDisplay = new google.maps.DirectionsRenderer()
-    const user = this.authService.getUser();
-    this.user = JSON.parse(user);
 
     this.hojaForm = this.formBuilder.group({
       nombre: ['', [Validators.required]],
@@ -109,6 +97,15 @@ export class HojaDeRutaViewPage implements OnInit {
         await this.cambiarWebEstado(false, false, true);
       }
     });
+  }
+
+  async cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
+    this.viewMode = view;
+    this.editMode = edit;
+    this.createMode = create;
+  }
+
+  async ionViewWillEnter() {
   }
 
   async inicializacion() {
