@@ -17,7 +17,7 @@ import firebase from 'firebase/app';
 
 export class RegistroPage implements OnInit {
   formularioDeRegistro: FormGroup;
-  errorRegistro: any;
+  errorRegistro={};
 
   constructor(
     private nav: NavController,
@@ -97,22 +97,16 @@ export class RegistroPage implements OnInit {
   }
 
   async registroConGoogle() {
+    console.log('Registro con google');
     await this.registroConGoogleOFacebook(new firebase.auth.GoogleAuthProvider());
   }
 
   async registroConFacebook() {
+    console.log('Registro con facebook');
     await this.registroConGoogleOFacebook(new firebase.auth.FacebookAuthProvider());
   }
 
   async registroConGoogleOFacebook(proveedorDeDatos){
-    //verifico que no haya ningún error en el formulario
-    if (Object.keys(this.errorRegistro).length){
-      const alert = await this.alertController.create({
-        header: 'Faltan completar campos',
-        buttons: ['OK'],
-      });
-      return await alert.present();
-    };
 
     const loading = await this.loadingController.create({message: 'Cargando datos...'});
     await loading.present();
