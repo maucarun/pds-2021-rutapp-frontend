@@ -31,7 +31,11 @@ export class ProductoViewPage implements OnInit {
     public toastController: ToastController,
     public loading: LoadingService,
     public alertController: AlertController,
-  ) { this.errorFormularioProducto={};}
+  ) {
+    this.errorFormularioProducto={};
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    this.producto?.url_imagen && this.corregirURL();
+  }
 
   async ngOnInit() {
     await this.loading.present('Cargando...');//si la carga es demasiado rápida, eliminarlo
@@ -113,13 +117,17 @@ export class ProductoViewPage implements OnInit {
       } else {
         //public_id viejo | imagen nueva
         this.producto.url_imagen = this.public_id + '|' + this.producto.url_imagen;
-        this.loading.present('Cargando...');
+        this.loading.present('Guardando...');
+        console.log('this.producto.url_imagen: ', this.producto.url_imagen);
+        console.log('antes de actualizar')
         this.productoService.update(this.producto)
           .then(
             () => {
               this.loading.dismiss();
               this.presentToast('Se ha actualizado correctamente!');
+              console.log('antes de corregir')
               this.corregirURL();
+              console.log('despues de corregir')
               // this.redirigirAProductos();
             },
             error => {
@@ -127,6 +135,7 @@ export class ProductoViewPage implements OnInit {
               this.loading.dismiss();
             }
           );
+          console.log('despues de actualizar')
       }
     } catch (error) {
       console.log('Hubo un error: ', error);
@@ -145,6 +154,7 @@ export class ProductoViewPage implements OnInit {
   }
 
   async changeListener($event: { target: { files: any[] } }): Promise<void> {
+    console.log('cambio de imagen');
     const imagenBase64 = await this.getBase64($event.target.files[0]);
     this.producto.url_imagen = imagenBase64.toString();
   }
@@ -157,8 +167,6 @@ export class ProductoViewPage implements OnInit {
       reader.onerror = (error) => reject(error);
     });
   }
-
-
 
   async presentToast(message: string) {
     const toast = await this.toastController.create({

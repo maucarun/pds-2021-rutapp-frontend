@@ -108,6 +108,7 @@ export class RegistroPage implements OnInit {
 
   async registroConGoogleOFacebook(proveedorDeDatos){
 
+
     const loading = await this.loadingController.create({message: 'Cargando datos...'});
     await loading.present();
 
