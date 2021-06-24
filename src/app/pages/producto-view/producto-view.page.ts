@@ -118,16 +118,13 @@ export class ProductoViewPage implements OnInit {
         //public_id viejo | imagen nueva
         this.producto.url_imagen = this.public_id + '|' + this.producto.url_imagen;
         this.loading.present('Guardando...');
-        console.log('this.producto.url_imagen: ', this.producto.url_imagen);
-        console.log('antes de actualizar')
         this.productoService.update(this.producto)
           .then(
             () => {
               this.loading.dismiss();
               this.presentToast('Se ha actualizado correctamente!');
-              console.log('antes de corregir')
               this.corregirURL();
-              console.log('despues de corregir')
+
               // this.redirigirAProductos();
             },
             error => {
@@ -135,7 +132,6 @@ export class ProductoViewPage implements OnInit {
               this.loading.dismiss();
             }
           );
-          console.log('despues de actualizar')
       }
     } catch (error) {
       console.log('Hubo un error: ', error);
@@ -154,7 +150,6 @@ export class ProductoViewPage implements OnInit {
   }
 
   async changeListener($event: { target: { files: any[] } }): Promise<void> {
-    console.log('cambio de imagen');
     const imagenBase64 = await this.getBase64($event.target.files[0]);
     this.producto.url_imagen = imagenBase64.toString();
   }
@@ -225,7 +220,7 @@ export class ProductoViewPage implements OnInit {
       errors['precio_unitario'] = 'El precio tiene que ser mayor que 0';
     }
 
-    console.log('error: ', errors);
+    // console.log('error: ', errors);
     return errors;
   }
 
