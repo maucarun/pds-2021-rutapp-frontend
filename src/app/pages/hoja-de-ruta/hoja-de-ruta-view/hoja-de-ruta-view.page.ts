@@ -1,13 +1,16 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RoutificService } from 'src/app/services/routific.service';
+import { HojaDeRuta } from 'src/app/models/hojaderuta.models';
 import { HojaDeRutaService } from 'src/app/services/hojaDeRuta.service';
 import { RutaDeNavegacion } from 'src/app/models/routific.models';
-import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
+import { EntregaComponent } from 'src/app/component/entrega/entrega.component';
+import { RemitoService } from 'src/app/services/remito.service';
+
 
 declare var google: any
 
@@ -43,12 +46,24 @@ export class HojaDeRutaViewPage implements OnInit {
     private router: Router,
     private hojaSev: HojaDeRutaService,
     private authService: AuthenticationService,
+    private rtoService: RemitoService,
     private alertCtrl: AlertController,
     private servicioRuta: RoutificService,
+    private modalCtrl: ModalController
   ) { }
 
   async ngOnInit() {
-    console.log('Método ngOnInit')
+    const user = this.authService.getUser();
+    this.user = JSON.parse(user);
+  }
+
+  async cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
+    this.viewMode = view;
+    this.editMode = edit;
+    this.createMode = create;
+  }
+
+  async ionViewWillEnter() {
     this.directionsService = new google.maps.DirectionsService()
     this.directionsDisplay = new google.maps.DirectionsRenderer()
     const user = this.authService.getUser();
@@ -70,7 +85,6 @@ export class HojaDeRutaViewPage implements OnInit {
       if (this.idHoja) {
         /* Como tiene id, completo el formulario con los datos del BE */
         try {
-          console.log('id hoja' + this.idHoja)
           this.hoja = await this.hojaSev.get(this.idHoja)
         } catch (error) {
           console.log("Ha ocurrido un error cargando la hoja de ruta, reintente.")
@@ -97,21 +111,7 @@ export class HojaDeRutaViewPage implements OnInit {
     });
   }
 
-  async cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
-    this.viewMode = view;
-    this.editMode = edit;
-    this.createMode = create;
-  }
-
-  async ionViewDidEnter() {
-    console.log('Método ionViewDidEnter')
-    if(this.hoja)
-    await this.inicializacion()
-  }
-
-  async inicializacion(){
-    console.log('Método inicializacion')
-    
+  async inicializacion() {
     if (!this.hoja || (this.hoja.estado.nombre.toLowerCase() !== 'en curso' && this.hoja.estado.nombre.toLowerCase() !== 'pendiente')) {
       return
     }
@@ -126,14 +126,11 @@ export class HojaDeRutaViewPage implements OnInit {
       return
     }
     this.proximaVisita = this.rutaNavigation.proximaVisita.nombre + ' (' + this.rutaNavigation.proximaVisita.direccion + ')'
-    console.log('final')
-    console.log(this.rutaNavigation)
     this.addMarkersToMap(this.rutaNavigation)
     this.showMap()
   }
 
   showMap() {
-    console.log('Método showMap')
     const location = new google.maps.LatLng(this.rutaNavigation.posicionInicial.lat, this.rutaNavigation.posicionInicial.lng)
     const options = {
       center: location,
@@ -144,17 +141,16 @@ export class HojaDeRutaViewPage implements OnInit {
       return
     else {
       this.map = new google.maps.Map(this.mapRef.nativeElement, options)
-      this.directionsDisplay.setMap(this.map)
-      const inicio = location
-      const final = new google.maps.LatLng(this.rutaNavigation.proximaVisita.posicion.lat, this.rutaNavigation.proximaVisita.posicion.lng)
-      this.addMarkersToMap(this.rutaNavigation)
-      this.calculateAndDisplayRoute(inicio, final)
+       this.directionsDisplay.setMap(this.map)
+       const inicio = location
+       const final = new google.maps.LatLng(this.rutaNavigation.proximaVisita.posicion.lat, this.rutaNavigation.proximaVisita.posicion.lng)
+       this.addMarkersToMap(this.rutaNavigation)
+       this.calculateAndDisplayRoute(inicio, final)
     }
 
   }
 
   addMarkersToMap(ruta: RutaDeNavegacion) {
-    console.log('Método addMarkersToMap')
     for (let marker of ruta.visitas) {
       let position = new google.maps.LatLng(marker.posicion.lat, marker.posicion.lng)
       let mapMarker = new google.maps.Marker({
@@ -169,7 +165,6 @@ export class HojaDeRutaViewPage implements OnInit {
   }
 
   addInfoWindowsToMarker(marker) {
-    console.log('Método addInfoWindowsToMarker')
     let infoWindowContent = '<div id="content">' +
       '<h2 id="firstHeading" class="firstHeading">' +
       marker.title + '</h2>' +
@@ -188,14 +183,12 @@ export class HojaDeRutaViewPage implements OnInit {
   }
 
   closeAllInfoWindows() {
-    console.log('Método closeAllInfoWindows')
     for (let windows of this.infoWindows) {
       windows.close()
     }
   }
 
   calculateAndDisplayRoute(start, end) {
-    console.log('Método calculateAndDisplayRoute')
     this.directionsService.route({
       origin: start,
       destination: end,
@@ -209,14 +202,49 @@ export class HojaDeRutaViewPage implements OnInit {
     });
   }
 
-  navegarClick() {
-        window.open('https://www.google.com/maps/dir/?api=1&destination=' +
-          this.rutaNavigation.proximaVisita.posicion.lat + ',' +
-          this.rutaNavigation.proximaVisita.posicion.lng)
+  async navegarClick() {
+    await this.mostrarModalEntrega()
+    //window.open('https://www.google.com/maps/dir/?api=1&destination=' +
+    //  this.rutaNavigation.proximaVisita.posicion.lat + ',' +
+    //  this.rutaNavigation.proximaVisita.posicion.lng)
+  }
+
+  async mostrarModalEntrega() {
+    const modal = await this.modalCtrl.create({
+      component: EntregaComponent,
+      backdropDismiss: false,
+      componentProps: {
+        visita: this.rutaNavigation.proximaVisita
+      }
+    });
+
+    await modal.present();
+    await modal.onWillDismiss().then(async (respuestaModal: any) => {
+      if (respuestaModal.role === 'cancelado') {
+        console.log('modalentrega cancelado')
+        console.log(respuestaModal.data)
+        let rto = await this.rtoService.get(this.rutaNavigation.proximaVisita.remito.idRemito + "")
+        rto.estado = { "tipo": "Remito", "id_estado": 5, "nombre": "Cancelado" }
+        rto.motivo = respuestaModal.data.motivo
+        await this.rtoService.actualizarRemito(rto)
+      }
+      if (respuestaModal.role === 'entregado') {
+        console.log('modalentrega entregado')
+        console.log(respuestaModal.data)
+        const finEntrega = new Date()
+        let rto = await this.rtoService.get(this.rutaNavigation.proximaVisita.remito.idRemito + "")
+        rto.tiempo_espera = finEntrega.getTime() - (respuestaModal.data.horaInicio as Date).getTime()
+        rto.comprobante = respuestaModal.data.comprobante
+        rto.estado = { "tipo": "Remito", "id_estado": 7, "nombre": "Entregado" }
+        await this.rtoService.actualizarRemito(rto)
+      }
+      this.hoja = await this.hojaSev.get(this.idHoja)
+      await this.inicializacion()
+    });
+
   }
 
   async alert(message: string, titulo: string) {
-    console.log('Método alert')
     const alert = await this.alertCtrl.create({
       header: titulo,
       message: message,

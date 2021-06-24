@@ -1,0 +1,28 @@
+<div class="ion-page" id="main-content">
+  <ion-header [translucent]="true">
+    <ion-toolbar color="secondary">
+      <ion-title>Seleccione los remitos a agregar</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content padding>
+    <ion-list>
+      <ion-item *ngFor="let remito of remitos; let i= index">
+        <ion-label text-wrap>
+          <ion-text color="primary">{{remito.cliente.nombre}}</ion-text>
+          <p>Disponible: {{diasDisponibles(remito)}}</p>
+        </ion-label>
+        <ion-checkbox slot="end" [(ngModel)]="remito.seleccionado"></ion-checkbox>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+
+  <ion-footer>
+    <ion-toolbar color="light">
+      <ion-item>
+        <ion-button color="danger" size="default" slot="start" (click)="cancelar()">Cancelar</ion-button>
+        <ion-button color="success" size="default" slot="end" (click)="agregarElementos()">Aceptar</ion-button>
+      </ion-item>
+    </ion-toolbar>
+  </ion-footer>
+</div>

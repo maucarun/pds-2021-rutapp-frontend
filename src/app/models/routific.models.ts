@@ -1,3 +1,4 @@
+import { Remito } from "./remito.models"
 
 export interface RtaRoutific {
   total_travel_time: number
@@ -42,6 +43,7 @@ export class Visita {
   localidad: string
   provincia: string
   posicion: Posicion
+  remito:Remito
 
   get direccion(): string {
     return this.calle + " " + this.altura.toString() + ", " + this.localidad + ", " + this.provincia

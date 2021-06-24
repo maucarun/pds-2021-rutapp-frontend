@@ -1,0 +1,128 @@
+<div class="ion-page" id="main-content">
+  <ion-header [translucent]="true">
+    <ion-toolbar color="secondary">
+      <ion-title>Navegando...</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content padding>
+    <div *ngIf="estado==='visitar'">
+      <ion-list>
+        <ion-item>
+          <ion-label text-wrap>
+            <ion-text color="primary">Cliente</ion-text>
+            <h2>{{visita.nombre}}</h2>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label text-wrap>
+            <ion-text color="primary">Direccion</ion-text>
+            <h2>{{visita.direccion}}</h2>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label text-wrap>
+            <ion-text color="primary">Inicio del recorrido</ion-text>
+            <h2>{{horaInicio | date: 'dd/MM/yyyy HH:mm:SS'}}</h2>
+          </ion-label>
+        </ion-item>
+        <ion-item  *ngIf="tieneTelefono">
+          <ion-label text-wrap>
+            <ion-button color="success" size="default" slot="start" (click)="enviarMje()">Enviar un Whattsaap</ion-button>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+
+
+
+
+    <div *ngIf="estado==='entregar'">
+      <ion-list>
+        <ion-item>
+          <ion-label text-wrap>
+            <ion-text position="floating" color="primary">Nomre</ion-text>
+            <ion-input placeholder="Nombre de quien recibe" type="text" required="true"
+              [(ngModel)]="comprobante.nombreCompleto">
+            </ion-input>
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label text-wrap>
+            <ion-text position="floating" color="primary">Nro Documento</ion-text>
+            <ion-input placeholder="Nombre de quien recibe" type="text" required="true" [(ngModel)]="comprobante.dni">
+            </ion-input>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+
+
+
+
+
+    <div *ngIf="estado==='cancelar'">
+      <ion-list>
+        <ion-item style="width: 100%;">
+          <ion-label>
+            <ion-text position="floating" color="primary">Motivo</ion-text>
+            <ion-textarea rows="10" cols="50" placeholder="Motivo de la cancelacion" type="text" required="true"
+              [(ngModel)]="motivoCancelacion">
+            </ion-textarea>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+
+
+
+
+
+    <div *ngIf="estado==='seleccionecancelacion'">
+      <ion-list>
+        <ion-item>
+          <ion-label text-wrap>
+            <ion-text color="primary">¿Desea cancelar la entrega o dejarla como pendiente?
+            </ion-text>
+          </ion-label>
+        </ion-item>
+        <ion-item style="text-align:center; width: 100%;">
+          <ion-label style="width: 100%;">
+            <ion-button style="margin-right: 1em;" color="danger" size="default" slot="start" (click)="anular()">
+              Cancelar</ion-button>
+            <ion-button color="success" size="default" slot="end" (click)="suspender()">Dejarla pendiente</ion-button>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+  </ion-content>
+
+
+
+
+  <ion-footer>
+    <ion-toolbar color="light">
+      <ion-item *ngIf="estado==='visitar'">
+        <ion-button color="danger" size="default" slot="start" (click)="cancelar()">Cancelar</ion-button>
+        <ion-button color="success" size="default" slot="end" (click)="entregar()">Realizar entrega</ion-button>
+      </ion-item>
+      <ion-item *ngIf="estado==='entregar'">
+        <ion-button color="danger" size="default" slot="start" (click)="cancelar()">Cancelar</ion-button>
+        <ion-button color="success" size="default" slot="end" (click)="finalizarEntregar()">Finalizar entrega
+        </ion-button>
+      </ion-item>
+      <ion-item *ngIf="estado==='seleccionecancelacion'">
+        <ion-button color="success" size="default" slot="end" (click)="volver()">Volver
+        </ion-button>
+      </ion-item>
+      <ion-item *ngIf="estado==='cancelar'">
+        <ion-button color="danger" size="default" slot="start" (click)="volver()">
+          Volver
+        </ion-button>
+        <ion-button color="success" size="default" slot="end" (click)="finalizarCancelacion()">
+          Aceptar
+        </ion-button>
+      </ion-item>
+    </ion-toolbar>
+  </ion-footer>
+</div>

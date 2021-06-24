@@ -2,7 +2,7 @@ import { Estado } from './estado.models';
 import { Remito } from './remito.models';
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export interface HojaDeRuta {
+export class HojaDeRuta {
     id_hoja_de_ruta: number;
     fecha_hora_inicio: Date;
     fecha_hora_fin: Date;
@@ -10,4 +10,7 @@ export interface HojaDeRuta {
     justificacion: string;
     estado: Estado;
     remitos: Remito[];
+    constructor(){
+        this.kms_recorridos= 0
+    }
 }

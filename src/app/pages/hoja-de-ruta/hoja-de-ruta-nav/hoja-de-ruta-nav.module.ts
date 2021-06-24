@@ -4,20 +4,20 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { HojaDeRutaViewPageRoutingModule } from './hoja-de-ruta-view-routing.module';
+import { HojaDeRutaNavPageRoutingModule } from './hoja-de-ruta-nav-routing.module';
 
-import { HojaDeRutaViewPage } from './hoja-de-ruta-view.page';
+import { HojaDeRutaNavPage } from './hoja-de-ruta-nav.page';
 import { ComponentsModule } from 'src/app/component/component.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    ComponentsModule,
     FormsModule,
     IonicModule,
-    HojaDeRutaViewPageRoutingModule,
     ReactiveFormsModule,
+    HojaDeRutaNavPageRoutingModule,
+    ComponentsModule
   ],
-  declarations: [HojaDeRutaViewPage]
+  declarations: [HojaDeRutaNavPage]
 })
-export class HojaDeRutaViewPageModule {}
+export class HojaDeRutaNavPageModule {}

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
-import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
+import { HojaDeRuta } from 'src/app/models/hojaderuta.models';
 import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { HojaDeRutaService, PaginacionService } from 'src/app/services/hojaDeRuta.service';
@@ -11,7 +11,7 @@ import { HojaDeRutaService, PaginacionService } from 'src/app/services/hojaDeRut
   templateUrl: './hoja-de-ruta.page.html',
   styleUrls: ['./hoja-de-ruta.page.scss'],
 })
-export class HojaDeRutaPage implements OnInit {
+export class HojaDeRutaPage {
 
   hojasderuta: HojaDeRuta[];
   user: Usuario;
@@ -24,18 +24,22 @@ export class HojaDeRutaPage implements OnInit {
   ) { }
 
   async ionViewWillEnter() {
-    const user = await this.authService.getUser();
-    this.user = JSON.parse(user);
+    
+    
+    const user = await this.authService.getUsuario()
+    this.user = user;
+    this.hojasderuta = null
 
-    this.hojaServ.getAll().then(
+    await this.hojaServ.getAll().then(
       (data: PaginacionService) => this.hojasderuta = data.reultado
     );
 
     this.menu.enable(true);
   }
-  agregarNuevaHojaDeRuta(){}
-
-  ngOnInit() {
-  }
-
+  
+  agregarNuevaHojaDeRuta() {
+    
+    this.router.navigate(['hojasderuta/hoja/crear']);
+    
+   }
 }

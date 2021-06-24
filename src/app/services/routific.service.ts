@@ -59,6 +59,7 @@ export class RoutificService {
       let nro = resultado.solution.vehiculo[i].location_id
       let datos = remitos[+nro]
       visita.numero = i
+      visita.remito = datos
       visita.nombre = datos.cliente.nombre
       visita.posicion = new Posicion()
       visita.posicion.lat = datos.cliente.direccion.latitud
