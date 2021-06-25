@@ -32,7 +32,7 @@ export class ProductoViewPage implements OnInit {
     public loading: LoadingService,
     public alertController: AlertController,
   ) {
-    this.errorFormularioProducto={};
+    this.errorFormularioProducto = {};
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.producto?.url_imagen && this.corregirURL();
   }
@@ -63,21 +63,38 @@ export class ProductoViewPage implements OnInit {
   }
 
   async borrarProducto() {
+    const msjConfirmacion = await this.alertController.create({
+      header: 'Confirme',
+      message: '¿Está seguro de eliminar este producto?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Borrar',
+          handler: async () => {
+            await this.productoService.delete(this.productoId);
+            this.redirigirAProductos();
+          }
+        }
+      ]
+    });
+    await msjConfirmacion.present();
     // const respuesta = this.presentAlertConfirm();
     // console.log('respuesta: ', respuesta);
-    const confirmacion = confirm('Estás seguro?');
-    if (confirmacion) {
-      // const respuesta = await
-      this.productoService.delete(this.producto.idProducto.toString())
-        .then(res =>
-        // {if(res.status===200)
-        // )}
-        {
-          alert('Producto eliminado');
-          this.redirigirAProductos();
-        });
-
-    }
+    //const confirmacion = confirm('Estás seguro?');
+    //if (confirmacion) {
+    // const respuesta = await
+    //this.productoService.delete(this.producto.idProducto.toString())
+    //.then(res =>
+    // {if(res.status===200)
+    // )}
+    //{
+    // alert('Producto eliminado');
+    // this.redirigirAProductos();
+    //});
+    //}
     // const respuesta = await this.productoService.delete(this.producto.idProducto.toString());
     // alert('Producto eliminado');
     // this.redirigirAProductos();
@@ -91,7 +108,7 @@ export class ProductoViewPage implements OnInit {
     // verifico que los campos requeridos esten llenos
     this.errorFormularioProducto = this.validarForm(this.producto);
     //verifico que no hayan errores
-    if (Object.keys(this.errorFormularioProducto).length){
+    if (Object.keys(this.errorFormularioProducto).length) {
       const alert = await this.alertController.create({
         header: 'Faltan completar campos',
         buttons: ['OK'],
@@ -210,7 +227,7 @@ export class ProductoViewPage implements OnInit {
     const errors = {};
 
     if (!producto.nombre) {
-    // if (!formulario.value.username) {
+      // if (!formulario.value.username) {
       errors['nombre'] = 'El nombre es requerido';
     }
 
@@ -224,8 +241,8 @@ export class ProductoViewPage implements OnInit {
     return errors;
   }
 
-  validarNumero(precio): boolean{
-      const regex = /^[1-9][0-9]*$/;
-      return regex.test(String(precio));
+  validarNumero(precio): boolean {
+    const regex = /^[1-9][0-9]*$/;
+    return regex.test(String(precio));
   }
 }
