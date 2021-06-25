@@ -12,6 +12,7 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { ModalPage } from 'src/app/component/modal/modal.component';
 import { ProductoRemito } from 'src/app/models/productoRemito.models';
 import { Estado } from 'src/app/models/estado.models';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-remito-view',
@@ -45,6 +46,7 @@ export class RemitoViewPage implements OnInit {
     private clienteService: ClienteService,
     private productoService: ProductoService,
     private modalController: ModalController,
+    private toastService: ToastService,
   ) { }
 
   async ngOnInit() {
@@ -118,7 +120,7 @@ export class RemitoViewPage implements OnInit {
   async borrarRemito() {
     const msjConfirmacion = await this.alertCtrl.create({
       header: 'Confirme',
-      message: '¿Esta seguro de eliminar este remito?',
+      message: '¿Está seguro de eliminar este remito?',
       buttons: [
         {
           text: 'Cancelar',
@@ -127,8 +129,15 @@ export class RemitoViewPage implements OnInit {
         {
           text: 'Borrar',
           handler: async () => {
-            await this.remitoService.cancelarRemito(this.idRemito);
-            this.volverAListaRemitos();
+            await this.remitoService.cancelarRemito(this.idRemito)
+              .then(() => {
+                this.toastService.presentToast('Remito eliminado');
+                this.volverAListaRemitos();
+              })
+              .catch(err => {
+                console.log(err);
+                this.toastService.presentToast(err.error.message);
+              });
           }
         }
       ]

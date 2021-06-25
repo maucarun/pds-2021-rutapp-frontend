@@ -7,6 +7,7 @@ import { Producto } from 'src/app/models/producto.models';
 import { ProductoService } from 'src/app/services/producto.service';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { LoadingService } from 'src/app/services/loading.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-producto-view',
@@ -31,6 +32,7 @@ export class ProductoViewPage implements OnInit {
     public toastController: ToastController,
     public loading: LoadingService,
     public alertController: AlertController,
+    private toastService: ToastService,
   ) {
     this.errorFormularioProducto = {};
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -74,8 +76,15 @@ export class ProductoViewPage implements OnInit {
         {
           text: 'Borrar',
           handler: async () => {
-            await this.productoService.delete(this.productoId);
-            this.redirigirAProductos();
+            await this.productoService.delete(this.productoId)
+              .then(() => {
+                this.toastService.presentToast('Eliminado el producto ' + this.producto.nombre);
+                this.redirigirAProductos();
+              })
+              .catch(err => {
+                console.log(err);
+                this.toastService.presentToast(err.error.message);
+              });
           }
         }
       ]

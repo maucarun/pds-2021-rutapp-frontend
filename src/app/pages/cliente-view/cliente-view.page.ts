@@ -159,7 +159,7 @@ export class ClienteViewPage implements OnInit {
     /* Verificando si la página tiene id */
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       this.idCliente = paramMap.get('id');
-      
+
       /** Obtenemos un batch de disponibilidades para los 7 dias de la semana */
       this.disponibilidadesNuevas = await this.clienteService.getDisponibilidades();
       this.disponibilidadesNuevas.forEach((d: any) => d.seleccionado = false);
@@ -259,15 +259,15 @@ export class ClienteViewPage implements OnInit {
 
   formatearHora(hora: string) {
     console.log(hora);
-    
-    if ( isNaN( Date.parse(hora) ) ) {
+
+    if (isNaN(Date.parse(hora))) {
       return hora;
     }
-    
+
     const date = new Date(hora);
-    
+
     const nuevaHora: any = ('00' + date.getHours()).slice(-2) + ':' +
-    ('00' + date.getMinutes()).slice(-2);
+      ('00' + date.getMinutes()).slice(-2);
     console.log(nuevaHora);
     return nuevaHora;
   }
@@ -363,7 +363,7 @@ export class ClienteViewPage implements OnInit {
   async borrarCliente() {
     const msjConfirmacion = await this.alertCtrl.create({
       header: 'Confirme',
-      message: '¿Esta seguro de eliminar este cliente?',
+      message: '¿Está seguro de eliminar este cliente?',
       buttons: [
         {
           text: 'Cancelar',
@@ -374,7 +374,7 @@ export class ClienteViewPage implements OnInit {
           handler: async () => {
             await this.clienteService.delete(this.idCliente)
               .then(() => {
-                this.toastService.presentToast('Eliminado el cliente ' + this.idCliente);
+                this.toastService.presentToast('Eliminado el cliente ' + this.cliente.nombre);
                 this.router.navigate(['clientes']);
               })
               .catch(err => {
