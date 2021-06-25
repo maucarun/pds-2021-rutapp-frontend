@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController, PopoverController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/component/popover/popover.component';
-import { HojaDeRuta } from 'src/app/models/hojaderuta.models';
+import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
 import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { HojaDeRutaService, PaginacionService } from 'src/app/services/hojaDeRuta.service';
