@@ -25,9 +25,11 @@
             [(ngModel)]="usuario.nombre" 
             required
             [disabled]="onlyView"
+            (ionChange)="handlerChange($event)"
             >
       </ion-input>
     </ion-item>
+    <p *ngIf="errorRegistro?.nombre" class="p-error">{{errorRegistro?.nombre}}</p>
 
     <ion-item>
       <ion-label><strong>Apellido: </strong></ion-label>
@@ -37,10 +39,12 @@
             [(ngModel)]="usuario.apellido" 
             required
             [disabled]="onlyView"
+            (ionChange)="handlerChange($event)"
             >
             </ion-input>
 
     </ion-item>
+    <p *ngIf="errorRegistro?.apellido" class="p-error">{{errorRegistro?.apellido}}</p>
 
     <ion-item>
       <ion-label><strong>Email: </strong></ion-label>
@@ -50,9 +54,11 @@
             [(ngModel)]="usuario.email" 
             required
             [disabled]="onlyView"
+            (ionChange)="handlerChange($event)"
             >
             </ion-input>
     </ion-item>
+    <p *ngIf="errorRegistro?.email" class="p-error">{{errorRegistro?.email}}</p>
 
     <ion-item>
       <ion-label><strong>Contraseña: </strong></ion-label>
@@ -62,10 +68,12 @@
             [(ngModel)]="usuario.password" 
             required
             [disabled]="onlyView"
+            (ionChange)="handlerChange($event)"
             >
             </ion-input>
 
     </ion-item>
+    <p *ngIf="errorRegistro?.password && !onlyView" class="p-error">{{errorRegistro?.password}}</p>
 
     <ion-item>
       <ion-label><strong>Alias: </strong></ion-label>
@@ -75,9 +83,11 @@
             [(ngModel)]="usuario.username" 
             required
             [disabled]="onlyView"
+            (ionChange)="handlerChange($event)"
             >
       </ion-input>
     </ion-item>
+    <p *ngIf="errorRegistro?.username" class="p-error">{{errorRegistro?.username}}</p>
 
   </ion-item-group>
 

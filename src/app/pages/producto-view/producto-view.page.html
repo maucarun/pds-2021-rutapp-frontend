@@ -92,8 +92,9 @@
           <ion-col>
             <!-- se muestra al crear o editar un producto  -->
             <ion-item *ngIf='!isView'>
-              <ion-input type="file" accept="image/*" (change)="changeListener($event)"></ion-input>
+              <ion-input type="file" accept="image/*" (ionChange)="handlerChange($event)" (change)="changeListener($event)"></ion-input>
             </ion-item>
+            <p *ngIf="errorFormularioProducto?.url_imagen" class="p-error">{{errorFormularioProducto?.url_imagen}}</p>
             <!-- se muestra cuando el producto tiene imagen -->
             <ion-img *ngIf='producto.url_imagen' [src]="producto.url_imagen" alt='photo'></ion-img>
           </ion-col>

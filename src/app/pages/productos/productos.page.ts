@@ -4,6 +4,7 @@ import { ProductoService } from '../../services/producto.service';
 import { Router } from '@angular/router';
 import { HojaDeRutaService } from 'src/app/services/hojaDeRuta.service';
 import { LoadingService } from 'src/app/services/loading.service';
+//import { AvatarService } from 'src/app/services/avatar.service';
 
 @Component({
   selector: 'app-productos',
@@ -20,6 +21,7 @@ export class ProductosPage {
     private loading: LoadingService,
     private productoService: ProductoService,
     private router: Router,
+    //private avatarService: AvatarService
   ) { }
 
 
@@ -32,12 +34,17 @@ export class ProductosPage {
       (productos: Producto[]) => this.productos = productos
     ).then(() => {
       this.corregirURL();
+/*       for (const producto of this.productos) {
+        if (producto.url_imagen === '') {
+          producto.url_imagen = this.avatarService.getAvatar(producto.nombre);
+        }
+      } */
       this.productosBackup = this.productos;
       this.loading.dismiss()
     })
-    .catch((e) => {
-      console.error(e)
-    });
+      .catch((e) => {
+        console.error(e)
+      });
   }
 
   corregirURL() {

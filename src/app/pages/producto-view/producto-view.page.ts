@@ -142,6 +142,7 @@ export class ProductoViewPage implements OnInit {
           );
       } else {
         //public_id viejo | imagen nueva
+        //if (this.public_id === undefined) { this.public_id = '-1'; }
         this.producto.url_imagen = this.public_id + '|' + this.producto.url_imagen;
         this.loading.present('Guardando...');
         this.productoService.update(this.producto)
@@ -178,6 +179,7 @@ export class ProductoViewPage implements OnInit {
   async changeListener($event: { target: { files: any[] } }): Promise<void> {
     const imagenBase64 = await this.getBase64($event.target.files[0]);
     this.producto.url_imagen = imagenBase64.toString();
+    this.handlerChange('');
   }
 
   getBase64(file: Blob) {
@@ -244,6 +246,10 @@ export class ProductoViewPage implements OnInit {
       errors['precio_unitario'] = 'El precio es requerido';
     } else if (!this.validarNumero(producto.precio_unitario)) {
       errors['precio_unitario'] = 'El precio tiene que ser mayor que 0';
+    }
+
+    if (!producto.url_imagen) {
+      errors['url_imagen'] = 'La imagen es requerida';
     }
 
     // console.log('error: ', errors);
