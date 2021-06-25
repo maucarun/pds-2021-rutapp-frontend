@@ -159,6 +159,7 @@ export class ClienteViewPage implements OnInit {
     /* Verificando si la página tiene id */
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       this.idCliente = paramMap.get('id');
+      
       /** Obtenemos un batch de disponibilidades para los 7 dias de la semana */
       this.disponibilidadesNuevas = await this.clienteService.getDisponibilidades();
       this.disponibilidadesNuevas.forEach((d: any) => d.seleccionado = false);
@@ -194,7 +195,6 @@ export class ClienteViewPage implements OnInit {
         disponibilidades: this.cliente.disponibilidades,
         urlImagenPerfil: this.cliente.urlImagenPerfil
       });
-
       // this.clienteForm.patchValue(this.cliente)
 
       /** Pegamos los contactos del cliente en el formulario */
@@ -258,9 +258,18 @@ export class ClienteViewPage implements OnInit {
   }
 
   formatearHora(hora: string) {
+    console.log(hora);
+    
+    if ( isNaN( Date.parse(hora) ) ) {
+      return hora;
+    }
+    
     const date = new Date(hora);
-    return ('00' + date.getHours()).slice(-2) + ':' +
-      ('00' + date.getMinutes()).slice(-2);
+    
+    const nuevaHora: any = ('00' + date.getHours()).slice(-2) + ':' +
+    ('00' + date.getMinutes()).slice(-2);
+    console.log(nuevaHora);
+    return nuevaHora;
   }
 
   obtenerDisponibilidadForm() {
@@ -382,11 +391,11 @@ export class ClienteViewPage implements OnInit {
   async onSubmit(form: FormGroup, e: any) {
     e.preventDefault();
     //console.log(form);
-    const dispSeleccionadas = this.clienteForm.get('disponibilidades').value;
-    const disponibilidadesFiltradas = dispSeleccionadas.filter(dsp => dsp.disponibilidadSeleccionado);
+    const disponibilidadesSemana = this.clienteForm.get('disponibilidades').value;
+    const disponibilidadesSeleccionadas = disponibilidadesSemana.filter(dsp => dsp.disponibilidadSeleccionado);
     const contactosAgregados = this.clienteForm.get('contactos').value;
     //console.log(contactosAgregados.length)
-    if (disponibilidadesFiltradas.length < 1) { this.toastService.presentToast('Debe seleccionar al menos una disponibilidad'); }
+    if (disponibilidadesSeleccionadas.length < 1) { this.toastService.presentToast('Debe seleccionar al menos una disponibilidad'); }
     else if (contactosAgregados.length < 1) { this.toastService.presentToast('Debe añadir al menos un contacto'); }
     else {
       /** Como el objeto cliente está vacío, tenemos que setetarle cada una de las propiedades del form */
@@ -394,13 +403,9 @@ export class ClienteViewPage implements OnInit {
       this.cliente.observaciones = this.clienteForm.get('observaciones').value;
       this.cliente.cuit = this.clienteForm.get('cuit').value;
       this.cliente.promedio_espera = this.clienteForm.get('promedio_espera').value;
-      // this.cliente.direccion.calle = this.clienteForm.get('calle').value;
-      // this.cliente.direccion.altura = this.clienteForm.get('altura').value;
-      // this.cliente.direccion.localidad = this.clienteForm.get('localidad').value;
-      // this.cliente.direccion.provincia = this.clienteForm.get('provincia').value;
       this.cliente.direccion = this.clienteForm.get('direccion').value;
-      console.log(this.cliente.direccion);
-      this.cliente.disponibilidades = disponibilidadesFiltradas;
+      // console.log(this.cliente.direccion);
+      this.cliente.disponibilidades = disponibilidadesSeleccionadas;
       /** Llamamos al servicio de Google para obtener lat y long de la direccion */
       const geoLocalizacion = await this.googleService.getGeoLocation(this.cliente.direccion);
       this.cliente.direccion.latitud = geoLocalizacion.lat;
@@ -435,23 +440,24 @@ export class ClienteViewPage implements OnInit {
       //   this.cliente.contactos.push(contacto);
       // });
 
+      /** Seteamos las props de disponibilidades */
+      disponibilidadesSeleccionadas.forEach(d => {
+        d.hora_apertura = this.formatearHora(d.hora_apertura);
+        d.hora_cierre = this.formatearHora(d.hora_cierre);
+        /** Volvemos a transformar el dia de la semana en un objeto DiaSemana */
+        this.disponibilidadesNuevas.forEach(disp => {
+          if (d.diaSemana === disp.diaSemana.diaSemana) {
+            d.diaSemana = disp.diaSemana;
+          }
+        });
+      });
+
       console.log(this.cliente);
 
       try {
         if (this.idCliente === 'nuevo') {
-          /** Seteamos las props de disponibilidades */
-          disponibilidadesFiltradas.forEach(d => {
-            d.hora_apertura = this.formatearHora(d.hora_apertura);
-            d.hora_cierre = this.formatearHora(d.hora_cierre);
-            /** Volvemos a transformar el dia de la semana en un objeto DiaSemana */
-            this.disponibilidadesNuevas.forEach(disp => {
-              if (d.diaSemana === disp.diaSemana.diaSemana) {
-                d.diaSemana = disp.diaSemana;
-              }
-            });
-          });
 
-          /** Como es un nuevo cliente hago el llamado al POST */
+          /** Como es un NUEVO cliente hago el llamado al POST */
           await this.clienteService.create(this.cliente)
             .then(() => {
               this.toastService.presentToast('Cliente creado exitosamente!');
@@ -466,17 +472,6 @@ export class ClienteViewPage implements OnInit {
         else {
           const idCliente = Number(this.idCliente); /** Transformo el id a number para comparar con el id que recibí del BE */
           if (idCliente === this.cliente.idCliente) {
-            /** Seteamos las props de disponibilidades */
-            disponibilidadesFiltradas.forEach(d => {
-              d.hora_apertura = d.hora_apertura;
-              d.hora_cierre = d.hora_cierre;
-              /** Volvemos a transformar el dia de la semana en un objeto DiaSemana */
-              this.disponibilidadesNuevas.forEach(disp => {
-                if (d.diaSemana === disp.diaSemana.diaSemana) {
-                  d.diaSemana = disp.diaSemana;
-                }
-              });
-            });
 
             /** Como estoy editando un cliente hago el llamado al PUT */
             await this.clienteService.update(this.cliente)

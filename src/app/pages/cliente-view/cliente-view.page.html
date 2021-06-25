@@ -24,7 +24,9 @@
       <div>
         <ion-card>
           <ion-card-header>
-            <ion-label color="primary">Datos</ion-label>
+            <ion-item class="ion-text-left" lines="none">
+              <ion-label style="font-size: 15px;" color="primary">Datos</ion-label>
+            </ion-item>
           </ion-card-header>
           <ion-card-content>
             <ion-item>
@@ -51,7 +53,9 @@
 
         <ion-card formGroupName="direccion">
           <ion-card-header>
-            <ion-label color="primary">Direccion</ion-label>
+            <ion-item class="ion-text-left" lines="none">
+              <ion-label style="font-size: 15px;" color="primary">Direccion</ion-label>
+            </ion-item>
           </ion-card-header>
           <ion-card-content>
             <ion-item>
@@ -146,54 +150,36 @@
           </div>
         </ion-card>
 
+        <ion-card>
+          <ion-card-header>
+            <ion-item class="ion-text-left" lines="none">
+              <ion-label style="font-size: 15px;" color="primary">Disponibilidades</ion-label>
+            </ion-item>
+          </ion-card-header>
+          <ion-list formArrayName="disponibilidades">
+            <ion-item *ngFor="let disponibilidad of clienteForm.get('disponibilidades')['controls']; let i = index"
+              style="width: 100%;" lines="none">
+              <div [formGroupName]="i">
+                <!-- <ion-input formControlName="disponibilidadDiaSemana" readonly></ion-input> -->
+                <ion-item style="width: 100%;">
 
-        <ion-list formArrayName="disponibilidades">
-          <ion-item *ngFor="let disponibilidad of clienteForm.get('disponibilidades')['controls']; let i = index"
-            style="width: 100%;" lines="none">
-            <!-- <ion-grid [formGroupName]="i">
-               <ion-input formControlName="disponibilidadDiaSemana" readonly></ion-input> 
-              <ion-row class="ion-align-items-center">
+                  <ion-checkbox style="width: 20px;" formControlName="disponibilidadSeleccionado"></ion-checkbox>
 
-                <ion-col size="1">
-                  <ion-checkbox formControlName="disponibilidadSeleccionado"></ion-checkbox>
-                </ion-col>
+                  <ion-input style="width: 50%; margin-left: 20px;" formControlName="diaSemana" readonly></ion-input>
 
-                <ion-col size="5">
-                  <ion-input formControlName="disponibilidadDiaSemana" readonly></ion-input>
-                </ion-col>
-
-                <ion-col size="3">
-                  <ion-datetime placeholder="Apert." formControlName="disponibilidadHoraApertura" displayFormat="HH:mm">
+                  <ion-datetime style="width: 25%;" placeholder="Apertura" formControlName="hora_apertura"
+                    displayFormat="HH:mm">
                   </ion-datetime>
-                </ion-col>
 
-                <ion-col size="3">
-                  <ion-datetime placeholder="Cierre" formControlName="disponibilidadHoraCierre" displayFormat="HH:mm">
+                  <ion-datetime style="width: 25%; margin-left: 20px;" placeholder="Cierre"
+                    formControlName="hora_cierre" displayFormat="HH:mm">
                   </ion-datetime>
-                </ion-col>
 
-              </ion-row>
-            </ion-grid> -->
-            <div [formGroupName]="i">
-              <!-- <ion-input formControlName="disponibilidadDiaSemana" readonly></ion-input> -->
-              <ion-item style="width: 100%;">
-
-                <ion-checkbox style="width: 20px;" formControlName="disponibilidadSeleccionado"></ion-checkbox>
-
-                <ion-input style="width: 50%; margin-left: 20px;" formControlName="diaSemana" readonly></ion-input>
-
-                <ion-datetime style="width: 25%;" placeholder="Apertura" formControlName="hora_apertura"
-                  displayFormat="HH:mm">
-                </ion-datetime>
-
-                <ion-datetime style="width: 25%; margin-left: 20px;" placeholder="Cierre" formControlName="hora_cierre"
-                  displayFormat="HH:mm">
-                </ion-datetime>
-
-              </ion-item>
-            </div>
-          </ion-item>
-        </ion-list>
+                </ion-item>
+              </div>
+            </ion-item>
+          </ion-list>
+        </ion-card>
       </div>
 
       <ion-fab *ngIf="!viewMode && clienteForm.enabled" bottom rigth edge>

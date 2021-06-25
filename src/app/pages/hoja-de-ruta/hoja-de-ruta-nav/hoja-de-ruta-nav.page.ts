@@ -5,7 +5,6 @@ import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 
-import { HojaDeRuta } from 'src/app/models/hojaderuta.models';
 import { HojaDeRutaService, PaginacionService } from 'src/app/services/hojaDeRuta.service';
 import { Remito } from 'src/app/models/remito.models';
 import { Estado } from 'src/app/models/estado.models';
@@ -15,6 +14,7 @@ import { ProductoRemito } from 'src/app/models/productoRemito.models';
 import { ComprobanteEntrega } from 'src/app/models/comprobanteEntrega.models';
 import { Disponibilidad } from 'src/app/models/disponibilidad.models';
 import { DiaSemana } from 'src/app/models/diasemana.models';
+import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
 
 
 @Component({

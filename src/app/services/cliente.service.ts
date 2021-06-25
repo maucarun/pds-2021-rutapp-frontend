@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Cliente } from '../models/cliente.models';
 import { environment } from 'src/environments/environment';
-import { UsuarioService } from './usuario.service';
 import { AuthenticationService } from './authentication.service';
 import { Disponibilidad } from '../models/disponibilidad.models';
 import { Usuario } from '../models/usuario.models';
@@ -23,7 +22,6 @@ export class ClienteService {
   constructor(
     private http: HttpClient,
     private authService: AuthenticationService,
-    private usuarioService: UsuarioService,
   ) {
     /*
     this.authService.loadsData();
@@ -47,7 +45,7 @@ export class ClienteService {
   }
 
   async get(idUsuario: number, id: string): Promise<Cliente> {
-    return this.http.get<Cliente>(this.url + '/usuario/' + this.user.idUsuario + '/cliente/' + id).toPromise();
+    return this.http.get<Cliente>(this.url + '/usuario/' + idUsuario + '/cliente/' + id).toPromise();
   }
 
   async getDisponibilidades(): Promise<Disponibilidad[]> {
@@ -55,6 +53,7 @@ export class ClienteService {
   }
 
   async create(cliente: Cliente): Promise<Cliente> {
+    this.user = this.authService.getUsuario();
     const headers = new HttpHeaders({
       usuario: this.user.username,
       password: this.user.password,
@@ -63,6 +62,7 @@ export class ClienteService {
   }
 
   async update(cliente: Cliente): Promise<Cliente> {
+    this.user = this.authService.getUsuario();
     const headers = new HttpHeaders({
       usuario: this.user.username,
       password: this.user.password,
@@ -71,6 +71,7 @@ export class ClienteService {
   }
 
   async delete(id: string) {
+    this.user = this.authService.getUsuario();
     const headers = new HttpHeaders({
       usuario: this.user.username,
       password: this.user.password,
