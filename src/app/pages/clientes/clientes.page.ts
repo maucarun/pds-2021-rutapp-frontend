@@ -6,6 +6,7 @@ import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { MenuController } from '@ionic/angular';
 import { AvatarService } from 'src/app/services/avatar.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-clientes',
@@ -23,6 +24,7 @@ export class ClientesPage {
     private clieServ: ClienteService,
     private router: Router,
     private authService: AuthenticationService,
+    private loading: LoadingService,
     private menu: MenuController,
     private avatarService: AvatarService
   ) { }
@@ -33,6 +35,7 @@ export class ClientesPage {
 
   /** Este método se ejecuta cada vez que se entra al componente */
   async ionViewWillEnter() {
+    this.loading.present('Cargando...');//si la carga es demasiado rápida, eliminarlo
     const user = await this.authService.getUser();
     this.user = JSON.parse(user);
     this.buscarCliente = '';
@@ -49,6 +52,7 @@ export class ClientesPage {
     );
 
     this.menu.enable(true);
+    this.loading.dismiss();
   }
 
   async getClientesBusqueda(ev: any) {

@@ -7,6 +7,7 @@ import { Usuario } from 'src/app/models/usuario.models';
 import { AvatarService } from 'src/app/services/avatar.service';
 import { PopoverController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/component/popover/popover.component';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-remitos',
@@ -28,11 +29,13 @@ export class RemitosPage {
     private router: Router,
     private authService: AuthenticationService,
     private avatarService: AvatarService,
+    private loading: LoadingService,
     public popoverController: PopoverController
   ) { }
 
   /* Este método se ejecuta cada vez que se entra al componente  */
   async ionViewWillEnter() {
+    this.loading.present('Cargando...');//si la carga es demasiado rápida, eliminarlo
     const user = await this.authService.getUser();
     this.user = JSON.parse(user);
     this.buscarRemito = '';
@@ -53,6 +56,7 @@ export class RemitosPage {
         }
         this.remitosBackup = this.remitos;
         this.obtenerEstados();
+        this.loading.dismiss()
       }
     );
   }

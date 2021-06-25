@@ -6,6 +6,7 @@ import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
 import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { HojaDeRutaService, PaginacionService } from 'src/app/services/hojaDeRuta.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-hoja-de-ruta',
@@ -23,13 +24,15 @@ export class HojaDeRutaPage {
   estadoSeleccionado: string;
 
   constructor(private hojaServ: HojaDeRutaService,
-    private router: Router,
     private authService: AuthenticationService,
+    private loading: LoadingService,
     private menu: MenuController,
-    public popoverController: PopoverController
+    public popoverController: PopoverController,
+    private router: Router,
   ) { }
 
   async ionViewWillEnter() {
+    this.loading.present('Cargando...');
     this.user = null;
     const user = this.authService.getUsuario();
     this.user = user;
@@ -41,6 +44,7 @@ export class HojaDeRutaPage {
     ).then(() => {
       this.hdRBackup = this.hojasderuta;
       this.obtenerEstados();
+      this.loading.dismiss()
     });
 
     this.menu.enable(true);

@@ -1,50 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Producto } from '../../models/producto.models';
 import { ProductoService } from '../../services/producto.service';
 import { Router } from '@angular/router';
 import { HojaDeRutaService } from 'src/app/services/hojaDeRuta.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.page.html',
   styleUrls: ['./productos.page.scss', './../../app.component.scss'],
 })
-export class ProductosPage implements OnInit {
+export class ProductosPage {
 
   productos: Producto[];
   productosBackup: Producto[];
   buscarProducto: string;
 
   constructor(
+    private loading: LoadingService,
     private productoService: ProductoService,
     private router: Router,
-    private hojaDeRutaService: HojaDeRutaService,
   ) { }
 
-  ngOnInit() {
-    // this.productos = [];
-    // this.productoService.getAll().then(
-    //   (productos: Producto[])=> this.productos = productos
-    // )
-    // .then( ()=>{
-    //   this.corregirURL();
-    // })
-    // .catch(e =>console.error(e));
-    // console.log('hojaDeRutaService: ', Object.values(this.hojaDeRutaService.getAll())[1]);
-  }
 
   ionViewWillEnter() {
+    this.loading.present('Cargando...');
     this.productos = [];
 
     this.buscarProducto = '';
     this.productoService.getAll().then(
       (productos: Producto[]) => this.productos = productos
-    )
-      .then(() => {
-        this.corregirURL();
-        this.productosBackup = this.productos;
-      })
-      .catch(e => console.error(e));
+    ).then(() => {
+      this.corregirURL();
+      this.productosBackup = this.productos;
+      this.loading.dismiss()
+    })
+    .catch((e) => {
+      console.error(e)
+    });
   }
 
   corregirURL() {
