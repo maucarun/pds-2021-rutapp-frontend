@@ -20,7 +20,7 @@ export class EntregaComponent {
   docValido: boolean = true
   motivoValido: boolean = true
   motivoCancelacion: string = ''
-
+  submitted = false
 
   constructor(private modalController: ModalController) { }
 
@@ -31,42 +31,34 @@ export class EntregaComponent {
   }
   */
 
-  get seleccionados(): any[] {
-    this.visita
-    return null //this.remitos.filter(e => e.seleccionado);
-  }
-
-  async agregarElementos() {
-    await this.modalController.dismiss(this.seleccionados, 'entregado');
-  }
-
   async cancelar() {
+    this.submitted = false
     this.estado = 'cancelar'
    /* this.estado = 'seleccionecancelacion'*/
   }
 
   async suspender() {
-
     await this.modalController.dismiss({ estado: 2 }, 'suspendido');
   }
 
   async anular() {
+    this.submitted = false
     this.estado = 'cancelar'
   }
   async volver(){
+    this.submitted = false
     this.estado = 'entregar'
   }
 
   async finalizarCancelacion() {
+    this.submitted = true
     if(this.motivoCancelacion===''){
       this.motivoValido = false
       return
     }
     await this.modalController.dismiss({ motivo: this.motivoCancelacion }, 'cancelado');
   }
-
-
-
+  
 get tieneTelefono(){
   return this.visita.remito &&
   this.visita.remito.cliente &&
@@ -90,6 +82,7 @@ get tieneTelefono(){
   }
 
   async finalizarEntregar() {
+    this.submitted = true
     if (!this.comprobante.nombreCompleto || this.comprobante.nombreCompleto === '') {
       this.nombreValido = false
       return
@@ -102,7 +95,7 @@ get tieneTelefono(){
 
 
     await this.modalController.dismiss({ horaInicio: this.horaInicio, comprobante: this.comprobante }, 'entregado');
-
+    this.submitted = true
   }
 }
 

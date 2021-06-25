@@ -47,6 +47,9 @@
             </ion-input>
           </ion-label>
         </ion-item>
+        <span class="error ion-padding" *ngIf="submitted && comprobante.nombreCompleto === ''">
+          Debe ingresar el nombre de quien recibe.
+        </span>
         <ion-item>
           <ion-label text-wrap>
             <ion-text position="floating" color="primary">Nro Documento</ion-text>
@@ -54,6 +57,9 @@
             </ion-input>
           </ion-label>
         </ion-item>
+        <span class="error ion-padding" *ngIf="submitted && comprobante.nombreCompleto === ''">
+          Debe ingresar el documento de quien recibe.
+        </span>
       </ion-list>
     </div>
 
@@ -71,6 +77,9 @@
             </ion-textarea>
           </ion-label>
         </ion-item>
+        <span class="error ion-padding" *ngIf="submitted && motivoCancelacion === ''">
+          Debe ingresar un motivo de cancelación
+        </span>
       </ion-list>
     </div>
 

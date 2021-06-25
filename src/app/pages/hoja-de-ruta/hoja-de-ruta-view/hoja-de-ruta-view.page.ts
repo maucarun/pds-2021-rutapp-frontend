@@ -106,6 +106,7 @@ export class HojaDeRutaViewPage implements OnInit {
   }
 
   async ionViewWillEnter() {
+    this.inicializacion()
   }
 
   async inicializacion() {
@@ -200,10 +201,10 @@ export class HojaDeRutaViewPage implements OnInit {
   }
 
   async navegarClick() {
+    window.open('https://www.google.com/maps/dir/?api=1&destination=' +
+      this.rutaNavigation.proximaVisita.posicion.lat + ',' +
+      this.rutaNavigation.proximaVisita.posicion.lng)
     await this.mostrarModalEntrega()
-    //window.open('https://www.google.com/maps/dir/?api=1&destination=' +
-    //  this.rutaNavigation.proximaVisita.posicion.lat + ',' +
-    //  this.rutaNavigation.proximaVisita.posicion.lng)
   }
 
   async mostrarModalEntrega() {
