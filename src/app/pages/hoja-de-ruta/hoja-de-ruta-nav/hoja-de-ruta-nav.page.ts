@@ -83,7 +83,8 @@ export class HojaDeRutaNavPage implements OnInit {
   // ###############                    ###############
 
   async inicializarNuevaHoja() {
-    this.hoja = new HojaDeRuta()
+    this.hoja = {} as HojaDeRuta
+    this.hoja.kms_recorridos = 0;
     this.hoja.estado = { id_estado: 2, nombre: "Pendiente", tipo: 'HojaDeRuta' } as Estado
     this.hoja.remitos = [] as Remito[]
     await this.hojaServ.getEstados().then(data => this.estadosHdr = data)
