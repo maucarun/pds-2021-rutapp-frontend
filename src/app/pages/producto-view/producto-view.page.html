@@ -107,12 +107,12 @@
         </ion-fab-button>
       </ion-fab>
       <ion-fab *ngIf='isView'vertical="bottom" horizontal="start" slot="fixed">
-        <ion-fab-button  color="success" (click)="editarProducto()">
+        <ion-fab-button  color="warning" (click)="editarProducto()">
           <ion-icon name="create-outline"></ion-icon>
         </ion-fab-button>
       </ion-fab>
       <ion-fab *ngIf='!isView'vertical="bottom" horizontal="start" slot="fixed">
-        <ion-fab-button color="success" (click)="guardarProducto()">
+        <ion-fab-button color="warning" (click)="guardarProducto()">
             <ion-icon name="save-outline"></ion-icon>
         </ion-fab-button>
       </ion-fab>
