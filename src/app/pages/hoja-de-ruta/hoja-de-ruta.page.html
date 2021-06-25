@@ -1,43 +1,60 @@
 <div class="ion-page" id="main-content">
   <ion-header [translucent]="true">
     <ion-toolbar color="secondary">
-      <ion-buttons slot="start">
+      <ion-buttons slot="end">
         <ion-menu-button color="light"></ion-menu-button>
       </ion-buttons>
-      <ion-title>Hojas de Ruta</ion-title>
+      <ion-title class="large-title">Hojas de Ruta</ion-title>
+    </ion-toolbar>
+    <ion-toolbar color="secondary">
+      <ion-searchbar (ionInput)="getHdRBusqueda($event)" autocomplete="on" placeholder="Buscar Hoja de Ruta"
+        color="primary" [(ngModel)]="buscarHdR">
+      </ion-searchbar>
+      <ion-button icon-only slot="end" fill="clear" size="large" (click)="presentPopover($event)">
+        <ion-icon name="ellipsis-vertical-circle"></ion-icon>
+      </ion-button>
     </ion-toolbar>
   </ion-header>
-  
+
   <ion-content>
     <ion-list id="inbox-list">
-        <ion-item *ngFor="let hdr of hojasderuta" [routerLink]="['/hojasderuta/hoja/', hdr.id_hoja_de_ruta]" routerDirection="forward" >
-          <ion-avatar slot="start">
-              <ion-img src="https://ui-avatars.com/api/?name=Suspendida&bold=true&rounded=true&length=1&background=f44336&color=fff&font-size=0.7" *ngIf="hdr.estado.nombre.substring(0,1).toUpperCase() === 'S'"></ion-img>
-              <ion-img src="https://ui-avatars.com/api/?name=EC&bold=true&rounded=true&length=2&background=fb9805&color=fff&font-size=0.7" *ngIf="hdr.estado.nombre.substring(0,1).toUpperCase() === 'E'"></ion-img>
-              <ion-img src="https://ui-avatars.com/api/?name=Completada&bold=true&rounded=true&length=1&background&color=8bc34a=fff&font-size=0.7" *ngIf="hdr.estado.nombre.substring(0,1).toUpperCase() === 'C'"></ion-img>
-              <ion-img src="https://ui-avatars.com/api/?name=Pendiente&bold=true&rounded=true&length=1&background=f7e439&color=fff&font-size=0.7" *ngIf="hdr.estado.nombre.substring(0,1).toUpperCase() === 'P'"></ion-img>
-          </ion-avatar>
-          <ion-grid>
-            <ion-row>
-              <ion-col>
-                <ion-label>
-                  Hoja de Ruta N° {{ hdr.id_hoja_de_ruta }}
-                </ion-label>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col>
-                <ion-text><small>Estado {{hdr.estado.nombre}}</small></ion-text>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
-        </ion-item>
+      <ion-item *ngFor="let hdr of hojasderuta" [routerLink]="['/hojasderuta/hoja/', hdr.id_hoja_de_ruta]"
+        routerDirection="forward">
+        <ion-avatar slot="start">
+          <ion-img
+            src="https://ui-avatars.com/api/?name=Suspendida&bold=true&rounded=true&length=1&background=f44336&color=fff&font-size=0.7"
+            *ngIf="hdr.estado.nombre.substring(0,1).toUpperCase() === 'S'"></ion-img>
+          <ion-img
+            src="https://ui-avatars.com/api/?name=EC&bold=true&rounded=true&length=2&background=fb9805&color=fff&font-size=0.7"
+            *ngIf="hdr.estado.nombre.substring(0,1).toUpperCase() === 'E'"></ion-img>
+          <ion-img
+            src="https://ui-avatars.com/api/?name=Completada&bold=true&rounded=true&length=1&background&color=8bc34a=fff&font-size=0.7"
+            *ngIf="hdr.estado.nombre.substring(0,1).toUpperCase() === 'C'"></ion-img>
+          <ion-img
+            src="https://ui-avatars.com/api/?name=Pendiente&bold=true&rounded=true&length=1&background=f7e439&color=fff&font-size=0.7"
+            *ngIf="hdr.estado.nombre.substring(0,1).toUpperCase() === 'P'"></ion-img>
+        </ion-avatar>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-label>
+                Hoja de Ruta N°{{ hdr.id_hoja_de_ruta }}
+              </ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-text><small>Estado {{hdr.estado.nombre}}</small></ion-text>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
     </ion-list>
-  
-    <ion-fab vertical="bottom" horizontal="end"  slot="fixed">
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button color="primary" (click)="agregarNuevaHojaDeRuta()">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
   </ion-content>
-  </div>
+</div>
