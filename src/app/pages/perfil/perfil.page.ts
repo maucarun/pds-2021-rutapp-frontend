@@ -4,6 +4,7 @@ import { AlertController, ToastController } from '@ionic/angular';
 import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { ToastService } from 'src/app/services/toast.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
@@ -20,43 +21,44 @@ export class PerfilPage implements OnInit {
     private authService: AuthenticationService,
     private usuarioService: UsuarioService,
     private loading: LoadingService,
-    private toastController: ToastController,
     private router: Router,
+    private toastService: ToastService,
     public alertController: AlertController,
   ) {
     this.authService.loadsData();
   }
 
   ngOnInit() {
-    const user = this.authService.getUser();
-    this.cargarUsuario(user);
+    // const user = this.authService.getUsuario();
+    // this.cargarUsuario(user);
+    this.usuario = this.authService.getUsuario();
 
-    this.usuarioService.getUsuarioById(JSON.parse(user).idUsuario)
+    this.usuarioService.getUsuarioById(this.usuario.idUsuario)
       .then((res) => {
         console.log('Usuario perfil: ', res);
         this.usuario = res;
       })
       .catch((e) => {
-        this.presentToast('Oops algo salio mal');
+        this.toastService.presentToast('Oops algo salio mal');
         setTimeout(() => this.redirigirA('clientes'), 2000);
 
       });
   }
 
-  cargarUsuario(usuarioLocalStorage) {
-    const user = {
-      idUsuario: JSON.parse(usuarioLocalStorage).idUsuario,
-      username: JSON.parse(usuarioLocalStorage).username,
-      nombre: JSON.parse(usuarioLocalStorage).nombre,
-      apellido: JSON.parse(usuarioLocalStorage).apellido,
-      email: JSON.parse(usuarioLocalStorage).email,
-      password: JSON.parse(usuarioLocalStorage).password,
-      activo: true,
-    };
-    console.log('inicio cargarUsuario: ', user);
-    this.usuario = user;
-    console.log('fin cargarUsuario: ');
-  }
+  // cargarUsuario(usuarioLocalStorage: Usuario) {
+  //   const user = {
+  //     idUsuario: usuarioLocalStorage.idUsuario,
+  //     username: usuarioLocalStorage.username,
+  //     nombre: usuarioLocalStorage.nombre,
+  //     apellido: usuarioLocalStorage.apellido,
+  //     email: usuarioLocalStorage.email,
+  //     password: usuarioLocalStorage.password,
+  //     activo: true,
+  //   };
+  //   console.log('inicio cargarUsuario: ', user);
+  //   this.usuario = user;
+  //   console.log('fin cargarUsuario: ');
+  // }
 
   editarPerfil() {
     // this.onlyView = false;//habilito la edición de los campos
@@ -140,11 +142,11 @@ export class PerfilPage implements OnInit {
       .then(
         () => {
           this.loading.dismiss();
-          this.presentToast('Se ha actualizado correctamente!');
+          this.toastService.presentToast('Se ha actualizado correctamente!');
         },
         error => {
           console.log(error);
-          this.presentToast('Oops algo salio mal');
+          this.toastService.presentToast('Oops algo salio mal');
           this.loading.dismiss();
         }
       );
@@ -153,14 +155,6 @@ export class PerfilPage implements OnInit {
 
   }
   //convertirlo en servicio
-  async presentToast(message: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      color: 'success',
-    });
-    toast.present();
-  }
   //convertirlo en servicio
   redirigirA(destino: string) {
     this.router.navigateByUrl(destino, { replaceUrl: true });

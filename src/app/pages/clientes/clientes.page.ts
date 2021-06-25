@@ -29,18 +29,13 @@ export class ClientesPage {
     private avatarService: AvatarService
   ) { }
 
-  /** Este método se ejecuta cuando se genera el componente por primera vez.
-     ngOnInit() { }
-   */
-
   /** Este método se ejecuta cada vez que se entra al componente */
   async ionViewWillEnter() {
     this.loading.present('Cargando...');//si la carga es demasiado rápida, eliminarlo
-    const user = await this.authService.getUser();
-    this.user = JSON.parse(user);
+    this.user = await this.authService.getUsuario();
     this.buscarCliente = '';
 
-    this.clieServ.getAll(this.user.idUsuario).then(
+    this.clieServ.getAll().then(
       (data: Cliente[]) => this.clientes = data
     ).then(
       () => {

@@ -52,8 +52,7 @@ export class HojaDeRutaNavPage implements OnInit {
   }
 
   async ngOnInit() {
-    const user = await this.authService.getUser()
-    this.user = JSON.parse(user)
+    this.user = await this.authService.getUsuario()
   }
 
   async ionViewWillEnter() {

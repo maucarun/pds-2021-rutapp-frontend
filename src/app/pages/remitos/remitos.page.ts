@@ -36,8 +36,7 @@ export class RemitosPage {
   /* Este método se ejecuta cada vez que se entra al componente  */
   async ionViewWillEnter() {
     this.loading.present('Cargando...');//si la carga es demasiado rápida, eliminarlo
-    const user = await this.authService.getUser();
-    this.user = JSON.parse(user);
+    this.user = await this.authService.getUsuario();
     this.buscarRemito = '';
 
     this.remitoService.getAll().then(

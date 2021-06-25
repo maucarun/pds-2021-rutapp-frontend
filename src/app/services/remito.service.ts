@@ -3,12 +3,14 @@ import { Injectable } from '@angular/core';
 import { Remito } from '../models/remito.models';
 import { environment } from 'src/environments/environment';
 import { AuthenticationService } from './authentication.service';
+import { Usuario } from '../models/usuario.models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RemitoService {
 
+  user: Usuario;
   idUsuario: number;
   username: string;
   password: string;
@@ -18,14 +20,18 @@ export class RemitoService {
     private http: HttpClient,
     private authService: AuthenticationService
   ) {
-    this.authService.loadsData();
-    const user = this.authService.getUser();
-    this.idUsuario = JSON.parse(user).idUsuario;
-    this.username = JSON.parse(user).username;
-    this.password = JSON.parse(user).password;
+    this.autenticar();
+  }
+
+  autenticar() {
+    this.user = this.authService.getUsuario()
+    this.idUsuario = this.user.idUsuario
+    this.username = this.user.username
+    this.password = this.user.password
   }
 
   async getAll(): Promise<Remito[]> {
+    this.autenticar();
     console.log('Buscaré los remitos del usuario ' + this.idUsuario);
     return this.http.get<Remito[]>(this.url + '/all/' + this.idUsuario).toPromise();
   }
@@ -40,6 +46,7 @@ export class RemitoService {
   }
 
   async cancelarRemito(idRemito: string) {
+    this.autenticar();
     const headers = new HttpHeaders({
       usuario: this.username,
       password: this.password,
@@ -48,6 +55,7 @@ export class RemitoService {
   }
 
   async guardarRemito(remito: Remito) {
+    this.autenticar();
     const headers = new HttpHeaders({
       usuario: this.username,
       password: this.password,
@@ -57,6 +65,7 @@ export class RemitoService {
   }
 
   async actualizarRemito(remito: Remito) {
+    this.autenticar();
     const headers = new HttpHeaders({
       usuario: this.username,
       password: this.password,

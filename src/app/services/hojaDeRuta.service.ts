@@ -22,7 +22,6 @@ export class HojaDeRutaService {
     url = environment.apiUrl + '/hojaDeRuta'
 
     constructor(private http: HttpClient, private authService: AuthenticationService) {
-        this.authService.loadsData();
         this.autenticar()
     }
 

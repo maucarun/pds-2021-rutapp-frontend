@@ -75,16 +75,6 @@ export class AuthenticationService {
     this.userData.next(null);
     await Storage.remove({ key: TOKEN_KEY });
     return Storage.remove({ key: USER });
-    //const token = await Storage.get({ key: TOKEN_KEY });
-    //console.log('set token: ', token.value);
-    //console.log(await Storage.get({ key: USER }));
-    //console.log(this.userData.getValue());
-  }
-
-  getUser() {
-    // await this.loadUser()
-    //console.log(this.userData);
-    return this.userData.getValue();
   }
 
   getUsuario() {

@@ -50,9 +50,8 @@ export class RemitoViewPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const user = this.authService.getUser();
-    this.user = JSON.parse(user);
-    this.clientes = await this.clienteService.getAll(this.user.idUsuario);
+    this.user = this.authService.getUsuario();
+    this.clientes = await this.clienteService.getAll();
     await this.convertirProductosEnPr();
 
     /* Verificando si la página tiene id */

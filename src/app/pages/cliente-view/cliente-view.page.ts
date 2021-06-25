@@ -121,8 +121,7 @@ export class ClienteViewPage implements OnInit {
 
   async ngOnInit() {
     this.loading.present('Cargando...');//si la carga es demasiado rápida, eliminarlo
-    const user = this.authService.getUser();
-    this.user = JSON.parse(user);
+    this.user = this.authService.getUsuario();
 
     /** Inicializamos las propiedades del cliente */
     this.cliente = {
@@ -179,7 +178,7 @@ export class ClienteViewPage implements OnInit {
       }
 
       console.log('Obtuve el cliente id ' + this.idCliente);
-      this.cliente = await this.clienteService.get(this.user.idUsuario, this.idCliente);
+      this.cliente = await this.clienteService.get(this.idCliente);
       console.log(this.cliente);
 
       /** Pegamos las props del cliente en el formulario */
