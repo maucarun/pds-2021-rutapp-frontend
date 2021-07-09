@@ -1,5 +1,5 @@
 {
-  "appId": "io.ionic.starter",
+  "appId": "edu.unsam.pds.rutapp",
   "appName": "Rutapp",
   "bundledWebRuntime": false,
   "npmClient": "npm",

@@ -9,8 +9,8 @@
         <ion-menu-button color="light"></ion-menu-button>
       </ion-buttons>
       <ion-title *ngIf="hoja && !editable">Hoja de ruta {{ hoja.id_hoja_de_ruta }}</ion-title>
-      <ion-title *ngIf="editable && hoja.id_hoja_de_ruta > 0">Editar Hoja de Ruta</ion-title>
-      <ion-title *ngIf="editable && (!hoja.id_hoja_de_ruta || hoja.id_hoja_de_ruta <1)">Crear Hoja de Ruta</ion-title>
+      <ion-title *ngIf="editable && hoja.id_hoja_de_ruta && hoja.id_hoja_de_ruta && hoja.id_hoja_de_ruta > 0">Editar Hoja de Ruta</ion-title>
+      <ion-title *ngIf="editable && (!hoja.id_hoja_de_ruta || hoja.id_hoja_de_ruta === null || hoja.id_hoja_de_ruta <1)">Crear Hoja de Ruta</ion-title>
     </ion-toolbar>
   </ion-header>
 
