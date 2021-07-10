@@ -106,11 +106,12 @@ export class HojaDeRutaViewPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-    this.inicializacion()
+    await this.inicializacion();
   }
 
   async inicializacion() {
     if (!this.hoja || (this.hoja.estado.nombre.toLowerCase() !== 'en curso' && this.hoja.estado.nombre.toLowerCase() !== 'pendiente')) {
+      console.log("No hay una hoja de ruta o el estado no es en curso y no es pendiente")
       return
     }
 

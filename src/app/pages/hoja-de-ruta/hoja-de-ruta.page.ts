@@ -38,7 +38,8 @@ export class HojaDeRutaPage {
     this.user = user;
     this.hojasderuta = null;
     this.buscarHdR = '';
-
+    
+    console.log("Buscaré las hojas de ruta del usuario " + this.user.idUsuario);
     await this.hojaServ.getAll().then(
       (data: PaginacionService) => this.hojasderuta = data.reultado
     ).then(() => {
