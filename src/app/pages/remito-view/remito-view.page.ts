@@ -13,6 +13,8 @@ import { ModalPage } from 'src/app/component/modal/modal.component';
 import { ProductoRemito } from 'src/app/models/productoRemito.models';
 import { Estado } from 'src/app/models/estado.models';
 import { ToastService } from 'src/app/services/toast.service';
+import jsPDF from 'jspdf';
+import domtoimage from 'dom-to-image';
 
 @Component({
   selector: 'app-remito-view',
@@ -216,6 +218,15 @@ export class RemitoViewPage implements OnInit {
 
   volverAListaRemitos() {
     this.router.navigate(['/remitos']);
+  }
+
+  generatePDF() {
+    const element = document.getElementById('invoice');
+    domtoimage.toPng(element).then((imgData) => {
+      const doc = new jsPDF('p', 'pt', 'a4');
+      doc.addImage(imgData, 'PNG', 0, 0);
+      doc.save(`${this.remito.fechaDeCreacion}_remito_${this.remito.idRemito}.pdf`);
+    });
   }
 }
 

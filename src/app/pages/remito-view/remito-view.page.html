@@ -20,15 +20,16 @@
   <ion-content>
 
     <ion-content id="formRemito" *ngIf="createMode || (editMode && !!remito)">
+      <ion-grid style="margin-bottom: 50px">
 
-      <ion-item>
-        <ion-label floating>Fecha del Remito</ion-label>
-        <ion-datetime [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar"
-          displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY" [(ngModel)]="remito.fechaDeCreacion"
-          [max]="fechaDeHoy"></ion-datetime>
-      </ion-item>
+        <ion-item>
+          <ion-label floating>Fecha del Remito</ion-label>
+          <ion-datetime [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar"
+            displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY" [(ngModel)]="remito.fechaDeCreacion"
+            [max]="fechaDeHoy"></ion-datetime>
+        </ion-item>
 
-      <!--
+        <!--
         Alternativa que me dio Maxi para setear un valor cuando haces editar en el ion-select   
   
         <ion-item>
@@ -38,101 +39,102 @@
           </ion-select>
         </ion-item>
      -->
-      <ion-item style="width: 100%;">
-        <ion-label>Cliente</ion-label>
-        <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
-        <ion-select required="true" interface="action-sheet" [selectedText]="remito.cliente.nombre"
-          [(ngModel)]="remito.cliente" placeholder="Seleccione el cliente" okText="Aceptar" cancelText="Cancelar">
-          <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
-          <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <!-- <ion-label>Tiempo de espera aproximado</ion-label> -->
-        <ion-input placeholder="Minutos de espera aprox." [(ngModel)]="remito.tiempo_espera"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label>Productos</ion-label>
-        <!-- <ion-button fill="transparent" slot="icon-only"> -->
-        <ion-button size="default" (click)="presentModal()" fill="clear">
-          <ion-icon name="add-circle"></ion-icon>
-        </ion-button>
-      </ion-item>
-
-      <ion-list>
+        <ion-item style="width: 100%;">
+          <ion-label>Cliente</ion-label>
+          <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
+          <ion-select required="true" interface="action-sheet" [selectedText]="remito.cliente.nombre"
+            [(ngModel)]="remito.cliente" placeholder="Seleccione el cliente" okText="Aceptar" cancelText="Cancelar">
+            <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
+            <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
 
         <ion-item>
-          <ion-grid>
-            <ion-row style="background-color: lightgrey;" class="ion-align-items-center">
-              <ion-col size="2">
-                <ion-text color="primary">Cant.</ion-text>
-              </ion-col>
-              <ion-col size="5">
-                <ion-text color="primary">Descripción</ion-text>
-              </ion-col>
-              <ion-col size="3">
-                <ion-text color="primary">% Desc.</ion-text>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
+          <!-- <ion-label>Tiempo de espera aproximado</ion-label> -->
+          <ion-input placeholder="Minutos de espera aprox." [(ngModel)]="remito.tiempo_espera"></ion-input>
         </ion-item>
 
-        <ion-item *ngFor="let pr of remito.productosDelRemito" style="width: 100%;">
-          <ion-grid>
-            <ion-row class="ion-align-items-center">
-
-              <ion-col size="2">
-                <ion-input required="true" type="number" placeholder="Cant." [min]="1" [(ngModel)]="pr.cantidad"
-                  (ionChange)="calcularTotal()">
-                </ion-input>
-              </ion-col>
-
-              <ion-col size="5">
-                <ion-label>{{ pr.producto.nombre }}</ion-label>
-              </ion-col>
-
-              <ion-col size="3">
-                <ion-input required="true" type="number" placeholder="% Desc." [min]="0" [max]="100"
-                  [(ngModel)]="pr.descuento" (ionChange)="calcularTotal()">
-                </ion-input>
-              </ion-col>
-
-              <ion-col class="ion-align-self-end" size="2">
-                <ion-button fill="clear" (click)="eliminarProducto(pr)" color="danger">
-                  <ion-icon name="trash"></ion-icon>
-                </ion-button>
-              </ion-col>
-
-            </ion-row>
-          </ion-grid>
+        <ion-item>
+          <ion-label>Productos</ion-label>
+          <!-- <ion-button fill="transparent" slot="icon-only"> -->
+          <ion-button size="default" (click)="presentModal()" fill="clear">
+            <ion-icon name="add-circle"></ion-icon>
+          </ion-button>
         </ion-item>
-      </ion-list>
 
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <ion-label style="color:gray">Cantidad de productos</ion-label>
-          </ion-col>
-        </ion-row>
-        <ion-row class="ion-margin-bottom">
-          <ion-col>
-            {{ remito.cantidadDeItems }}
-          </ion-col>
-        </ion-row>
+        <ion-list>
 
-        <ion-row>
-          <ion-col>
-            <ion-label style="color:gray">Precio total</ion-label>
-          </ion-col>
-        </ion-row>
-        <ion-row class="ion-margin-bottom">
-          <ion-col>
-            $ {{ remito.total }}
-          </ion-col>
-        </ion-row>
+          <ion-item>
+            <ion-grid>
+              <ion-row style="background-color: lightgrey;" class="ion-align-items-center">
+                <ion-col size="2">
+                  <ion-text color="primary">Cant.</ion-text>
+                </ion-col>
+                <ion-col size="5">
+                  <ion-text color="primary">Descripción</ion-text>
+                </ion-col>
+                <ion-col size="3">
+                  <ion-text color="primary">% Desc.</ion-text>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+
+          <ion-item *ngFor="let pr of remito.productosDelRemito" style="width: 100%;">
+            <ion-grid>
+              <ion-row class="ion-align-items-center">
+
+                <ion-col size="2">
+                  <ion-input required="true" type="number" placeholder="Cant." [min]="1" [(ngModel)]="pr.cantidad"
+                    (ionChange)="calcularTotal()">
+                  </ion-input>
+                </ion-col>
+
+                <ion-col size="5">
+                  <ion-label>{{ pr.producto.nombre }}</ion-label>
+                </ion-col>
+
+                <ion-col size="3">
+                  <ion-input required="true" type="number" placeholder="% Desc." [min]="0" [max]="100"
+                    [(ngModel)]="pr.descuento" (ionChange)="calcularTotal()">
+                  </ion-input>
+                </ion-col>
+
+                <ion-col class="ion-align-self-end" size="2">
+                  <ion-button fill="clear" (click)="eliminarProducto(pr)" color="danger">
+                    <ion-icon name="trash"></ion-icon>
+                  </ion-button>
+                </ion-col>
+
+              </ion-row>
+            </ion-grid>
+          </ion-item>
+        </ion-list>
+
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-label style="color:gray">Cantidad de productos</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-margin-bottom">
+            <ion-col>
+              {{ remito.cantidadDeItems }}
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-label style="color:gray">Precio total</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row class="ion-margin-bottom">
+            <ion-col>
+              $ {{ remito.total }}
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-grid>
 
       <ion-fab vertical="bottom" horizontal="start" slot="fixed">
@@ -146,6 +148,8 @@
 
     <ion-content id="remitoView" *ngIf="viewMode && remito!!">
       <ion-grid style="margin-bottom: 50px">
+
+        <ion-button (click)="generatePDF()"></ion-button>
 
         <ion-row>
           <ion-col>
@@ -268,4 +272,78 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-footer> -->
+
+</div>
+
+<div id="invoice" *ngIf="!!remito">
+  <div class="invoice-box">
+    <table cellpadding="0" cellspacing="0">
+      <tr class="top">
+        <td colspan="4">
+          <table>
+            <tr>
+              <td class="title">
+                <img src="assets/Logo.png" style="width: 50%; max-width: 200px" />
+              </td>
+
+              <td>
+                Remito N° 0001-00000{{ remito.idRemito }}<br />
+                Fecha: {{ remito.fechaDeCreacion }}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <tr class="information">
+        <td colspan="4">
+          <table>
+            <tr>
+              <td>
+                {{ user.nombre }} {{ user.apellido }}<br />
+                {{ user.email }}
+              </td>
+
+              <td>
+                {{ remito.cliente.nombre }}<br />
+                CUIT: {{ remito.cliente.cuit }}<br />
+                {{ remito.cliente.direccion.calle }} {{ remito.cliente.direccion.altura }},<br />
+                {{ remito.cliente.direccion.localidad }}, {{ remito.cliente.direccion.provincia }}<br />
+                {{ remito.cliente.contactos[0].nombre }} {{ remito.cliente.contactos[0].apellido }}<br />
+                Tel: {{ remito.cliente.contactos[0].telefonos[0].telefono }}<br />
+                {{ remito.cliente.contactos[0].emails[0].direccion }}
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <tr class="heading">
+        <td>Cantidad</td>
+
+        <td>Producto</td>
+
+        <td>Precio Unitario</td>
+
+        <td>Precio Total</td>
+      </tr>
+
+      <tr class="item" *ngFor="let pr of remito.productosDelRemito">
+        <td>{{ pr.cantidad }}</td>
+
+        <td>{{ pr.producto.nombre }}</td>
+
+        <td>${{ pr.precio_unitario * (1 - pr.descuento / 100) }}</td>
+
+        <td>${{ pr.precio_unitario * pr.cantidad * (1 - pr.descuento / 100) }}</td>
+      </tr>
+
+      <tr class="total">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td>Total: ${{ remito.total }}</td>
+      </tr>
+    </table>
+  </div>
 </div>

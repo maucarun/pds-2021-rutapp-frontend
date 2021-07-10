@@ -31,7 +31,9 @@
     "@ionic/storage": "^3.0.4",
     "@ionic/storage-angular": "^3.0.6",
     "@types/googlemaps": "^3.39.12",
+    "dom-to-image": "^2.6.0",
     "firebase": "^8.6.8",
+    "jspdf": "^1.5.3",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
@@ -51,6 +53,7 @@
     "@ionic/lab": "3.2.10",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
+    "@types/jspdf": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "4.16.1",
     "@typescript-eslint/parser": "4.16.1",
     "eslint": "^7.6.0",
