@@ -89,6 +89,7 @@ export class HojaDeRutaViewPage implements OnInit {
           //Habilito las propiedades ver en el formulario
           console.log('Como está en modo vista, completo el formulario con los datos del BE ');
           await this.cambiarWebEstado(true, false, false);
+          await this.inicializacion();
         }
       } else {
 
@@ -105,9 +106,9 @@ export class HojaDeRutaViewPage implements OnInit {
     this.createMode = create;
   }
 
-  async ionViewWillEnter() {
-    await this.inicializacion();
-  }
+  //async ionViewWillEnter() {
+  //  await this.inicializacion();
+  //}
 
   async inicializacion() {
     if (!this.hoja || (this.hoja.estado.nombre.toLowerCase() !== 'en curso' && this.hoja.estado.nombre.toLowerCase() !== 'pendiente')) {
