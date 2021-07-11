@@ -275,8 +275,8 @@
 
 </div>
 
-<div id="invoice" *ngIf="!!remito">
-  <div class="invoice-box">
+<div id="remitoPDF" *ngIf="viewMode && !!remito" #remitoPDF>
+  <div class="remitoPDF-box">
     <table cellpadding="0" cellspacing="0">
       <tr class="top">
         <td colspan="4">
@@ -328,14 +328,14 @@
         <td>Precio Total</td>
       </tr>
 
-      <tr class="item" *ngFor="let pr of remito.productosDelRemito">
-        <td>{{ pr.cantidad }}</td>
+      <tr class="item" *ngFor="let prod of remito.productosDelRemito">
+        <td>{{ prod.cantidad }}</td>
 
-        <td>{{ pr.producto.nombre }}</td>
+        <td>{{ prod.producto.nombre }}</td>
 
-        <td>${{ pr.precio_unitario * (1 - pr.descuento / 100) }}</td>
+        <td>${{ prod.precio_unitario * (1 - prod.descuento / 100) }}</td>
 
-        <td>${{ pr.precio_unitario * pr.cantidad * (1 - pr.descuento / 100) }}</td>
+        <td>${{ prod.precio_unitario * prod.cantidad * (1 - prod.descuento / 100) }}</td>
       </tr>
 
       <tr class="total">

@@ -25,7 +25,7 @@ ion-select::part(text) {
 /// ESTILO REMITO PDF ///
 /////////////////////////
 
-.invoice-box {
+.remitoPDF-box {
   width: 800px;
   padding: 30px;
   border: 1px solid #eee;
@@ -36,78 +36,78 @@ ion-select::part(text) {
   color: #555;
 }
 
-.invoice-box table {
+.remitoPDF-box table {
   width: 100%;
   line-height: inherit;
   text-align: left;
 }
 
-.invoice-box table td {
+.remitoPDF-box table td {
   padding: 5px;
   vertical-align: top;
 }
 
-.invoice-box table tr td:nth-child(2) {
+.remitoPDF-box table tr td:nth-child(2) {
   text-align: right;
 }
 
-.invoice-box table tr.top table td {
+.remitoPDF-box table tr.top table td {
   padding-bottom: 20px;
 }
 
-.invoice-box table tr.top table td.title {
+.remitoPDF-box table tr.top table td.title {
   font-size: 45px;
   line-height: 45px;
   color: #333;
 }
 
-.invoice-box table tr.information table td {
+.remitoPDF-box table tr.information table td {
   padding-bottom: 40px;
 }
 
-.invoice-box table tr.heading td {
+.remitoPDF-box table tr.heading td {
   background: #eee;
   border-bottom: 1px solid #ddd;
   font-weight: bold;
 }
 
-.invoice-box table tr.item td {
+.remitoPDF-box table tr.item td {
   border-bottom: 1px solid #eee;
 }
 
-.invoice-box table tr.heading td:nth-child(1) {
+.remitoPDF-box table tr.heading td:nth-child(1) {
   text-align: center;
 }
 
-.invoice-box table tr.item td:nth-child(1) {
+.remitoPDF-box table tr.item td:nth-child(1) {
   text-align: center;
 }
 
-.invoice-box table tr.heading td:nth-child(2) {
+.remitoPDF-box table tr.heading td:nth-child(2) {
   text-align: left;
 }
 
-.invoice-box table tr.item td:nth-child(2) {
+.remitoPDF-box table tr.item td:nth-child(2) {
   text-align: left;
 }
 
-.invoice-box table tr.heading td:nth-child(3) {
+.remitoPDF-box table tr.heading td:nth-child(3) {
   text-align: right;
 }
 
-.invoice-box table tr.item td:nth-child(3) {
+.remitoPDF-box table tr.item td:nth-child(3) {
   text-align: right;
 }
 
-.invoice-box table tr.heading td:nth-child(4) {
+.remitoPDF-box table tr.heading td:nth-child(4) {
   text-align: right;
 }
 
-.invoice-box table tr.item td:nth-child(4) {
+.remitoPDF-box table tr.item td:nth-child(4) {
   text-align: right;
 }
 
-.invoice-box table tr.total td:nth-child(4) {
+.remitoPDF-box table tr.total td:nth-child(4) {
   font-weight: bold;
   text-align: right;
 }

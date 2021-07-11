@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Remito } from 'src/app/models/remito.models';
@@ -22,6 +22,9 @@ import domtoimage from 'dom-to-image';
   styleUrls: ['./remito-view.page.scss'],
 })
 export class RemitoViewPage implements OnInit {
+
+  @ViewChild('remitoPDF') remitoPDF: ElementRef;
+
   idRemito: string;
   remito: Remito;
 
@@ -221,7 +224,7 @@ export class RemitoViewPage implements OnInit {
   }
 
   generatePDF() {
-    const element = document.getElementById('invoice');
+    const element = this.remitoPDF.nativeElement;
     domtoimage.toPng(element).then((imgData) => {
       const doc = new jsPDF('p', 'pt', 'a4');
       doc.addImage(imgData, 'PNG', 0, 0);
