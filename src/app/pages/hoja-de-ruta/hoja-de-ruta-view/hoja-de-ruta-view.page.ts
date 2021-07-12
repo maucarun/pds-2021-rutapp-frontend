@@ -10,6 +10,7 @@ import { RutaDeNavegacion } from 'src/app/models/routific.models';
 import { EntregaComponent } from 'src/app/component/entrega/entrega.component';
 import { RemitoService } from 'src/app/services/remito.service';
 import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
+import { ToastService } from 'src/app/services/toast.service';
 
 
 declare var google: any
@@ -49,7 +50,8 @@ export class HojaDeRutaViewPage implements OnInit {
     private rtoService: RemitoService,
     private alertCtrl: AlertController,
     private servicioRuta: RoutificService,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private toastService: ToastService,
   ) { }
 
   async ngOnInit() {
@@ -106,25 +108,27 @@ export class HojaDeRutaViewPage implements OnInit {
     this.createMode = create;
   }
 
-  //async ionViewWillEnter() {
-  //  await this.inicializacion();
-  //}
+  async ionViewWillEnter() {
+   await this.inicializacion();
+  }
 
   async inicializacion() {
     if (!this.hoja || (this.hoja.estado.nombre.toLowerCase() !== 'en curso' && this.hoja.estado.nombre.toLowerCase() !== 'pendiente')) {
-      console.log("No hay una hoja de ruta o el estado no es en curso y no es pendiente")
-      return
+      this.alert('No hay una hoja de ruta o el estado no es en curso y no es pendiente', 'Error: Sin hoja de ruta');
     }
 
     await this.servicioRuta.get(this.hoja).then((data: RutaDeNavegacion) => {
       this.rutaNavigation = data
+    }).catch((err) => { 
+      console.log(err);
+      this.toastService.presentToast(err.error.message);
     })
-      .catch((error) => { this.alert(error, "Atención") })
 
     if (!this.rutaNavigation) {
-      this.alert("No hay visitas disponibles para hoy", "Atención")
+      this.toastService.presentToast("No hay visitas disponibles para hoy");
       return
     }
+
     this.proximaVisita = this.rutaNavigation.proximaVisita.nombre + ' (' + this.rutaNavigation.proximaVisita.direccion + ')'
     this.addMarkersToMap(this.rutaNavigation)
     this.showMap()

@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Usuario } from 'src/app/models/usuario.models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { HojaDeRutaService, PaginacionService } from 'src/app/services/hojaDeRuta.service';
 import { Remito } from 'src/app/models/remito.models';
@@ -12,9 +12,8 @@ import { HojaDeRutaModalComponent } from 'src/app/component/hoja-de-ruta-modal/h
 import { Cliente } from 'src/app/models/cliente.models';
 import { ProductoRemito } from 'src/app/models/productoRemito.models';
 import { ComprobanteEntrega } from 'src/app/models/comprobanteEntrega.models';
-import { Disponibilidad } from 'src/app/models/disponibilidad.models';
-import { DiaSemana } from 'src/app/models/diasemana.models';
 import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
+import { LoadingService } from 'src/app/services/loading.service';
 
 
 @Component({
@@ -22,7 +21,7 @@ import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
   templateUrl: './hoja-de-ruta-nav.page.html',
   styleUrls: ['./hoja-de-ruta-nav.page.scss'],
 })
-export class HojaDeRutaNavPage implements OnInit {
+export class HojaDeRutaNavPage {
 
   hojaForm: FormGroup
   idHoja: string
@@ -38,24 +37,29 @@ export class HojaDeRutaNavPage implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private hojaServ: HojaDeRutaService,
+    private loading: LoadingService,
     private authService: AuthenticationService,
     private alertCtrl: AlertController,
     private modalCtrl: ModalController
   ) {
     this.hojaForm = this.formBuilder.group({
       justificacion: new FormControl('', []),
+      // estado: this.formBuilder.group({
+      //   id_estado: new FormControl('', []),
+      //   nombre: ['', [Validators.required]],
+      //   tipo: new FormControl('', [])
+      // }),
       estado: new FormControl('', []),
-      kms: new FormControl('', []),
-      inicio: new FormControl('', []),
-      final: new FormControl('', [])
+      kms_recorridos: new FormControl('', []),
+      fecha_hora_inicio: new FormControl('', []),
+      fecha_hora_fin: new FormControl('', []),
     });
   }
 
-  async ngOnInit() {
-    this.user = await this.authService.getUsuario()
-  }
-
   async ionViewWillEnter() {
+    this.loading.present('Cargando...');
+    this.user = await this.authService.getUsuario()
+
     this.activatedRoute.paramMap.subscribe(async paramMap => {
       this.idHoja = paramMap.get('idHojaDeRuta')
       if (this.idHoja !== 'crear') {
@@ -72,8 +76,16 @@ export class HojaDeRutaNavPage implements OnInit {
       } else {
         await this.inicializarNuevaHoja()
         this.editable = true
-        this.hojaForm.patchValue(this.hoja)
+        // this.hojaForm.patchValue(this.hoja)
+        this.hojaForm.patchValue({
+          estado: this.hoja.estado,
+          kms_recorridos: this.hoja.kms_recorridos
+        })
+        /** Desactivar la selección de estado porque por defecto es "Pendiente" */
+        this.hojaForm.get("estado").disable()
+        console.log(this.hojaForm)
       }
+      return this.loading.dismiss();
     })
   }
 
@@ -328,7 +340,8 @@ export class HojaDeRutaNavPage implements OnInit {
   async guardarHoja() {
     this.submitted = true;
     let confirma: boolean = false
-
+    console.log("Guardando la hoja de ruta")
+    console.log(this.hojaForm)
 
     await this.validarGuardado().then(rta => confirma = rta)
     if (!confirma)
@@ -356,12 +369,12 @@ export class HojaDeRutaNavPage implements OnInit {
         }
         else {
           await this.hojaServ.save(this.hoja).then(_ => {
-            mensaje = 'Se ha creado la nueva hoja de ruta correctamente.'
             titulo = 'Operación Exitosa!'
+            mensaje = 'Se ha creado la nueva hoja de ruta correctamente.'
           }
           ).catch(_ => {
-            mensaje = 'No se pudo crear la nueva hoja de ruta'
             titulo = 'Operación Fallida!'
+            mensaje = 'No se pudo crear la nueva hoja de ruta'
           }
           )
         }
