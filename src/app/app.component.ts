@@ -19,6 +19,7 @@ export class AppComponent {
     { title: 'Productos', url: '/productos', icon: 'cart' },
     { title: 'Remitos', url: '/remitos', icon: 'reader' },
     { title: 'Hoja de ruta', url: '/hojasderuta', icon: 'location' },
+    { title: 'Reportes', url: '/reportes', icon: 'analytics' },
     { title: 'Perfil', url: '/perfil', icon: 'person' },
     // { title: 'Acerca de', url: '/about', icon: 'information' }
   ];
