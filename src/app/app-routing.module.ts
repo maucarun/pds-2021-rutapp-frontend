@@ -7,9 +7,7 @@ const routes: Routes = [
   { path: '', redirectTo: 'clientes', pathMatch: 'full' },
   {
     path: 'login',
-    // loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule),
     loadChildren: () => import('./pages/login2/login2.module').then(m => m.Login2PageModule),
-
     canLoad: [AutoLoginGuard]
   },
   {
@@ -17,11 +15,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/registro/registro.module').then(m => m.RemitosPageModule),
     canLoad: [AutoLoginGuard]
   },
-  // {
-  //   path: 'login2',
-  //   loadChildren: () => import('./pages/login2/login2.module').then(m => m.Login2PageModule),
-  //   canLoad: [AutoLoginGuard]
-  // },
   {
     path: 'clientes',
     loadChildren: () => import('./pages/clientes/clientes.module').then(m => m.ClientesPageModule),

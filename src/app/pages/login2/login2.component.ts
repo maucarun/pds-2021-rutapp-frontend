@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 /* eslint-disable @typescript-eslint/dot-notation */
 import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -15,6 +16,9 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 export class Login2Component implements OnInit {
   credenciales: FormGroup;
   errorCredenciales: any;
+  showPassword = false;
+  passwordType: string = 'password';
+  passwordIcon: string = 'eye-off';
   // errorCredenciales= {username:'', password:''};
   constructor(
     public nav: NavController,
@@ -29,7 +33,7 @@ export class Login2Component implements OnInit {
     private afAuth: AngularFireAuth,
   ) {
     this.menu.swipeGesture(false);
-    this.errorCredenciales={};
+    this.errorCredenciales = {};
   }
   ngOnInit() {
     this.credenciales = this.fb.group({
@@ -55,7 +59,7 @@ export class Login2Component implements OnInit {
     //verifico que los campos esten llenos
     this.errorCredenciales = this.validarForm(this.credenciales);
     // console.log('this.credenciales.value: ', this.credenciales.value);
-    if (Object.keys(this.errorCredenciales).length){
+    if (Object.keys(this.errorCredenciales).length) {
       const alert = await this.alertController.create({
         header: 'Faltan completar campos',
         buttons: ['OK'],
@@ -63,7 +67,7 @@ export class Login2Component implements OnInit {
       return await alert.present();
     }
 
-    const loading = await this.loadingController.create({message:'Verificando datos'});
+    const loading = await this.loadingController.create({ message: 'Verificando datos' });
     await loading.present();
 
     this.authService.login(this.credenciales.value).subscribe(
@@ -130,7 +134,7 @@ export class Login2Component implements OnInit {
   }
 
   async loginGoogleOFacebook(proveedorDeDatos): Promise<void> {
-    const loading = await this.loadingController.create({message:'Verificando datos'});
+    const loading = await this.loadingController.create({ message: 'Verificando datos' });
     await loading.present();
 
     try {
@@ -177,4 +181,15 @@ export class Login2Component implements OnInit {
     return errors;
   }
 
+  // verPassword(evento){
+  //   let eye = document.getElementById('login-eye');
+  //   console.log('ver password: ', eye);
+  //   // console.log('ver password: ', eye.attributes);
+  //   // console.log('ver password: ', eye.attributes.getNamedItem('name'));
+  //   // console.log('ver password: ', eye.attributes.set('name'));
+  // }
+  hideShowPassword() {
+    this.passwordType = this.passwordType === 'text' ? 'password' : 'text';
+    this.passwordIcon = this.passwordIcon === 'eye-off' ? 'eye' : 'eye-off';
+  }
 }

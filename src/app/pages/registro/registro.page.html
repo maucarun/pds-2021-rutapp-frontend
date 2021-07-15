@@ -13,7 +13,7 @@
       </div>
   
       <!-- Login form -->
-      <form class="list-form" (ngSubmit)="registro()" [formGroup]="formularioDeRegistro">
+      <form class="list-form" (ngSubmit)="registro()" (keyup.enter)="registro()" [formGroup]="formularioDeRegistro">
         <ion-item>
           <ion-label floating>
             <ion-icon name="person" item-start class="text-primary"></ion-icon>

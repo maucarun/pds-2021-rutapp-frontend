@@ -15,7 +15,7 @@
     </div>
 
     <!-- Login form -->
-    <form class="list-form" (ngSubmit)="login()" [formGroup]="credenciales">
+    <form class="list-form" (ngSubmit)="login()" (keyup.enter)="login()" [formGroup]="credenciales">
       
       <ion-item class="input-login">
         <ion-label floating>
@@ -32,7 +32,8 @@
           <ion-icon name="lock-closed" item-start class="text-primary"></ion-icon>
           <!-- Password -->
         </ion-label>
-        <ion-input type="password" placeholder="Password" formControlName="password" (ionChange)="handlerChange($event)"></ion-input>
+        <ion-input [type]="passwordType" placeholder="Password" formControlName="password" (ionChange)="handlerChange($event)"></ion-input>
+        <ion-icon id="login-eye"[name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()' floating item-start class="text-primary"></ion-icon>
       </ion-item>
       <p *ngIf="errorCredenciales?.password" class="p-error">{{errorCredenciales?.password}}</p>
     </form>
