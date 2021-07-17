@@ -12,11 +12,25 @@
     </ion-toolbar>
   </ion-header>
 
-  <ion-content>
+  <ion-content style="max-width: 600px;display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;">
     <div class="ion-padding">
 
+      <ion-item style="width: 100%;">
+        <ion-label>Tipo de reporte</ion-label>
+        <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
+        <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
+          [(ngModel)]="reporteSeleccionado" placeholder="Seleccione el reporte" okText="Aceptar" cancelText="Cancelar">
+          <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
+          <ion-select-option *ngFor="let reporte of tiposDeReportes" [value]="reporte">{{ reporte }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
       <!-- Theme classes dark, material, bootstrap -->
-      <ngx-datatable class="bootstrap" [limit]="8" 
+      <ngx-datatable style="height: 250px;" *ngIf="!!reporteSeleccionado" class="bootstrap" [limit]="8" 
       [rows]="rows" [rowHeight]="50" [columns]="columns"
       [columnMode]="'force'" [sortType]="'multi'" 
       [headerHeight]="50" [footerHeight]="50"
