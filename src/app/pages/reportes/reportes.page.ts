@@ -47,6 +47,8 @@ export class ReportesPage implements OnInit {
     this.loading.present('Cargando...');
     switch (this.reporteSeleccionado.nombre) {
       case 'Productos': {
+        this.fechaDesde = null;
+        this.fechaHasta = null;
         this.columns = this.columnasProducto;
 
         await this.productosService.getAll().then(
@@ -70,6 +72,9 @@ export class ReportesPage implements OnInit {
           this.loading.dismiss();
           return this.toastService.presentToast("Fecha Desde o Fecha Hasta sin completar");
         }
+
+        this.fechaDesde = this.formatearFecha(this.fechaDesde);
+        this.fechaHasta = this.formatearFecha(this.fechaHasta);
         // const fechaDesde = '2021-07-01';
         // const fechaHasta = '2021-07-17';
         await this.remitosService.getCantidadProductosVendidos(this.fechaDesde, this.fechaHasta).then(
@@ -81,11 +86,12 @@ export class ReportesPage implements OnInit {
           console.error(err.error.message);
           this.toastService.presentToast(err.error.message);
         });
-        
-        break;
 
+        this.reporteSubmitted = true;
+        break;
       }
       default: {
+        this.reporteSubmitted = false;
         const defaultMessage = "Aun no está resuelta la opcion " + this.reporteSeleccionado;
         console.log(defaultMessage);
         this.toastService.presentToast(defaultMessage);
@@ -100,6 +106,13 @@ export class ReportesPage implements OnInit {
     console.log(this.reporteSeleccionado)
     console.log(this.reporteSeleccionado.nombre)
     console.log(this.reporteSeleccionado.necesitaFecha)
+  }
+
+  formatearFecha(fecha: string) {
+    const date = new Date(fecha);
+    return date.getFullYear() + '-' +
+      ('00' + (date.getMonth() + 1)).slice(-2) + '-' +
+      ('00' + date.getDate()).slice(-2);
   }
 
   columnasProducto = [

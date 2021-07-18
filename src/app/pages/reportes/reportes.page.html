@@ -30,17 +30,17 @@
         </ion-select>
       </ion-item>
 
-      <ion-item *ngIf="!!reporteSeleccionado && reporteSeleccionado.necesitaFecha">
+      <div style="display: flex;" *ngIf="!!reporteSeleccionado && reporteSeleccionado.necesitaFecha">
         <ion-datetime style="width: 100%; text-align: left;" placeholder="Fecha Desde" [monthNames]="mesesCustomizados"
           cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY"
           [(ngModel)]="fechaDesde" [max]="fechaDeHoy">
         </ion-datetime>
 
-        <ion-datetime *ngIf="!!fechaDesde" style="width: 100%; text-align: right;" placeholder="Fecha Hasta" [monthNames]="mesesCustomizados"
-          cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY"
-          [(ngModel)]="fechaHasta" [max]="fechaHasta">
+        <ion-datetime *ngIf="!!fechaDesde" style="width: 100%; text-align: right;" placeholder="Fecha Hasta"
+          [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY"
+          pickFormat="DDDD MMMM YYYY" [(ngModel)]="fechaHasta" [min]="fechaDesde" [max]="fechaDeHoy">
         </ion-datetime>
-      </ion-item>
+      </div>
 
       <ion-fab vertical="bottom" horizontal="start" slot="fixed">
         <ion-fab-button color="warning" (click)="ejecutarReporte()">
