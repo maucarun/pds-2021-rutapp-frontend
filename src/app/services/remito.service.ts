@@ -4,6 +4,7 @@ import { Remito } from '../models/remito.models';
 import { environment } from 'src/environments/environment';
 import { AuthenticationService } from './authentication.service';
 import { Usuario } from '../models/usuario.models';
+import { Producto } from '../models/producto.models';
 
 @Injectable({
   providedIn: 'root'
@@ -43,6 +44,15 @@ export class RemitoService {
 
   async get(idRemito: string): Promise<Remito> {
     return this.http.get<Remito>(`${this.url}/${idRemito}`).toPromise();
+  }
+
+  async getCantidadProductosVendidos(fechaDesde: string, fechaHasta: string): Promise<Producto[]> {
+    this.autenticar();
+    const headers = new HttpHeaders({
+      usuario: this.username,
+      password: this.password,
+    });
+    return this.http.get<Producto[]>(`${this.url}/producto/ventas?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`, { headers }).toPromise();
   }
 
   async cancelarRemito(idRemito: string) {

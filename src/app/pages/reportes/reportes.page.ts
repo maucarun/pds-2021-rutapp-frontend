@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Producto } from 'src/app/models/producto.models';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ProductoService } from 'src/app/services/producto.service';
+import { RemitoService } from 'src/app/services/remito.service';
 import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
@@ -20,7 +21,8 @@ export class ReportesPage implements OnInit {
 
   constructor(
     private loading: LoadingService,
-    private productosServices: ProductoService,
+    private productosService: ProductoService,
+    private remitosService: RemitoService,
     private toastService: ToastService,
   ) { }
 
@@ -32,13 +34,13 @@ export class ReportesPage implements OnInit {
     if(opcionSeleccionada == "")
     return;
     
+    this.loading.present('Cargando...');
     switch (opcionSeleccionada) {
       case 'Productos': {
-        this.loading.present('Cargando...');
 
         this.columns = this.columnasProducto;
 
-        await this.productosServices.getAll().then(
+        await this.productosService.getAll().then(
           (productos: Producto[]) => {
             console.log(productos);
             this.rows = productos
@@ -49,15 +51,35 @@ export class ReportesPage implements OnInit {
         });
         
         this.reporteSeleccionado = opcionSeleccionada;
-        this.loading.dismiss();
         break;
       }
+      case 'Remitos': {
+        this.columns = this.columnasRemitos;
+        const fechaDesde = '2021-07-01';
+        const fechaHasta = '2021-07-17';
+        await this.remitosService.getCantidadProductosVendidos(fechaDesde, fechaHasta).then(
+          (productos: Producto[]) => {
+            console.log(productos);
+            this.rows = productos;
+          }
+        ).catch((err) => {
+          console.error(err.error.message);
+          this.toastService.presentToast(err.error.message);
+        });
+        
+        this.reporteSeleccionado = opcionSeleccionada;
+        break;
+
+      }
       default: {
-        console.log("Aun no está resuelta la opcion " + opcionSeleccionada);
+        const defaultMessage = "Aun no está resuelta la opcion " + opcionSeleccionada;
+        console.log(defaultMessage);
+        this.toastService.presentToast(defaultMessage);
         this.reporteSeleccionado = null;
         break;
       }
     }
+    this.loading.dismiss();
   }
 
   columnasProducto = [
@@ -65,5 +87,10 @@ export class ReportesPage implements OnInit {
     { prop: 'nombre', name: 'Nombre' },
     { prop: 'precio_unitario', name: 'Precio' }
   ];
+
+  columnasRemitos = [
+    { prop: 'producto.nombre', name: 'Nombre'},
+    { prop: 'cantidad', name: 'Cantidad'}
+  ]
 
 }
