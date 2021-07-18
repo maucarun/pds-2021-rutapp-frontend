@@ -18,17 +18,25 @@
   justify-content: center;">
     <div class="ion-padding">
 
-      <ion-item style="width: 100%;">
-        <ion-label>Tipo de reporte</ion-label>
-        <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
-        <!-- <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)" -->
-        <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
-          [(ngModel)]="reporteSeleccionado" placeholder="Seleccione el reporte" okText="Aceptar" cancelText="Cancelar">
-          <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
-          <ion-select-option *ngFor="let reporte of tiposDeReportes.tipoReporte" [value]="reporte">{{ reporte.nombre }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
+      <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
+      <!-- <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)" -->
+      <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
+        [(ngModel)]="tipoReporteSeleccionado" placeholder="Seleccione Tipo de Reporte" okText="Aceptar"
+        cancelText="Cancelar">
+        <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
+        <ion-select-option *ngFor="let tipoReporte of tiposDeReportes.tipoReporte" [value]="tipoReporte">
+          {{ tipoReporte.nombre }}
+        </ion-select-option>
+      </ion-select>
+
+      <ion-select *ngIf="!!reportes" required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
+        [(ngModel)]="reporteSeleccionado" placeholder="Seleccione Reporte" okText="Aceptar"
+        cancelText="Cancelar">
+        <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
+        <ion-select-option *ngFor="let reporte of reportes" [value]="reporte">
+          {{ reporte.nombre }}
+        </ion-select-option>
+      </ion-select>
 
       <div style="display: flex;" *ngIf="!!reporteSeleccionado && reporteSeleccionado.necesitaFecha">
         <ion-datetime style="width: 100%; text-align: left;" placeholder="Fecha Desde" [monthNames]="mesesCustomizados"

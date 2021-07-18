@@ -18,8 +18,10 @@ export class ReportesPage implements OnInit {
   columns: any;
   rows: any;
   // tiposDeReportes = ['Productos', 'Clientes', 'Remitos', 'Hojas de Ruta'];
+  tipoReporteSeleccionado: any;
   reporteSeleccionado: any;
   tiposDeReportes: any;
+  reportes: any;
   reporteSubmitted: boolean = false;
   mesesCustomizados = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiempre', 'Octubre', 'Noviembre', 'Diciembre'];
   fechaDeHoy: string = new Date().toISOString();
@@ -41,15 +43,20 @@ export class ReportesPage implements OnInit {
 
   async ejecutarReporte() {
     
-    if(this.reporteSeleccionado == "")
-      return;
+    if(this.reporteSeleccionado == "" || this.reporteSeleccionado == undefined) {
+      const defaultMessage = "Aun no hay reportes para el tipo de reporte " + this.tipoReporteSeleccionado.nombre;
+      console.log(defaultMessage);
+      this.toastService.presentToast(defaultMessage);
+      return this.limpiarCampos();
+    }
     
     this.loading.present('Cargando...');
+    
+    /** Reportes que están en reportesDisponibles.json */
     switch (this.reporteSeleccionado.nombre) {
-      case 'Productos': {
-        this.fechaDesde = null;
-        this.fechaHasta = null;
-        this.columns = this.columnasProducto;
+      case 'Productos Disponibles': {
+        this.limpiarFechas()
+        this.columns = this.reporteSeleccionado.columnas;
 
         await this.productosService.getAll().then(
           (productos: Producto[]) => {
@@ -57,6 +64,7 @@ export class ReportesPage implements OnInit {
             this.rows = productos
           }
         ).catch((err) => {
+          this.limpiarCampos();
           console.error(err.error.message);
           return this.toastService.presentToast(err.error.message);
         });
@@ -64,25 +72,24 @@ export class ReportesPage implements OnInit {
         
         break;
       }
-      case 'Remitos': {
-        this.columns = this.columnasRemitos;
+      case 'Productos Vendidos': {
+        this.columns = this.reporteSeleccionado.columnas;
         
         if (this.fechaDesde == null || this.fechaHasta == null ) {
-          this.reporteSeleccionado = null;
+          this.limpiarCampos();
           this.loading.dismiss();
           return this.toastService.presentToast("Fecha Desde o Fecha Hasta sin completar");
         }
 
-        this.fechaDesde = this.formatearFecha(this.fechaDesde);
-        this.fechaHasta = this.formatearFecha(this.fechaHasta);
-        // const fechaDesde = '2021-07-01';
-        // const fechaHasta = '2021-07-17';
+        this.formatearFechas()
+        
         await this.remitosService.getCantidadProductosVendidos(this.fechaDesde, this.fechaHasta).then(
           (productos: Producto[]) => {
             console.log(productos);
             this.rows = productos;
           }
         ).catch((err) => {
+          this.limpiarCampos();
           console.error(err.error.message);
           this.toastService.presentToast(err.error.message);
         });
@@ -91,7 +98,7 @@ export class ReportesPage implements OnInit {
         break;
       }
       default: {
-        this.reporteSubmitted = false;
+        this.limpiarCampos();
         const defaultMessage = "Aun no está resuelta la opcion " + this.reporteSeleccionado;
         console.log(defaultMessage);
         this.toastService.presentToast(defaultMessage);
@@ -103,9 +110,24 @@ export class ReportesPage implements OnInit {
 
   seleccionarReporte($event) {
     console.log($event.target.value)
-    console.log(this.reporteSeleccionado)
-    console.log(this.reporteSeleccionado.nombre)
-    console.log(this.reporteSeleccionado.necesitaFecha)
+    console.log(this.tipoReporteSeleccionado)
+    console.log(this.tipoReporteSeleccionado.nombre)
+    console.log(this.tipoReporteSeleccionado.reportes)
+    if ( this.tipoReporteSeleccionado.reportes != undefined)
+      return this.reportes = this.tipoReporteSeleccionado.reportes
+    this.reportes = null
+  }
+
+  limpiarCampos() {
+    this.limpiarFechas();
+    this.tipoReporteSeleccionado = null;
+    this.reporteSeleccionado = null;
+    this.reporteSubmitted = false;
+  }
+
+  limpiarFechas() {
+    this.fechaDesde = null;
+    this.fechaHasta = null;
   }
 
   formatearFecha(fecha: string) {
@@ -115,15 +137,9 @@ export class ReportesPage implements OnInit {
       ('00' + date.getDate()).slice(-2);
   }
 
-  columnasProducto = [
-    { prop: 'idProducto', name: 'Id' },
-    { prop: 'nombre', name: 'Nombre' },
-    { prop: 'precio_unitario', name: 'Precio' }
-  ];
-
-  columnasRemitos = [
-    { prop: 'producto.nombre', name: 'Nombre'},
-    { prop: 'cantidad', name: 'Cantidad'}
-  ]
+  formatearFechas() {
+    this.fechaDesde = this.formatearFecha(this.fechaDesde);
+    this.fechaHasta = this.formatearFecha(this.fechaHasta);
+  }
 
 }

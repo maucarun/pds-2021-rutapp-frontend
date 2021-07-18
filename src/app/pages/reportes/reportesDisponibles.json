@@ -2,19 +2,34 @@
     "tipoReporte": [
         {
             "nombre": "Productos",
-            "necesitaFecha": false
+            "reportes": [
+                {
+                    "nombre": "Productos Disponibles",
+                    "necesitaFecha": false,
+                    "columnas" : [
+                        { "prop": "idProducto", "name": "Id" },
+                        { "prop": "nombre", "name": "Nombre" },
+                        { "prop": "precio_unitario", "name": "Precio" }
+                    ]
+                },
+                {
+                    "nombre": "Productos Vendidos",
+                    "necesitaFecha": true,
+                    "columnas" : [
+                        { "prop": "producto.nombre", "name": "Nombre" },
+                        { "prop": "cantidad", "name": "Cantidad" }
+                    ]
+                }
+            ]
         },
         {
-            "nombre": "Clientes",
-            "necesitaFecha": false
+            "nombre": "Clientes"
         },
         {
-            "nombre": "Remitos",
-            "necesitaFecha": true
+            "nombre": "Remitos"
         },
         {
-            "nombre": "Hojas de Ruta",
-            "necesitaFecha": false
+            "nombre": "Hojas de Ruta"
         }
     ]
 }
