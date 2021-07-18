@@ -21,7 +21,8 @@
       <ion-item style="width: 100%;">
         <ion-label>Tipo de reporte</ion-label>
         <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
-        <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
+        <!-- <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)" -->
+        <ion-select required="true" interface="action-sheet"
           [(ngModel)]="reporteSeleccionado" placeholder="Seleccione el reporte" okText="Aceptar" cancelText="Cancelar">
           <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
           <ion-select-option *ngFor="let reporte of tiposDeReportes" [value]="reporte">{{ reporte }}
@@ -29,12 +30,28 @@
         </ion-select>
       </ion-item>
 
+      <ion-item *ngIf="necesitaFecha">
+        <ion-label floating>Fecha Desde</ion-label>
+        <ion-datetime [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar"
+          displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY" [(ngModel)]="fechaDesde" [max]="fechaDeHoy">
+        </ion-datetime>
+
+        <ion-label floating>Fecha Hasta</ion-label>
+        <ion-datetime [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar"
+          displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY" [(ngModel)]="fechaHasta" [max]="fechaHasta">
+        </ion-datetime>
+      </ion-item>
+
+      <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+        <ion-fab-button color="warning" (click)="ejecutarReporte()">
+          <ion-icon name="play-outline"></ion-icon>
+        </ion-fab-button>
+      </ion-fab>
+
       <!-- Theme classes dark, material, bootstrap -->
-      <ngx-datatable style="height: 250px;" *ngIf="!!reporteSeleccionado" class="bootstrap" [limit]="8" 
-      [rows]="rows" [rowHeight]="50" [columns]="columns"
-      [columnMode]="'force'" [sortType]="'multi'" 
-      [headerHeight]="50" [footerHeight]="50"
-      [scrollbarV]="true" [scrollbarH]="true">
+      <ngx-datatable style="height: 250px;" *ngIf="reporteSubmitted" class="bootstrap" [limit]="8" [rows]="rows"
+        [rowHeight]="50" [columns]="columns" [columnMode]="'force'" [sortType]="'multi'" [headerHeight]="50"
+        [footerHeight]="50" [scrollbarV]="true" [scrollbarH]="true">
       </ngx-datatable>
 
     </div>

@@ -18,6 +18,12 @@ export class ReportesPage implements OnInit {
   rows: any;
   tiposDeReportes = ['Productos', 'Clientes', 'Remitos', 'Hojas de Ruta'];
   reporteSeleccionado: any;
+  reporteSubmitted: boolean = false;
+  necesitaFecha: boolean = false;
+  mesesCustomizados = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiempre', 'Octubre', 'Noviembre', 'Diciembre'];
+  fechaDeHoy: string = new Date().toISOString();
+  fechaDesde: string;
+  fechaHasta: string;
 
   constructor(
     private loading: LoadingService,
@@ -28,14 +34,13 @@ export class ReportesPage implements OnInit {
 
   ngOnInit() { }
 
-  async seleccionarReporte($event) {
-    const opcionSeleccionada = $event.target.value;
+  async ejecutarReporte() {
     
-    if(opcionSeleccionada == "")
-    return;
+    if(this.reporteSeleccionado == "")
+      return;
     
     this.loading.present('Cargando...');
-    switch (opcionSeleccionada) {
+    switch (this.reporteSeleccionado) {
       case 'Productos': {
 
         this.columns = this.columnasProducto;
@@ -47,17 +52,24 @@ export class ReportesPage implements OnInit {
           }
         ).catch((err) => {
           console.error(err.error.message);
-          this.toastService.presentToast(err.error.message);
+          return this.toastService.presentToast(err.error.message);
         });
+        this.reporteSubmitted = true;
         
-        this.reporteSeleccionado = opcionSeleccionada;
         break;
       }
       case 'Remitos': {
         this.columns = this.columnasRemitos;
-        const fechaDesde = '2021-07-01';
-        const fechaHasta = '2021-07-17';
-        await this.remitosService.getCantidadProductosVendidos(fechaDesde, fechaHasta).then(
+        this.necesitaFecha = true;
+        
+        if (this.fechaDesde == null || this.fechaHasta == null ) {
+          this.reporteSeleccionado = null;
+          this.loading.dismiss();
+          return this.toastService.presentToast("Fecha Desde o Fecha Hasta sin completar");
+        }
+        // const fechaDesde = '2021-07-01';
+        // const fechaHasta = '2021-07-17';
+        await this.remitosService.getCantidadProductosVendidos(this.fechaDesde, this.fechaHasta).then(
           (productos: Producto[]) => {
             console.log(productos);
             this.rows = productos;
@@ -67,15 +79,14 @@ export class ReportesPage implements OnInit {
           this.toastService.presentToast(err.error.message);
         });
         
-        this.reporteSeleccionado = opcionSeleccionada;
         break;
 
       }
       default: {
-        const defaultMessage = "Aun no está resuelta la opcion " + opcionSeleccionada;
+        this.necesitaFecha = false;
+        const defaultMessage = "Aun no está resuelta la opcion " + this.reporteSeleccionado;
         console.log(defaultMessage);
         this.toastService.presentToast(defaultMessage);
-        this.reporteSeleccionado = null;
         break;
       }
     }
