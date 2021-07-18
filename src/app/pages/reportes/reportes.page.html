@@ -22,23 +22,23 @@
         <ion-label>Tipo de reporte</ion-label>
         <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
         <!-- <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)" -->
-        <ion-select required="true" interface="action-sheet"
+        <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
           [(ngModel)]="reporteSeleccionado" placeholder="Seleccione el reporte" okText="Aceptar" cancelText="Cancelar">
           <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
-          <ion-select-option *ngFor="let reporte of tiposDeReportes" [value]="reporte">{{ reporte }}
+          <ion-select-option *ngFor="let reporte of tiposDeReportes.tipoReporte" [value]="reporte">{{ reporte.nombre }}
           </ion-select-option>
         </ion-select>
       </ion-item>
 
-      <ion-item *ngIf="necesitaFecha">
-        <ion-label floating>Fecha Desde</ion-label>
-        <ion-datetime [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar"
-          displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY" [(ngModel)]="fechaDesde" [max]="fechaDeHoy">
+      <ion-item *ngIf="!!reporteSeleccionado && reporteSeleccionado.necesitaFecha">
+        <ion-datetime style="width: 100%; text-align: left;" placeholder="Fecha Desde" [monthNames]="mesesCustomizados"
+          cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY"
+          [(ngModel)]="fechaDesde" [max]="fechaDeHoy">
         </ion-datetime>
 
-        <ion-label floating>Fecha Hasta</ion-label>
-        <ion-datetime [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar"
-          displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY" [(ngModel)]="fechaHasta" [max]="fechaHasta">
+        <ion-datetime *ngIf="!!fechaDesde" style="width: 100%; text-align: right;" placeholder="Fecha Hasta" [monthNames]="mesesCustomizados"
+          cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY"
+          [(ngModel)]="fechaHasta" [max]="fechaHasta">
         </ion-datetime>
       </ion-item>
 

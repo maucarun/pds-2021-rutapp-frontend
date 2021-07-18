@@ -4,6 +4,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { RemitoService } from 'src/app/services/remito.service';
 import { ToastService } from 'src/app/services/toast.service';
+import reportesDisponiblesJson from 'src/app/pages/reportes/reportesDisponibles.json'
 
 @Component({
   selector: 'app-reportes',
@@ -16,10 +17,10 @@ export class ReportesPage implements OnInit {
 
   columns: any;
   rows: any;
-  tiposDeReportes = ['Productos', 'Clientes', 'Remitos', 'Hojas de Ruta'];
+  // tiposDeReportes = ['Productos', 'Clientes', 'Remitos', 'Hojas de Ruta'];
   reporteSeleccionado: any;
+  tiposDeReportes: any;
   reporteSubmitted: boolean = false;
-  necesitaFecha: boolean = false;
   mesesCustomizados = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiempre', 'Octubre', 'Noviembre', 'Diciembre'];
   fechaDeHoy: string = new Date().toISOString();
   fechaDesde: string;
@@ -32,7 +33,11 @@ export class ReportesPage implements OnInit {
     private toastService: ToastService,
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    this.tiposDeReportes = reportesDisponiblesJson;
+    console.log(this.tiposDeReportes)
+  }
+
 
   async ejecutarReporte() {
     
@@ -40,9 +45,8 @@ export class ReportesPage implements OnInit {
       return;
     
     this.loading.present('Cargando...');
-    switch (this.reporteSeleccionado) {
+    switch (this.reporteSeleccionado.nombre) {
       case 'Productos': {
-
         this.columns = this.columnasProducto;
 
         await this.productosService.getAll().then(
@@ -60,7 +64,6 @@ export class ReportesPage implements OnInit {
       }
       case 'Remitos': {
         this.columns = this.columnasRemitos;
-        this.necesitaFecha = true;
         
         if (this.fechaDesde == null || this.fechaHasta == null ) {
           this.reporteSeleccionado = null;
@@ -83,7 +86,6 @@ export class ReportesPage implements OnInit {
 
       }
       default: {
-        this.necesitaFecha = false;
         const defaultMessage = "Aun no está resuelta la opcion " + this.reporteSeleccionado;
         console.log(defaultMessage);
         this.toastService.presentToast(defaultMessage);
@@ -91,6 +93,13 @@ export class ReportesPage implements OnInit {
       }
     }
     this.loading.dismiss();
+  }
+
+  seleccionarReporte($event) {
+    console.log($event.target.value)
+    console.log(this.reporteSeleccionado)
+    console.log(this.reporteSeleccionado.nombre)
+    console.log(this.reporteSeleccionado.necesitaFecha)
   }
 
   columnasProducto = [

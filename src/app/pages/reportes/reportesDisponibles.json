@@ -1,0 +1,20 @@
+{
+    "tipoReporte": [
+        {
+            "nombre": "Productos",
+            "necesitaFecha": false
+        },
+        {
+            "nombre": "Clientes",
+            "necesitaFecha": false
+        },
+        {
+            "nombre": "Remitos",
+            "necesitaFecha": true
+        },
+        {
+            "nombre": "Hojas de Ruta",
+            "necesitaFecha": false
+        }
+    ]
+}
