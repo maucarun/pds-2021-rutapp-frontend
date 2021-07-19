@@ -26,7 +26,21 @@
             "nombre": "Clientes"
         },
         {
-            "nombre": "Remitos"
+            "nombre": "Remitos",
+            "reportes": [
+                {
+                    "nombre": "Remitos Disponibles",
+                    "necesitaFecha": false,
+                    "columnas" : [
+                        { "prop": "idRemito", "name": "Id" },
+                        { "prop": "cliente.nombre", "name": "Nombre" },
+                        { "prop": "fechaDeCreacion", "name": "Fecha de Creacion" },
+                        { "prop": "cantidadDeItems", "name": "Cantidad de items" },
+                        { "prop": "total", "name": "Total" },
+                        { "prop": "estado.nombre", "name": "Estado" }
+                    ]
+                }
+            ]
         },
         {
             "nombre": "Hojas de Ruta"

@@ -72,8 +72,9 @@
       <!-- [selected]="selected" (activate)="onActivate($event)" -->
       <!-- Theme classes dark, material, bootstrap -->
       <ngx-datatable style="height: 250px;" *ngIf="reporteSubmitted" class="bootstrap" [limit]="8" [rows]="rows"
-        [rowHeight]="50" [columns]="columns" [columnMode]="'force'" [sortType]="'multi'"
-        [selectionType]="SelectionType.single" (select)="onSelect($event)" [headerHeight]="50" [footerHeight]="50"
+        [rowHeight]="50" [columnWidth]="50" [columns]="columns" [columnMode]="'force'" [sortType]="'multi'"
+        [selectionType]="SelectionType.single" (select)="onSelect($event)" 
+        [headerHeight]="50" [footerHeight]="50"
         [scrollbarV]="true" [scrollbarH]="true">
       </ngx-datatable>
 

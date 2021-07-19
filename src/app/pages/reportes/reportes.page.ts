@@ -7,6 +7,7 @@ import { ToastService } from 'src/app/services/toast.service';
 import reportesDisponiblesJson from 'src/app/pages/reportes/reportesDisponibles.json'
 import { SelectionType } from '@swimlane/ngx-datatable';
 import { Router } from '@angular/router';
+import { Remito } from 'src/app/models/remito.models';
 
 @Component({
   selector: 'app-reportes',
@@ -101,6 +102,24 @@ export class ReportesPage implements OnInit {
         this.reporteSubmitted = true;
         break;
       }
+      case 'Remitos Disponibles': {
+        this.limpiarFechas()
+        this.columns = this.reporteSeleccionado.columnas;
+
+        await this.remitosService.getAll().then(
+          (remitos: Remito[]) => {
+            console.log(remitos);
+            this.rows = remitos
+          }
+        ).catch((err) => {
+          this.limpiarCampos();
+          console.error(err.error.message);
+          return this.toastService.presentToast(err.error.message);
+        });
+        this.reporteSubmitted = true;
+        
+        break;
+      }
       default: {
         this.limpiarCampos();
         const defaultMessage = "Aun no está resuelta la opcion " + this.reporteSeleccionado;
@@ -158,7 +177,10 @@ export class ReportesPage implements OnInit {
         this.router.navigate(['productos/' + (selected[0].idProducto == undefined ? selected[0].producto.idProducto : selected[0].idProducto)]);
         break;
       }
-
+      case 'Remitos': {
+        this.router.navigate(['remitos/' + (selected[0].idRemito == undefined ? selected[0].remito.idRemito : selected[0].idRemito)]);
+        break;
+      }
       default: {
         const defaultMessage = "Aun no está resuelta la opcion " + this.tipoReporteSeleccionado.nombre;
         console.log(defaultMessage);
