@@ -30,8 +30,7 @@
       </ion-select>
 
       <ion-select *ngIf="!!reportes" required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
-        [(ngModel)]="reporteSeleccionado" placeholder="Seleccione Reporte" okText="Aceptar"
-        cancelText="Cancelar">
+        [(ngModel)]="reporteSeleccionado" placeholder="Seleccione Reporte" okText="Aceptar" cancelText="Cancelar">
         <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
         <ion-select-option *ngFor="let reporte of reportes" [value]="reporte">
           {{ reporte.nombre }}
@@ -56,10 +55,12 @@
         </ion-fab-button>
       </ion-fab>
 
+      <!-- [selected]="selected" (activate)="onActivate($event)" -->
       <!-- Theme classes dark, material, bootstrap -->
       <ngx-datatable style="height: 250px;" *ngIf="reporteSubmitted" class="bootstrap" [limit]="8" [rows]="rows"
-        [rowHeight]="50" [columns]="columns" [columnMode]="'force'" [sortType]="'multi'" [headerHeight]="50"
-        [footerHeight]="50" [scrollbarV]="true" [scrollbarH]="true">
+        [rowHeight]="50" [columns]="columns" [columnMode]="'force'" [sortType]="'multi'" 
+        [selectionType]="SelectionType.single" (select)="onSelect($event)"
+        [headerHeight]="50" [footerHeight]="50" [scrollbarV]="true" [scrollbarH]="true">
       </ngx-datatable>
 
     </div>

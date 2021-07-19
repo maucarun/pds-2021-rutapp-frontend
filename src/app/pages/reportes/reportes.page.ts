@@ -5,6 +5,8 @@ import { ProductoService } from 'src/app/services/producto.service';
 import { RemitoService } from 'src/app/services/remito.service';
 import { ToastService } from 'src/app/services/toast.service';
 import reportesDisponiblesJson from 'src/app/pages/reportes/reportesDisponibles.json'
+import { SelectionType } from '@swimlane/ngx-datatable';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reportes',
@@ -27,11 +29,13 @@ export class ReportesPage implements OnInit {
   fechaDeHoy: string = new Date().toISOString();
   fechaDesde: string;
   fechaHasta: string;
+  SelectionType = SelectionType;
 
   constructor(
     private loading: LoadingService,
     private productosService: ProductoService,
     private remitosService: RemitoService,
+    private router: Router,
     private toastService: ToastService,
   ) { }
 
@@ -140,6 +144,25 @@ export class ReportesPage implements OnInit {
   formatearFechas() {
     this.fechaDesde = this.formatearFecha(this.fechaDesde);
     this.fechaHasta = this.formatearFecha(this.fechaHasta);
+  }
+
+  onSelect({selected}) {
+    console.log(selected);
+    console.log(selected[0]);
+
+    switch (this.tipoReporteSeleccionado.nombre) {
+      case 'Productos': {
+        this.router.navigate(['productos/' + (selected[0].idProducto == undefined ? selected[0].producto.idProducto : selected[0].idProducto)]);
+        break;
+      }
+
+      default: {
+        const defaultMessage = "Aun no está resuelta la opcion " + this.tipoReporteSeleccionado.nombre;
+        console.log(defaultMessage);
+        this.toastService.presentToast(defaultMessage);
+        break;
+      }
+    }
   }
 
 }
