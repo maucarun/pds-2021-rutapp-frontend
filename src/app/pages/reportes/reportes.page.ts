@@ -117,9 +117,12 @@ export class ReportesPage implements OnInit {
     console.log(this.tipoReporteSeleccionado)
     console.log(this.tipoReporteSeleccionado.nombre)
     console.log(this.tipoReporteSeleccionado.reportes)
+    
     if ( this.tipoReporteSeleccionado.reportes != undefined)
       return this.reportes = this.tipoReporteSeleccionado.reportes
-    this.reportes = null
+    
+    this.reportes = null;
+    this.reporteSeleccionado = null;
   }
 
   limpiarCampos() {

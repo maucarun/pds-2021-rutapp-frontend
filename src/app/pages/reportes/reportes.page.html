@@ -20,33 +20,47 @@
 
       <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
       <!-- <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)" -->
-      <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
-        [(ngModel)]="tipoReporteSeleccionado" placeholder="Seleccione Tipo de Reporte" okText="Aceptar"
-        cancelText="Cancelar">
-        <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
-        <ion-select-option *ngFor="let tipoReporte of tiposDeReportes.tipoReporte" [value]="tipoReporte">
-          {{ tipoReporte.nombre }}
-        </ion-select-option>
-      </ion-select>
+      <ion-item>
+        <ion-icon style="margin-right: 5px;" name="caret-down-outline"></ion-icon>
+        <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
+          [(ngModel)]="tipoReporteSeleccionado" placeholder="Seleccione Tipo de Reporte" okText="Aceptar"
+          cancelText="Cancelar">
+          <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
+          <ion-select-option *ngFor="let tipoReporte of tiposDeReportes.tipoReporte" [value]="tipoReporte">
+            {{ tipoReporte.nombre }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
 
-      <ion-select *ngIf="!!reportes" required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
-        [(ngModel)]="reporteSeleccionado" placeholder="Seleccione Reporte" okText="Aceptar" cancelText="Cancelar">
-        <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
-        <ion-select-option *ngFor="let reporte of reportes" [value]="reporte">
-          {{ reporte.nombre }}
-        </ion-select-option>
-      </ion-select>
+      <ion-item *ngIf="!!reportes">
+        <ion-icon style="margin-right: 5px;" name="chevron-down-outline"></ion-icon>
+        <ion-select  required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
+          [(ngModel)]="reporteSeleccionado" placeholder="Seleccione Reporte" okText="Aceptar" cancelText="Cancelar">
+          <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
+          <ion-select-option *ngFor="let reporte of reportes" [value]="reporte">
+            {{ reporte.nombre }}
+          </ion-select-option>
+        </ion-select>
+
+      </ion-item>
+
 
       <div style="display: flex;" *ngIf="!!reporteSeleccionado && reporteSeleccionado.necesitaFecha">
-        <ion-datetime style="width: 100%; text-align: left;" placeholder="Fecha Desde" [monthNames]="mesesCustomizados"
-          cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY"
-          [(ngModel)]="fechaDesde" [max]="fechaDeHoy">
-        </ion-datetime>
+        <ion-item style="width: 100%; text-align: left;">
+          <ion-icon style="margin-right: 5px;" name="calendar-outline"></ion-icon>
+          <ion-datetime  placeholder="Fecha Desde" [monthNames]="mesesCustomizados"
+            cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY"
+            [(ngModel)]="fechaDesde" [max]="fechaDeHoy">
+          </ion-datetime>
+        </ion-item>
 
-        <ion-datetime *ngIf="!!fechaDesde" style="width: 100%; text-align: right;" placeholder="Fecha Hasta"
-          [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY"
-          pickFormat="DDDD MMMM YYYY" [(ngModel)]="fechaHasta" [min]="fechaDesde" [max]="fechaDeHoy">
-        </ion-datetime>
+        <ion-item *ngIf="!!fechaDesde" style="width: 100%; text-align: right;">
+          <ion-icon style="margin-right: 5px;" name="calendar-outline"></ion-icon>
+          <ion-datetime  placeholder="Fecha Hasta"
+            [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY"
+            pickFormat="DDDD MMMM YYYY" [(ngModel)]="fechaHasta" [min]="fechaDesde" [max]="fechaDeHoy">
+          </ion-datetime>
+        </ion-item>
       </div>
 
       <ion-fab vertical="bottom" horizontal="start" slot="fixed">
@@ -58,9 +72,9 @@
       <!-- [selected]="selected" (activate)="onActivate($event)" -->
       <!-- Theme classes dark, material, bootstrap -->
       <ngx-datatable style="height: 250px;" *ngIf="reporteSubmitted" class="bootstrap" [limit]="8" [rows]="rows"
-        [rowHeight]="50" [columns]="columns" [columnMode]="'force'" [sortType]="'multi'" 
-        [selectionType]="SelectionType.single" (select)="onSelect($event)"
-        [headerHeight]="50" [footerHeight]="50" [scrollbarV]="true" [scrollbarH]="true">
+        [rowHeight]="50" [columns]="columns" [columnMode]="'force'" [sortType]="'multi'"
+        [selectionType]="SelectionType.single" (select)="onSelect($event)" [headerHeight]="50" [footerHeight]="50"
+        [scrollbarV]="true" [scrollbarH]="true">
       </ngx-datatable>
 
     </div>
