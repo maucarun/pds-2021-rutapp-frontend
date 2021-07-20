@@ -8,6 +8,8 @@ import reportesDisponiblesJson from 'src/app/pages/reportes/reportesDisponibles.
 import { SelectionType } from '@swimlane/ngx-datatable';
 import { Router } from '@angular/router';
 import { Remito } from 'src/app/models/remito.models';
+import { ClienteService } from 'src/app/services/cliente.service';
+import { Cliente } from 'src/app/models/cliente.models';
 
 @Component({
   selector: 'app-reportes',
@@ -33,6 +35,7 @@ export class ReportesPage implements OnInit {
   SelectionType = SelectionType;
 
   constructor(
+    private clientesService: ClienteService,
     private loading: LoadingService,
     private productosService: ProductoService,
     private remitosService: RemitoService,
@@ -139,6 +142,24 @@ export class ReportesPage implements OnInit {
 
         break;
       }
+      case 'Tiempo de Espera': {
+        this.limpiarFechas()
+        this.columns = this.reporteSeleccionado.columnas;
+
+        await this.clientesService.getAll().then(
+          (clientes: Cliente[]) => {
+            console.log(clientes);
+            this.rows = clientes
+          }
+        ).catch((err) => {
+          this.limpiarCampos();
+          console.error(err.error.message);
+          return this.toastService.presentToast(err.error.message);
+        });
+        this.reporteSubmitted = true;
+
+        break;
+      }
       default: {
         this.limpiarCampos();
         const defaultMessage = "Aun no está resuelta la opcion " + this.reporteSeleccionado;
@@ -219,6 +240,10 @@ export class ReportesPage implements OnInit {
       }
       case 'Remitos': {
         this.router.navigate(['remitos/' + (selected[0].idRemito == undefined ? selected[0].remito.idRemito : selected[0].idRemito)]);
+        break;
+      }
+      case 'Clientes': {
+        this.router.navigate(['clientes/' + selected[0].idCliente]);
         break;
       }
       default: {

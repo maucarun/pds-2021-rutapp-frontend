@@ -34,7 +34,18 @@
             ]
         },
         {
-            "nombre": "Clientes"
+            "nombre": "Clientes",
+            "reportes": [
+                {
+                    "nombre": "Tiempo de Espera",
+                    "necesitaFecha": false,
+                    "columnas" : [
+                        { "prop": "idCliente", "name": "Id" },
+                        { "prop": "nombre", "name": "Nombre" },
+                        { "prop": "promedio_espera", "name": "Minutos de Espera" }
+                    ]
+                }
+            ]
         },
         {
             "nombre": "Remitos",
