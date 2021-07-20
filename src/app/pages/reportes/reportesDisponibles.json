@@ -16,7 +16,18 @@
                     "nombre": "Productos Vendidos",
                     "necesitaFecha": true,
                     "columnas" : [
-                        { "prop": "producto.nombre", "name": "Nombre" },
+                        { "prop": "idProducto", "name": "Id" },
+                        { "prop": "nombreProducto", "name": "Nombre de Producto" },
+                        { "prop": "cantidad", "name": "Cantidad" }
+                    ]
+                },
+                {
+                    "nombre": "Productos Entregados",
+                    "necesitaFecha": true,
+                    "columnas" : [
+                        { "prop": "idProducto", "name": "Id" },
+                        { "prop": "nombreProducto", "name": "Nombre de Producto" },
+                        { "prop": "nombreCliente", "name": "Nombre de Cliente" },
                         { "prop": "cantidad", "name": "Cantidad" }
                     ]
                 }

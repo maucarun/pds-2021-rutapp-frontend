@@ -40,23 +40,23 @@ export class ReportesPage implements OnInit {
     private toastService: ToastService,
   ) { }
 
-  ngOnInit() { 
+  ngOnInit() {
     this.tiposDeReportes = reportesDisponiblesJson;
     console.log(this.tiposDeReportes)
   }
 
 
   async ejecutarReporte() {
-    
-    if(this.reporteSeleccionado == "" || this.reporteSeleccionado == undefined) {
+
+    if (this.reporteSeleccionado == "" || this.reporteSeleccionado == undefined) {
       const defaultMessage = "Aun no hay reportes para el tipo de reporte " + this.tipoReporteSeleccionado.nombre;
       console.log(defaultMessage);
       this.toastService.presentToast(defaultMessage);
       return this.limpiarCampos();
     }
-    
+
     this.loading.present('Cargando...');
-    
+
     /** Reportes que están en reportesDisponibles.json */
     switch (this.reporteSeleccionado.nombre) {
       case 'Productos Disponibles': {
@@ -74,21 +74,40 @@ export class ReportesPage implements OnInit {
           return this.toastService.presentToast(err.error.message);
         });
         this.reporteSubmitted = true;
-        
+
         break;
       }
       case 'Productos Vendidos': {
         this.columns = this.reporteSeleccionado.columnas;
-        
-        if (this.fechaDesde == null || this.fechaHasta == null ) {
-          this.limpiarCampos();
-          this.loading.dismiss();
-          return this.toastService.presentToast("Fecha Desde o Fecha Hasta sin completar");
-        }
+
+        if (!this.validarFechas())
+          return;
 
         this.formatearFechas()
-        
+
         await this.remitosService.getCantidadProductosVendidos(this.fechaDesde, this.fechaHasta).then(
+          (productos: Producto[]) => {
+            console.log(productos);
+            this.rows = productos;
+          }
+        ).catch((err) => {
+          this.limpiarCampos();
+          console.error(err.error.message);
+          this.toastService.presentToast(err.error.message);
+        });
+
+        this.reporteSubmitted = true;
+        break;
+      }
+      case 'Productos Entregados': {
+        this.columns = this.reporteSeleccionado.columnas;
+
+        if (!this.validarFechas())
+          return;
+
+        this.formatearFechas()
+
+        await this.remitosService.getCantidadProductosEntregados(this.fechaDesde, this.fechaHasta).then(
           (productos: Producto[]) => {
             console.log(productos);
             this.rows = productos;
@@ -117,7 +136,7 @@ export class ReportesPage implements OnInit {
           return this.toastService.presentToast(err.error.message);
         });
         this.reporteSubmitted = true;
-        
+
         break;
       }
       default: {
@@ -136,12 +155,25 @@ export class ReportesPage implements OnInit {
     console.log(this.tipoReporteSeleccionado)
     console.log(this.tipoReporteSeleccionado.nombre)
     console.log(this.tipoReporteSeleccionado.reportes)
-    
-    if ( this.tipoReporteSeleccionado.reportes != undefined)
+
+    if (this.tipoReporteSeleccionado.reportes != undefined)
       return this.reportes = this.tipoReporteSeleccionado.reportes
-    
+
     this.reportes = null;
     this.reporteSeleccionado = null;
+  }
+
+  validarFechas(): boolean {
+    var fechasValidas = true;
+
+    if (this.fechaDesde == null || this.fechaHasta == null) {
+      fechasValidas = false
+      this.limpiarCampos();
+      this.loading.dismiss();
+      this.toastService.presentToast("Fecha Desde o Fecha Hasta sin completar");
+    }
+
+    return fechasValidas;
   }
 
   limpiarCampos() {
@@ -168,13 +200,21 @@ export class ReportesPage implements OnInit {
     this.fechaHasta = this.formatearFecha(this.fechaHasta);
   }
 
-  onSelect({selected}) {
+  onSelect({ selected }) {
     console.log(selected);
+    /** Como selected puede tener multiples seleccionados (NO USAMOS MULTIPLE)
+     * usamos por defecto selected[0]
+     */
     console.log(selected[0]);
 
     switch (this.tipoReporteSeleccionado.nombre) {
       case 'Productos': {
+        /** 
+         * Esto es para obtener el id del producto según como esté armado el objeto que viene del BE
+         * Por ejemplo: si obtenes el idProducto de producto y no directamente del reporte, este ternario lo resuelve
         this.router.navigate(['productos/' + (selected[0].idProducto == undefined ? selected[0].producto.idProducto : selected[0].idProducto)]);
+        */ 
+        this.router.navigate(['productos/' + selected[0].idProducto]);
         break;
       }
       case 'Remitos': {

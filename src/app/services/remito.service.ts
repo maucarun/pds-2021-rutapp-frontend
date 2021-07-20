@@ -55,6 +55,15 @@ export class RemitoService {
     return this.http.get<Producto[]>(`${this.url}/producto/ventas?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`, { headers }).toPromise();
   }
 
+  async getCantidadProductosEntregados(fechaDesde: string, fechaHasta: string): Promise<Producto[]> {
+    this.autenticar();
+    const headers = new HttpHeaders({
+      usuario: this.username,
+      password: this.password,
+    });
+    return this.http.get<Producto[]>(`${this.url}/producto/entregados?fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`, { headers }).toPromise();
+  }
+
   async cancelarRemito(idRemito: string) {
     this.autenticar();
     const headers = new HttpHeaders({
