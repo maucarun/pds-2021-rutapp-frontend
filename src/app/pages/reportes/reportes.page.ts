@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Producto } from 'src/app/models/producto.models';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ProductoService } from 'src/app/services/producto.service';
 import { RemitoService } from 'src/app/services/remito.service';
 import { ToastService } from 'src/app/services/toast.service';
 import reportesDisponiblesJson from 'src/app/pages/reportes/reportesDisponibles.json'
-import { SelectionType } from '@swimlane/ngx-datatable';
+import { DatatableComponent, SelectionType } from '@swimlane/ngx-datatable';
 import { Router } from '@angular/router';
 import { Remito } from 'src/app/models/remito.models';
 import { ClienteService } from 'src/app/services/cliente.service';
@@ -22,16 +22,21 @@ export class ReportesPage implements OnInit {
 
   columns: any;
   rows: any;
-  // tiposDeReportes = ['Productos', 'Clientes', 'Remitos', 'Hojas de Ruta'];
+  filteredData = [];
+  @ViewChild(DatatableComponent) table: DatatableComponent;
+
   tipoReporteSeleccionado: any;
   reporteSeleccionado: any;
   tiposDeReportes: any;
   reportes: any;
+
   reporteSubmitted: boolean = false;
+
   mesesCustomizados = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiempre', 'Octubre', 'Noviembre', 'Diciembre'];
   fechaDeHoy: string = new Date().toISOString();
   fechaDesde: string;
   fechaHasta: string;
+
   SelectionType = SelectionType;
 
   constructor(
@@ -51,8 +56,11 @@ export class ReportesPage implements OnInit {
 
   async ejecutarReporte() {
 
+    if (this.tipoReporteSeleccionado == undefined)
+      return this.toastService.presentToast("Seleccione un tipo de reporte");
+
     if (this.reporteSeleccionado == "" || this.reporteSeleccionado == undefined) {
-      const defaultMessage = "Aun no hay reportes para el tipo de reporte " + this.tipoReporteSeleccionado.nombre;
+      const defaultMessage = "Seleccione un reporte para el tipo de reporte " + this.tipoReporteSeleccionado.nombre;
       console.log(defaultMessage);
       this.toastService.presentToast(defaultMessage);
       return this.limpiarCampos();
@@ -69,7 +77,8 @@ export class ReportesPage implements OnInit {
         await this.productosService.getAll().then(
           (productos: Producto[]) => {
             console.log(productos);
-            this.rows = productos
+            this.rows = productos;
+            this.filteredData = productos;
           }
         ).catch((err) => {
           this.limpiarCampos();
@@ -92,6 +101,7 @@ export class ReportesPage implements OnInit {
           (productos: Producto[]) => {
             console.log(productos);
             this.rows = productos;
+            this.filteredData = productos;
           }
         ).catch((err) => {
           this.limpiarCampos();
@@ -114,6 +124,7 @@ export class ReportesPage implements OnInit {
           (productos: Producto[]) => {
             console.log(productos);
             this.rows = productos;
+            this.filteredData = productos;
           }
         ).catch((err) => {
           this.limpiarCampos();
@@ -132,6 +143,7 @@ export class ReportesPage implements OnInit {
           (remitos: Remito[]) => {
             console.log(remitos);
             this.rows = remitos
+            this.filteredData = remitos;
           }
         ).catch((err) => {
           this.limpiarCampos();
@@ -150,6 +162,7 @@ export class ReportesPage implements OnInit {
           (clientes: Cliente[]) => {
             console.log(clientes);
             this.rows = clientes
+            this.filteredData = clientes;
           }
         ).catch((err) => {
           this.limpiarCampos();
@@ -234,7 +247,7 @@ export class ReportesPage implements OnInit {
          * Esto es para obtener el id del producto según como esté armado el objeto que viene del BE
          * Por ejemplo: si obtenes el idProducto de producto y no directamente del reporte, este ternario lo resuelve
         this.router.navigate(['productos/' + (selected[0].idProducto == undefined ? selected[0].producto.idProducto : selected[0].idProducto)]);
-        */ 
+        */
         this.router.navigate(['productos/' + selected[0].idProducto]);
         break;
       }
@@ -254,5 +267,27 @@ export class ReportesPage implements OnInit {
       }
     }
   }
+
+  getBusqueda(ev: any) {
+    let val = ev.target.value.toLowerCase();
+    // get the amount of columns in the table
+    let colsAmt = this.columns.length;
+    // get the key names of each column in the dataset
+    let keys = Object.keys(this.rows[0]);
+    // assign filtered matches to the active datatable
+    this.rows = this.filteredData.filter(function (item) {
+      // iterate through each row's column data
+      for (let i = 0; i < colsAmt; i++) {
+        // check for a match
+        if (item[keys[i]].toString().toLowerCase().indexOf(val) !== -1 || !val) {
+          // found match, return true to add to result set
+          return true;
+        }
+      }
+    });
+    // whenever the filter changes, always go back to the first page
+    this.table.offset = 0;
+  }
+
 
 }

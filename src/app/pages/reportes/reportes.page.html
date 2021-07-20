@@ -63,6 +63,10 @@
         </ion-item>
       </div>
 
+      <ion-searchbar *ngIf="reporteSubmitted" (ionInput)="getBusqueda($event)" autocomplete="on" placeholder="Buscar..."
+        color="primary">
+      </ion-searchbar>
+
       <ion-fab vertical="bottom" horizontal="start" slot="fixed">
         <ion-fab-button color="warning" (click)="ejecutarReporte()">
           <ion-icon name="play-outline"></ion-icon>
