@@ -21,6 +21,7 @@ export class EntregaComponent {
   motivoValido: boolean = true
   motivoCancelacion: string = ''
   submitted = false
+  horaInicioEspera: number
 
   constructor(private modalController: ModalController) { }
 
@@ -76,6 +77,7 @@ get tieneTelefono(){
     window.open('https://api.whatsapp.com/send?phone=54' + this.visita.remito.cliente.contactos[0].telefonos[0].telefono)
   }
   entregar() {
+    this.horaInicioEspera = Date.now()
     this.estado = 'entregar'
     this.comprobante = {} as ComprobanteEntrega
     this.comprobante.fechaHoraEntrega = new Date()
@@ -93,8 +95,10 @@ get tieneTelefono(){
       return
     }
 
+    const difEnMilisegundos = Date.now() - this.horaInicioEspera
+    const difEnSegundos = Math.round(difEnMilisegundos/1000)
 
-    await this.modalController.dismiss({ horaInicio: this.horaInicio, comprobante: this.comprobante }, 'entregado');
+    await this.modalController.dismiss({ horaInicio: this.horaInicio, comprobante: this.comprobante, tiempoEspera: difEnSegundos }, 'entregado');
     this.submitted = true
   }
 }

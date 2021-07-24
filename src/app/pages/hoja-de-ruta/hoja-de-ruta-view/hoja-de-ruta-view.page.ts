@@ -242,6 +242,7 @@ export class HojaDeRutaViewPage implements OnInit {
         rto.tiempo_espera = finEntrega.getTime() - (respuestaModal.data.horaInicio as Date).getTime()
         rto.comprobante = respuestaModal.data.comprobante
         rto.estado = { "tipo": "Remito", "id_estado": 7, "nombre": "Entregado" }
+        rto.tiempo_espera = respuestaModal.data.tiempoEspera
         await this.rtoService.actualizarRemito(rto)
       }
       this.hoja = await this.hojaSev.get(this.idHoja)
