@@ -210,6 +210,7 @@ export class HojaDeRutaViewPage implements OnInit {
     window.open('https://www.google.com/maps/dir/?api=1&destination=' +
       this.rutaNavigation.proximaVisita.posicion.lat + ',' +
       this.rutaNavigation.proximaVisita.posicion.lng)
+    await this.enviarRemito();
     await this.mostrarModalEntrega()
   }
 
@@ -230,6 +231,7 @@ export class HojaDeRutaViewPage implements OnInit {
         let rto = await this.rtoService.get(this.rutaNavigation.proximaVisita.remito.idRemito + "")
         rto.estado = { "tipo": "Remito", "id_estado": 5, "nombre": "Cancelado" }
         rto.motivo = respuestaModal.data.motivo
+        delete rto.comprobante;
         await this.rtoService.actualizarRemito(rto)
       }
       if (respuestaModal.role === 'entregado') {
@@ -260,6 +262,11 @@ export class HojaDeRutaViewPage implements OnInit {
       ]
     });
     await alert.present();
+  }
+
+  async enviarRemito() {
+    const idRemito = this.rutaNavigation.proximaVisita.remito.idRemito;
+    await this.rtoService.enviarRemito(idRemito);
   }
 }
 

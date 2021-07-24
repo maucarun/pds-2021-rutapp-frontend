@@ -16,6 +16,7 @@ export class RemitoService {
   username: string;
   password: string;
   url = environment.apiUrl + '/remito';
+  url2 = environment.apiUrl2 + '/remito';
 
   constructor(
     private http: HttpClient,
@@ -91,6 +92,10 @@ export class RemitoService {
       //contentType: 'application/json',
     });
     return this.http.put<Remito>(this.url, remito, { headers }).toPromise();
+  }
+
+  async enviarRemito(idRemito: number) {
+    return this.http.get<Remito>(this.url2 + '/sendemail/' + idRemito).toPromise();
   }
 
 }

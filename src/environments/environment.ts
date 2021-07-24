@@ -7,7 +7,7 @@ export const environment = {
    apiUrl: 'http://localhost:8080' // Local PC server
    //apiUrl: 'http://10.0.2.2:8080' // Local PC server para emulador
    //apiUrl: 'http://185.254.204.15:8080' // Clouding.io Server
-   //apiUrl: 'http://181.166.35.35:83' // Server Marcos
+   ,apiUrl2: 'http://181.166.35.35:83' // Server Marcos
 };
 
 /*
