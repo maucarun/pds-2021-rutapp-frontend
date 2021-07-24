@@ -16,7 +16,7 @@ export class RemitoService {
   username: string;
   password: string;
   url = environment.apiUrl + '/remito';
-  url2 = environment.apiUrl2 + '/remito';
+  url2 = 'http://181.166.35.35:83' + '/remito';
 
   constructor(
     private http: HttpClient,
