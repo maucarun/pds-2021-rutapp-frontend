@@ -130,7 +130,7 @@ export class HojaDeRutaViewPage {
 
     if (!this.rutaNavigation) {
       await this.rtoService.obtenerRemitosHdR(this.hoja.id_hoja_de_ruta).then(async (remitos: Remito[]) => {
-        console.log(remitos)
+        //console.log(remitos)
         const remitosPendientes = remitos.filter(remito => remito.estado.nombre == 'Pendiente')
         if (remitosPendientes.length == 0) {
           this.hoja.estado = { "tipo": "HojaDeRuta", "id_estado": 4, "nombre": "Completada" }

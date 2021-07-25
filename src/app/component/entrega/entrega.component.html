@@ -113,11 +113,11 @@
     <ion-toolbar color="light">
       <ion-item *ngIf="estado==='visitar'">
         <ion-button color="danger" size="default" slot="start" (click)="cancelar()">Cancelar</ion-button>
-        <ion-button color="success" size="default" slot="end" (click)="entregar()">Realizar entrega</ion-button>
+        <ion-button style="margin-inline-start: 0" color="success" size="default" slot="end" (click)="entregar()">Realizar entrega</ion-button>
       </ion-item>
       <ion-item *ngIf="estado==='entregar'">
         <ion-button color="danger" size="default" slot="start" (click)="cancelar()">Cancelar</ion-button>
-        <ion-button color="success" size="default" slot="end" (click)="finalizarEntregar()">Finalizar entrega
+        <ion-button style="margin-inline-start: 0" color="success" size="default" slot="end" (click)="finalizarEntregar()">Finalizar entrega
         </ion-button>
       </ion-item>
       <ion-item *ngIf="estado==='seleccionecancelacion'">
