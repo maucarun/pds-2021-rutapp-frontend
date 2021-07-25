@@ -98,4 +98,8 @@ export class RemitoService {
     return this.http.get<Remito>(this.url2 + '/sendemail/' + idRemito).toPromise();
   }
 
+  async obtenerRemitosHdR(idHdR: number) {
+    return this.http.get<Remito[]>(this.url + '/all/hdr/' + idHdR).toPromise();
+  }
+
 }

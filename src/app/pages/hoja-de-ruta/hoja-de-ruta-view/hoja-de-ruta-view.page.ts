@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular';
 import { Usuario } from 'src/app/models/usuario.models';
@@ -11,6 +11,8 @@ import { EntregaComponent } from 'src/app/component/entrega/entrega.component';
 import { RemitoService } from 'src/app/services/remito.service';
 import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
 import { ToastService } from 'src/app/services/toast.service';
+import { Remito } from 'src/app/models/remito.models';
+import { LoadingService } from 'src/app/services/loading.service';
 
 
 declare var google: any
@@ -20,7 +22,7 @@ declare var google: any
   templateUrl: './hoja-de-ruta-view.page.html',
   styleUrls: ['./hoja-de-ruta-view.page.scss'],
 })
-export class HojaDeRutaViewPage implements OnInit {
+export class HojaDeRutaViewPage {
   map: any
   @ViewChild("map", { read: ElementRef, static: false }) mapRef: ElementRef
   @ViewChild("btnnav", { read: ElementRef, static: false }) btnnavRef: ElementRef
@@ -52,55 +54,8 @@ export class HojaDeRutaViewPage implements OnInit {
     private servicioRuta: RoutificService,
     private modalCtrl: ModalController,
     private toastService: ToastService,
+    private loading: LoadingService,
   ) { }
-
-  async ngOnInit() {
-    this.user = this.authService.getUsuario();
-    this.directionsService = new google.maps.DirectionsService()
-    this.directionsDisplay = new google.maps.DirectionsRenderer()
-
-    this.hojaForm = this.formBuilder.group({
-      nombre: ['', [Validators.required]],
-      calle: ['', [Validators.required]],
-      altura: ['', [Validators.required]],
-      localidad: ['', [Validators.required]]
-    });
-
-    /* Verificando si la página tiene id */
-
-    this.activatedRoute.paramMap.subscribe(async paramMap => {
-      this.idHoja = paramMap.get('idHojaDeRuta');
-      this.editMode = this.router.url.includes('/hojasderuta/editar/');
-
-      if (this.idHoja) {
-        /* Como tiene id, completo el formulario con los datos del BE */
-        try {
-          this.hoja = await this.hojaSev.get(this.idHoja)
-        } catch (error) {
-          console.log("Ha ocurrido un error cargando la hoja de ruta, reintente.")
-        }
-
-        if (this.editMode) {
-
-          //Habilito las propiedades para editar en el formulario
-          console.log('Como está en modo edición, completo el formulario con los datos del BE ');
-          await this.cambiarWebEstado(false, true, false);
-          this.hojaForm.patchValue(this.hojaSubmit)
-        } else {
-
-          //Habilito las propiedades ver en el formulario
-          console.log('Como está en modo vista, completo el formulario con los datos del BE ');
-          await this.cambiarWebEstado(true, false, false);
-          await this.inicializacion();
-        }
-      } else {
-
-        //Habilito las propiedades para crear en el formulario
-        console.log('Como está en modo creación, dejo el formulario vacío');
-        await this.cambiarWebEstado(false, false, true);
-      }
-    });
-  }
 
   async cambiarWebEstado(view: boolean, edit: boolean, create: boolean) {
     this.viewMode = view;
@@ -109,7 +64,56 @@ export class HojaDeRutaViewPage implements OnInit {
   }
 
   async ionViewWillEnter() {
-   await this.inicializacion();
+   this.loading.present('Cargando...');
+   this.user = this.authService.getUsuario();
+   this.directionsService = new google.maps.DirectionsService()
+   this.directionsDisplay = new google.maps.DirectionsRenderer()
+
+   this.hojaForm = this.formBuilder.group({
+     nombre: ['', [Validators.required]],
+     calle: ['', [Validators.required]],
+     altura: ['', [Validators.required]],
+     localidad: ['', [Validators.required]]
+   });
+
+   /* Verificando si la página tiene id */
+
+   this.activatedRoute.paramMap.subscribe(async paramMap => {
+     this.idHoja = paramMap.get('idHojaDeRuta');
+     this.editMode = this.router.url.includes('/hojasderuta/editar/');
+
+     if (this.idHoja) {
+       /* Como tiene id, completo el formulario con los datos del BE */
+       try {
+         this.hoja = await this.hojaSev.get(this.idHoja)
+       } catch (error) {
+         console.log("Ha ocurrido un error cargando la hoja de ruta, reintente.")
+         this.loading.dismiss()
+         return
+       }
+
+       if (this.editMode) {
+
+         //Habilito las propiedades para editar en el formulario
+         console.log('Como está en modo edición, completo el formulario con los datos del BE ');
+         await this.cambiarWebEstado(false, true, false);
+         this.hojaForm.patchValue(this.hojaSubmit)
+         this.loading.dismiss()
+       } else {
+
+         //Habilito las propiedades ver en el formulario
+         console.log('Como está en modo vista, completo el formulario con los datos del BE ');
+         await this.cambiarWebEstado(true, false, false);
+         await this.inicializacion();
+       }
+     } else {
+
+       //Habilito las propiedades para crear en el formulario
+       console.log('Como está en modo creación, dejo el formulario vacío');
+       await this.cambiarWebEstado(false, false, true);
+       this.loading.dismiss()
+     }
+   });
   }
 
   async inicializacion() {
@@ -125,6 +129,14 @@ export class HojaDeRutaViewPage implements OnInit {
     })
 
     if (!this.rutaNavigation) {
+      await this.rtoService.obtenerRemitosHdR(this.hoja.id_hoja_de_ruta).then(async (remitos: Remito[]) => {
+        console.log(remitos)
+        const remitosPendientes = remitos.filter(remito => remito.estado.nombre == 'Pendiente')
+        if (remitosPendientes.length == 0) {
+          this.hoja.estado = { "tipo": "HojaDeRuta", "id_estado": 4, "nombre": "Completada" }
+          await this.hojaSev.update(this.hoja)
+        }
+      })
       this.toastService.presentToast("No hay visitas disponibles para hoy");
       return
     }
@@ -132,6 +144,7 @@ export class HojaDeRutaViewPage implements OnInit {
     this.proximaVisita = this.rutaNavigation.proximaVisita.nombre + ' (' + this.rutaNavigation.proximaVisita.direccion + ')'
     this.addMarkersToMap(this.rutaNavigation)
     this.showMap()
+    this.loading.dismiss()
   }
 
   showMap() {
@@ -263,6 +276,7 @@ export class HojaDeRutaViewPage implements OnInit {
       ]
     });
     await alert.present();
+    this.router.navigate(['hojasderuta'])
   }
 
   async enviarRemito() {

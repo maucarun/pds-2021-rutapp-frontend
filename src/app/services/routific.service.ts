@@ -27,7 +27,7 @@ export class RoutificService {
   }
 
   async get(hoja: HojaDeRuta): Promise<RutaDeNavegacion> {
-    console.log('Método toutificservice get')
+    console.log('Método routificservice get')
 
     console.log('ver ahora')
     await this.getLocation().then(coords => {
@@ -35,7 +35,7 @@ export class RoutificService {
     })
 
     let body: string
-    console.log('routrificservice - 30')
+    console.log('routificservice - 30')
     console.log(hoja)
     const remitos: Remito[] = await this.remitosDisponible(hoja.remitos)
 
