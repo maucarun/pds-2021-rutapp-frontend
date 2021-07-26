@@ -65,7 +65,24 @@
             ]
         },
         {
-            "nombre": "Hojas de Ruta"
+            "nombre": "Hojas de Ruta",
+            "reportes": [
+                {
+                    "nombre": "Estatus General",
+                    "necesitaFecha": false,
+                    "columnas" : [
+                        { "prop": "idHojaDeRuta", "name": "Id" },
+                        { "prop": "fechaHoraInicio", "name": "Fecha y Hora de Inicio" },
+                        { "prop": "estado", "name": "Estado" },
+                        { "prop": "kmsRecorridos", "name": "KMs Recorridos" },
+                        { "prop": "cantidadClientes", "name": "Cantidad de Clientes" },
+                        { "prop": "cantidadClientesVisitados", "name": "Cantidad de Clientes Visitados" },
+                        { "prop": "cantidadProductosEntregados", "name": "Cantidad de Productos Entregados" },
+                        { "prop": "promedioEntrega", "name": "Promedio de Entrega" }
+                    ]
+                }
+            ]
+
         }
     ]
 }

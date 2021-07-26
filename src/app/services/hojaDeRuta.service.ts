@@ -42,6 +42,14 @@ export class HojaDeRutaService {
         ).toPromise()
     }
 
+    async getAllStatus(): Promise<HojaDeRuta[]> {
+        this.autenticar()
+        const headers = new HttpHeaders({
+            usuario: this.username, password: this.password
+        });
+        return await this.http.get<HojaDeRuta[]>(this.url+'/info', { headers }).toPromise()
+    }
+
     async get(id: string): Promise<HojaDeRuta> {
         this.autenticar()
         const headers = new HttpHeaders({

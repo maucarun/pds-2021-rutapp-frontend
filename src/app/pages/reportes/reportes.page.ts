@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { Remito } from 'src/app/models/remito.models';
 import { ClienteService } from 'src/app/services/cliente.service';
 import { Cliente } from 'src/app/models/cliente.models';
+import { HojaDeRutaService } from 'src/app/services/hojaDeRuta.service';
+import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
 
 @Component({
   selector: 'app-reportes',
@@ -41,6 +43,7 @@ export class ReportesPage implements OnInit {
 
   constructor(
     private clientesService: ClienteService,
+    private hdrService: HojaDeRutaService,
     private loading: LoadingService,
     private productosService: ProductoService,
     private remitosService: RemitoService,
@@ -52,7 +55,6 @@ export class ReportesPage implements OnInit {
     this.tiposDeReportes = reportesDisponiblesJson;
     console.log(this.tiposDeReportes)
   }
-
 
   async ejecutarReporte() {
 
@@ -173,6 +175,25 @@ export class ReportesPage implements OnInit {
 
         break;
       }
+      case 'Estatus General': {
+        this.limpiarFechas()
+        this.columns = this.reporteSeleccionado.columnas;
+
+        await this.hdrService.getAllStatus().then(
+          (hdrs: HojaDeRuta[]) => {
+            console.log(hdrs);
+            this.rows = hdrs
+            this.filteredData = hdrs;
+          }
+        ).catch((err) => {
+          this.limpiarCampos();
+          console.error(err.error.message);
+          return this.toastService.presentToast(err.error.message);
+        });
+        this.reporteSubmitted = true;
+
+        break;
+      }
       default: {
         this.limpiarCampos();
         const defaultMessage = "Aun no está resuelta la opcion " + this.reporteSeleccionado;
@@ -257,6 +278,10 @@ export class ReportesPage implements OnInit {
       }
       case 'Clientes': {
         this.router.navigate(['clientes/' + selected[0].idCliente]);
+        break;
+      }
+      case 'Hojas de Ruta': {
+        this.router.navigate(['hojasderuta/hoja/' + selected[0].idHojaDeRuta]);
         break;
       }
       default: {
