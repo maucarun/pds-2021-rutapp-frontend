@@ -211,11 +211,15 @@ export class ReportesPage implements OnInit {
     console.log(this.tipoReporteSeleccionado.nombre)
     console.log(this.tipoReporteSeleccionado.reportes)
 
-    if (this.tipoReporteSeleccionado.reportes != undefined)
-      return this.reportes = this.tipoReporteSeleccionado.reportes
+    if (this.tipoReporteSeleccionado.reportes == undefined) {
+      this.reportes = null;
+      this.reporteSeleccionado = null;
+      return this.toastService.presentToast("No hay un tipo de reporte seleccionado");
+    }
 
-    this.reportes = null;
-    this.reporteSeleccionado = null;
+    this.limpiarFechas();
+    this.reporteSubmitted = false;
+    return this.reportes = this.tipoReporteSeleccionado.reportes
   }
 
   validarFechas(): boolean {
