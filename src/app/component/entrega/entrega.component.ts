@@ -73,8 +73,8 @@ get tieneTelefono(){
 
 
   enviarMje() {
-   
-    window.open('https://api.whatsapp.com/send?phone=54' + this.visita.remito.cliente.contactos[0].telefonos[0].telefono)
+    window.open('https://api.whatsapp.com/send?phone=+5491139368836&text=Su pedido está en camino');
+    // window.open('https://api.whatsapp.com/send?phone=54' + this.visita.remito.cliente.contactos[0].telefonos[0].telefono)
   }
   entregar() {
     this.horaInicioEspera = Date.now()

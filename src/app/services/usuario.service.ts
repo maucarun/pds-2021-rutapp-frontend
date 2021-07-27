@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Usuario } from '../models/usuario.models';
 import { environment } from '../../environments/environment';
 
@@ -9,6 +9,7 @@ import { environment } from '../../environments/environment';
 export class UsuarioService {
 
   url = environment.apiUrl + '/usuario';
+  password: string;
   constructor(private http: HttpClient) { }
 
   // async getUsuarioById(idUsuario: any): Promise<Usuario> {
@@ -28,6 +29,21 @@ export class UsuarioService {
   //registrar usuario
   async actualizarUsuario(idUsuario: number, usuario: Usuario): Promise<Usuario>{
     return await this.http.put<any>(this.url+'/' + idUsuario, usuario).toPromise();
+  }
+
+  //Recuperar contraseña
+  async guardarNuevaContraseñaGenerada(email: string, password: string){
+    console.log('Password: ', password);
+    this.password = password;
+    const headers = new HttpHeaders({
+      password: this.password,
+    });
+    // headers.set('password', 'algo');
+    // console.log('***headers: ', headers);
+    console.log('***headers: ', headers.keys());
+    console.log('***headers: ', headers.get('password'));
+    // return this.http.put<Usuario>(this.url+'?email='+email, { headers:new HttpHeaders({password}) }).toPromise();
+    return this.http.put<any>(this.url+'?email='+email,{}, { headers }).toPromise();
   }
 
   //login usuario
