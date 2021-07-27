@@ -3,11 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, LoadingController, MenuController, NavController, ToastController } from '@ionic/angular';
+import { AlertController, LoadingController, MenuController, NavController, Platform, ToastController } from '@ionic/angular';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import firebase from 'firebase/app';
-
+import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 @Component({
   selector: 'app-registro',
@@ -30,6 +30,9 @@ export class RegistroPage implements OnInit {
     private afAuth: AngularFireAuth,
     private userService: UsuarioService,
     private toastController: ToastController,
+    //plugin
+    private platform: Platform,
+    private googlePlus: GooglePlus
   ) {
   }
   ngOnInit(): void {
@@ -97,8 +100,20 @@ export class RegistroPage implements OnInit {
   }
 
   async registroConGoogle() {
-    console.log('Registro con google');
-    await this.registroConGoogleOFacebook(new firebase.auth.GoogleAuthProvider());
+    // console.log('Registro con google');
+    // await this.registroConGoogleOFacebook(new firebase.auth.GoogleAuthProvider());
+    if (this.platform.is('android')) {
+      // this.loginGoogleAndroid();
+      const res = await this.googlePlus.login({
+        webClientId: '',
+        offline: true
+      });
+      await this.registroConGoogleOFacebook(firebase.auth.GoogleAuthProvider.credential(res.idToken));
+    } else {
+      // this.loginGoogleWeb();
+      await this.registroConGoogleOFacebook(new firebase.auth.GoogleAuthProvider());
+    }
+
   }
 
   async registroConFacebook() {
@@ -111,9 +126,17 @@ export class RegistroPage implements OnInit {
 
     const loading = await this.loadingController.create({message: 'Cargando datos...'});
     await loading.present();
-
+    let resDeFirebase;
+    try {
+      if (this.platform.is('android')) {
+        resDeFirebase = await this.afAuth.signInWithCredential(proveedorDeDatos);
+        // resDeFirebase = await this.afAuth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(res.idToken));
+      }else{
+        resDeFirebase = await this.afAuth.signInWithPopup(proveedorDeDatos);
+      }
     //Traigo los datos de firebase
-    this.afAuth.signInWithPopup(proveedorDeDatos)
+    // this.afAuth.signInWithPopup(proveedorDeDatos)
+    resDeFirebase
     .then((res) => {
       const user = res.user;
       console.log(user);
