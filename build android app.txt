@@ -1,0 +1,17 @@
+Pasos para compilar una aplicación con Ionic Capacitor
+1. Eliminar la carpeta Android, si es que está generada
+1. Abrir una consola y ejecutar
+ionic build
+1. ejecutar
+npx cap add android
+1. abrir android studio
+npx cap open android
+
+Permitir peticiones por http
+1. Abrir android studio
+1. Abrir archivo android/manifests/AndroidManifest.xml
+1. Añadir la siguiente linea antes del '>'
+android:usesCleartextTraffic="true">
+
+Permitir login con google desde Android
+1. copiar y pegar el archivo google-service.json de la raiz del proyecto a la carpeta android y android/app

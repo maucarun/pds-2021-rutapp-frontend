@@ -107,7 +107,7 @@ export class Login2Component implements OnInit {
     if (this.platform.is('android')) {
       // this.loginGoogleAndroid();
       const res = await this.googlePlus.login({
-        webClientId: '',
+        webClientId: '102831843420-mb43t9qjnv5akqq04elk2ffi9ggov2jr.apps.googleusercontent.com',
         offline: true
       });
       await this.loginGoogleOFacebookWeb(firebase.auth.GoogleAuthProvider.credential(res.idToken));

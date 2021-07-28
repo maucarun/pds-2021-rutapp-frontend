@@ -17,7 +17,7 @@ import { GooglePlus } from '@ionic-native/google-plus/ngx';
 
 export class RegistroPage implements OnInit {
   formularioDeRegistro: FormGroup;
-  errorRegistro={};
+  errorRegistro = {};
 
   constructor(
     private nav: NavController,
@@ -49,14 +49,14 @@ export class RegistroPage implements OnInit {
     //Verifico que los campos estén llenos
     this.errorRegistro = this.validarForm(this.formularioDeRegistro);
     //verifico que no haya ningún error en el formulario
-    if (Object.keys(this.errorRegistro).length){
+    if (Object.keys(this.errorRegistro).length) {
       const alert = await this.alertController.create({
         header: 'Faltan completar campos',
         buttons: ['OK'],
       });
       return await alert.present();
     };
-    const loading = await this.loadingController.create({message: 'Cargando datos...'});
+    const loading = await this.loadingController.create({ message: 'Cargando datos...' });
     await loading.present();
 
     const usuario = {
@@ -69,22 +69,22 @@ export class RegistroPage implements OnInit {
       activo: true,
     };
     this.userService.registrarUsuario(usuario)
-        .then(async () => {
-          await loading.dismiss();
-          this.presentToast('Usuario registrado correctamente!');
-          this.irAlogin();
-        }
-        )
-        .catch(async (e) => {
-          console.error(e);
-          await loading.dismiss();
-          const alert = await this.alertController.create({
-            header: 'Falló el registro',
-            buttons: ['OK'],
-          });
-
-          await alert.present();
+      .then(async () => {
+        await loading.dismiss();
+        this.presentToast('Usuario registrado correctamente!');
+        this.irAlogin();
+      }
+      )
+      .catch(async (e) => {
+        console.error(e);
+        await loading.dismiss();
+        const alert = await this.alertController.create({
+          header: 'Falló el registro',
+          buttons: ['OK'],
         });
+
+        await alert.present();
+      });
     // this.userService.registrarUsuario(usuario)
     //   .then(() => {
     //     this.presentToast('Usuario registrado correctamente');
@@ -105,7 +105,7 @@ export class RegistroPage implements OnInit {
     if (this.platform.is('android')) {
       // this.loginGoogleAndroid();
       const res = await this.googlePlus.login({
-        webClientId: '',
+        webClientId: '102831843420-mb43t9qjnv5akqq04elk2ffi9ggov2jr.apps.googleusercontent.com',
         offline: true
       });
       await this.registroConGoogleOFacebook(firebase.auth.GoogleAuthProvider.credential(res.idToken));
@@ -121,56 +121,57 @@ export class RegistroPage implements OnInit {
     await this.registroConGoogleOFacebook(new firebase.auth.FacebookAuthProvider());
   }
 
-  async registroConGoogleOFacebook(proveedorDeDatos){
+  async registroConGoogleOFacebook(proveedorDeDatos) {
 
 
-    const loading = await this.loadingController.create({message: 'Cargando datos...'});
+    const loading = await this.loadingController.create({ message: 'Cargando datos...' });
     await loading.present();
     let resDeFirebase;
     try {
       if (this.platform.is('android')) {
         resDeFirebase = await this.afAuth.signInWithCredential(proveedorDeDatos);
         // resDeFirebase = await this.afAuth.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(res.idToken));
-      }else{
+      } else {
         resDeFirebase = await this.afAuth.signInWithPopup(proveedorDeDatos);
       }
+    } catch (err) {
+      this.presentToast(err);
+    }
     //Traigo los datos de firebase
     // this.afAuth.signInWithPopup(proveedorDeDatos)
-    resDeFirebase
-    .then((res) => {
-      const user = res.user;
-      console.log(user);
+    console.log(resDeFirebase);
+    
+    const user = resDeFirebase.user;
+    console.log(user);
 
-      const usuario = {
-        idUsuario: null,
-        nombre: user.displayName.split(' ')[0],
-        apellido: user.displayName.split(' ')[1],
-        username: user.displayName.split(' ')[0],
-        password: user.uid,
-        email: user.email,
-        activo: true,
-        // telefono: user.phoneNumber,
-        // foto: user.photoURL,
-      };//);
-      // Registro al usuario
-      this.userService.registrarUsuario(usuario)
-        .then(async () => {
-          await loading.dismiss();
-          this.presentToast('Usuario registrado correctamente!');
-          this.irAlogin();
-        }
-        )
-        .catch(async (e) => {
-          console.error(e);
-          await loading.dismiss();
-          const alert = await this.alertController.create({
-            header: 'Falló el registro',
-            buttons: ['OK'],
-          });
-
-          await alert.present();
+    const usuario = {
+      idUsuario: null,
+      nombre: user.displayName.split(' ')[0],
+      apellido: user.displayName.split(' ')[1],
+      username: user.displayName.split(' ')[0],
+      password: user.uid,
+      email: user.email,
+      activo: true,
+      // telefono: user.phoneNumber,
+      // foto: user.photoURL,
+    };//);
+    // Registro al usuario
+    this.userService.registrarUsuario(usuario)
+      .then(async () => {
+        await loading.dismiss();
+        this.presentToast('Usuario registrado correctamente!');
+        this.irAlogin();
+      })
+      .catch(async (e) => {
+        console.error(e);
+        await loading.dismiss();
+        const alert = await this.alertController.create({
+          header: 'Falló el registro',
+          buttons: ['OK'],
         });
-    });
+
+        await alert.present();
+      });
   }
 
   async presentToast(message: string) {
@@ -223,7 +224,7 @@ export class RegistroPage implements OnInit {
     return regex.test(String(email).toLowerCase());
   }
 
-  validarPassword(password: string): boolean{
+  validarPassword(password: string): boolean {
     // Contain at least 8 characters
     // contain at least 1 number
     // contain at least 1 lowercase character (a-z)
