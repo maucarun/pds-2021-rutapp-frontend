@@ -59,15 +59,15 @@ export class ClienteViewPage implements OnInit {
   };
 
   constructor(
-    private formBuilder: FormBuilder,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private clienteService: ClienteService,
-    private authService: AuthenticationService,
     private alertCtrl: AlertController,
-    private loading: LoadingService,
-    private toastService: ToastService,
+    private authService: AuthenticationService,
+    private clienteService: ClienteService,
+    private formBuilder: FormBuilder,
     private googleService: GoogleService,
+    private loading: LoadingService,
+    private router: Router,
+    private toastService: ToastService,
   ) { }
 
   get nombre() {
@@ -160,7 +160,17 @@ export class ClienteViewPage implements OnInit {
       this.idCliente = paramMap.get('id');
 
       /** Obtenemos un batch de disponibilidades para los 7 dias de la semana */
-      this.disponibilidadesNuevas = await this.clienteService.getDisponibilidades();
+      await this.clienteService.getDisponibilidades()
+      .then((disp: Disponibilidad[]) => {
+        disp.forEach( (d: Disponibilidad) => {
+          d.hora_apertura = "00:00"
+          d.hora_cierre = "00:00"
+        })
+        this.disponibilidadesNuevas = disp
+      })
+      .catch(err => this.toastService.presentToast(err.error));
+
+      /** Creamos la propiedad seleccionado para las disponibilidades */
       this.disponibilidadesNuevas.forEach((d: any) => d.seleccionado = false);
 
       if (this.idCliente === 'nuevo') {
@@ -178,7 +188,9 @@ export class ClienteViewPage implements OnInit {
       }
 
       console.log('Obtuve el cliente id ' + this.idCliente);
-      this.cliente = await this.clienteService.get(this.idCliente);
+      await this.clienteService.get(this.idCliente)
+      .then((data: Cliente) => this.cliente = data) 
+      .catch(err => this.toastService.presentToast(err.error));
       console.log(this.cliente);
 
       /** Pegamos las props del cliente en el formulario */
@@ -387,6 +399,16 @@ export class ClienteViewPage implements OnInit {
     await msjConfirmacion.present();
   }
 
+  fallaDisponibilidad(disponibilidades: Disponibilidad[]): boolean {
+    var hayError = false;
+    disponibilidades.forEach((disp: Disponibilidad) => {
+      if (disp.hora_cierre < disp.hora_apertura)
+        hayError = true;
+    })
+
+    return hayError;
+  }
+
   async onSubmit(form: FormGroup, e: any) {
     e.preventDefault();
     //console.log(form);
@@ -394,8 +416,9 @@ export class ClienteViewPage implements OnInit {
     const disponibilidadesSeleccionadas = disponibilidadesSemana.filter(dsp => dsp.disponibilidadSeleccionado);
     const contactosAgregados = this.clienteForm.get('contactos').value;
     //console.log(contactosAgregados.length)
-    if (disponibilidadesSeleccionadas.length < 1) { this.toastService.presentToast('Debe seleccionar al menos una disponibilidad'); }
-    else if (contactosAgregados.length < 1) { this.toastService.presentToast('Debe añadir al menos un contacto'); }
+    if (disponibilidadesSeleccionadas.length < 1) { this.toastService.presentToast('ERROR: Debe seleccionar al menos una disponibilidad'); }
+    else if (this.fallaDisponibilidad(disponibilidadesSeleccionadas)) { this.toastService.presentToast('ERROR: La hora de cierre debe ser menor a la hora de apertura'); }
+    else if (contactosAgregados.length < 1) { this.toastService.presentToast('ERROR: Debe añadir al menos un contacto'); }
     else {
       /** Como el objeto cliente está vacío, tenemos que setetarle cada una de las propiedades del form */
       this.cliente.nombre = this.clienteForm.get('nombre').value;

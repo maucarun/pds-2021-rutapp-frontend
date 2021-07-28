@@ -2,9 +2,17 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+/**
+ * CUIDADO: si usas el servicio de google cambiar '41' por 'AI'
+ * Pegar esta key en el archivo index.html en la linea 20
+ *  NO COMMITEAR este archivo
+ */
+const googleKey = '41zaSyDGfQwweS1miAkl9rtrYB2UHzS1_l0hndw';
+
 export const environment = {
   production: false,
-   apiUrl: 'http://localhost:8080' // Local PC server
+  googleApiUrl: 'https://maps.googleapis.com/maps/api/geocode/json?key=' + googleKey + '&address=',
+  apiUrl: 'http://localhost:8080' // Local PC server
    //apiUrl: 'http://10.0.2.2:8080' // Local PC server para emulador
    //apiUrl: 'http://185.254.204.15:8080' // Clouding.io Server
   //  apiUrl: 'http://181.166.35.35:83' // Server Marcos
