@@ -11,6 +11,8 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { Platform } from '@ionic/angular';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { ToastService } from 'src/app/services/toast.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-login2',
@@ -25,15 +27,16 @@ export class Login2Component implements OnInit {
   passwordIcon: string = 'eye-off';
   // errorCredenciales= {username:'', password:''};
   constructor(
-    public nav: NavController,
+    private alertController: AlertController,
+    private authService: AuthenticationService,
+    private fb: FormBuilder,
     public forgotCtrl: AlertController,
+    private loadingController: LoadingController,
     public menu: MenuController,
+    public nav: NavController,
     public router: Router,
     public toastCtrl: ToastController,
-    private fb: FormBuilder,
-    private authService: AuthenticationService,
-    private alertController: AlertController,
-    private loadingController: LoadingController,
+    private toast: ToastService,
     //firebase
     private afAuth: AngularFireAuth,
     private modalCtrl: ModalController,
@@ -45,13 +48,19 @@ export class Login2Component implements OnInit {
     this.menu.swipeGesture(false);
     this.errorCredenciales = {};
   }
-  ngOnInit() {
+  async ngOnInit() {
     this.credenciales = this.fb.group({
       username: ['', [Validators.required]],
       // email: ['', [Validators.required]],
       password: ['', [Validators.required]],
     });
     this.menu.enable(false);
+
+    await this.authService.consultarEstadoDelBE()
+    .catch(err => {
+      this.toast.presentToast("ERROR: BE " + environment.apiUrl + " no conectado", 0);
+      console.log(err.error);
+    });
   }
 
   // Redirige a registro

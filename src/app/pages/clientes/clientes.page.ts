@@ -7,6 +7,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { MenuController } from '@ionic/angular';
 import { AvatarService } from 'src/app/services/avatar.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-clientes',
@@ -21,12 +22,13 @@ export class ClientesPage {
   buscarCliente: string;
 
   constructor(
-    private clieServ: ClienteService,
-    private router: Router,
     private authService: AuthenticationService,
+    private avatarService: AvatarService,
+    private clieServ: ClienteService,
     private loading: LoadingService,
     private menu: MenuController,
-    private avatarService: AvatarService
+    private router: Router,
+    private toast: ToastService
   ) { }
 
   /** Este método se ejecuta cada vez que se entra al componente */
@@ -44,7 +46,10 @@ export class ClientesPage {
         }
         this.clientesBackup = this.clientes;
       }
-    );
+    ).catch(err => {
+      this.toast.presentToast("ERROR: No se puede obtener los clientes del usuario " + this.user.nombre);
+      console.log(err.error);
+    }) ;
 
     this.menu.enable(true);
     this.loading.dismiss();

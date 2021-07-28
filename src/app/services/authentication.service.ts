@@ -86,4 +86,8 @@ export class AuthenticationService {
     Storage.set({ key: USER, value: JSON.stringify(user) });
     this.loadUser();
   }
+
+  consultarEstadoDelBE(): Promise<boolean> {
+    return this.http.get<boolean>(this.url + '/').toPromise();
+  }
 }
