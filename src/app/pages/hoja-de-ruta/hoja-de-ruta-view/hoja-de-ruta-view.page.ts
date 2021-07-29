@@ -223,7 +223,7 @@ export class HojaDeRutaViewPage {
     window.open('https://www.google.com/maps/dir/?api=1&destination=' +
       this.rutaNavigation.proximaVisita.posicion.lat + ',' +
       this.rutaNavigation.proximaVisita.posicion.lng)
-    await this.enviarRemito();
+    this.enviarRemito();
     await this.mostrarModalEntrega()
   }
 
@@ -257,6 +257,7 @@ export class HojaDeRutaViewPage {
         rto.estado = { "tipo": "Remito", "id_estado": 7, "nombre": "Entregado" }
         rto.tiempo_espera = respuestaModal.data.tiempoEspera
         await this.rtoService.actualizarRemito(rto)
+        this.enviarComprobante();
       }
       this.hoja = await this.hojaSev.get(this.idHoja)
       await this.inicializacion()
@@ -282,6 +283,11 @@ export class HojaDeRutaViewPage {
   async enviarRemito() {
     const idRemito = this.rutaNavigation.proximaVisita.remito.idRemito;
     await this.rtoService.enviarRemito(idRemito);
+  }
+
+  async enviarComprobante() {
+    const idRemito = this.rutaNavigation.proximaVisita.remito.idRemito;
+    await this.rtoService.enviarComprobante(idRemito);
   }
 }
 

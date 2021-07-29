@@ -28,7 +28,7 @@
         </ion-item>
         <ion-item  *ngIf="tieneTelefono">
           <ion-label text-wrap>
-            <ion-button color="success" size="default" slot="start" (click)="enviarMje()">Enviar un Whattsaap</ion-button>
+            <ion-button color="success" size="default" slot="start" (click)="enviarMje()">Enviar un WhatsApp</ion-button>
           </ion-label>
         </ion-item>
       </ion-list>
@@ -41,13 +41,13 @@
       <ion-list>
         <ion-item>
           <ion-label text-wrap>
-            <ion-text position="floating" color="primary">Nombre</ion-text>
+            <ion-text position="floating" color="primary">Nombre completo</ion-text>
             <ion-input placeholder="Nombre de quien recibe" type="text" required="true"
-              [(ngModel)]="comprobante.nombreCompleto">
+              [(ngModel)]="comprobante.nombre_completo">
             </ion-input>
           </ion-label>
         </ion-item>
-        <span class="error ion-padding" *ngIf="submitted && comprobante.nombreCompleto === ''">
+        <span class="error ion-padding" *ngIf="submitted && comprobante.nombre_completo === ''">
           Debe ingresar el nombre de quien recibe.
         </span>
         <ion-item>
@@ -57,7 +57,7 @@
             </ion-input>
           </ion-label>
         </ion-item>
-        <span class="error ion-padding" *ngIf="submitted && comprobante.nombreCompleto === ''">
+        <span class="error ion-padding" *ngIf="submitted && comprobante.nombre_completo === ''">
           Debe ingresar el documento de quien recibe.
         </span>
       </ion-list>

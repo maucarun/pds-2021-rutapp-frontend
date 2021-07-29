@@ -94,7 +94,11 @@ export class RemitoService {
   }
 
   async enviarRemito(idRemito: number) {
-    return this.http.get<Remito>(this.url + '/sendemail/' + idRemito).toPromise();
+    return this.http.get(this.url + '/sendemail/' + idRemito).toPromise();
+  }
+
+  async enviarComprobante(idRemito: number) {
+    return this.http.get(this.url + '/sendcomprobante/' + idRemito).toPromise();
   }
 
   async obtenerRemitosHdR(idHdR: number) {

@@ -1,8 +1,6 @@
-import { Remito } from './remito.models';
-
 export interface ComprobanteEntrega {
     idComprobante: number;
-    nombreCompleto: string;
+    nombre_completo: string;
     dni: string;
     fechaHoraEntrega: Date;
 }

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { Component, Input } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { timeout } from 'rxjs/operators';
@@ -80,12 +81,14 @@ get tieneTelefono(){
     this.horaInicioEspera = Date.now()
     this.estado = 'entregar'
     this.comprobante = {} as ComprobanteEntrega
-    this.comprobante.fechaHoraEntrega = new Date()
+    const horaFechaActual = new Date()
+    const horaFechaEntrega = new Date(horaFechaActual.getFullYear(), horaFechaActual.getMonth(), horaFechaActual.getDate(), horaFechaActual.getHours()-3, horaFechaActual.getMinutes());
+    this.comprobante.fechaHoraEntrega = horaFechaEntrega
   }
 
   async finalizarEntregar() {
     this.submitted = true
-    if (!this.comprobante.nombreCompleto || this.comprobante.nombreCompleto === '') {
+    if (!this.comprobante.nombre_completo || this.comprobante.nombre_completo === '') {
       this.nombreValido = false
       return
     }
