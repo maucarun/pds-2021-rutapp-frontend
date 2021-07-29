@@ -116,7 +116,7 @@ export class HojaDeRutaNavPage {
   get validarMks(): string {
     let estado = this.hoja.estado
     if (estado && estado.id_estado === 3 && (!this.hoja.kms_recorridos || this.hoja.kms_recorridos <= 0))
-      return 'Debe los kilometros recorridos'
+      return 'Debe ingresar los kilometros recorridos'
     return null
   }
 
@@ -228,7 +228,7 @@ export class HojaDeRutaNavPage {
   async seleccione(mensaje: string): Promise<boolean> {
     let confirma
     const alert = await this.alertCtrl.create({
-      header: 'Confirmacion',
+      header: 'Confirmación',
       message: mensaje,
       buttons: [
         {
