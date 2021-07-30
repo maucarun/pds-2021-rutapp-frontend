@@ -72,8 +72,14 @@
 
   <ion-footer>
     <ion-toolbar color="light">
+      <!-- <div class="btn-whatsapp">
+        <a href="https://api.whatsapp.com/send?phone=5199999999" target="_blank">
+          <img src="http://s2.accesoperu.com/logos/btn_whatsapp.png" alt="">
+        </a>
+      </div> -->
+
       <ion-buttons color="primary" *ngIf="!rutaNavigation">
-        <a  href="/hojasderuta" class="waves-effect waves-light btn-large">Volver</a>
+        <a href="/hojasderuta" class="waves-effect waves-light btn-large">Volver</a>
       </ion-buttons>
       <ion-buttons color="primary" *ngIf="rutaNavigation">
         <a id="btnnav" (click)="navegarClick()" class="waves-effect waves-light btn-large">Iniciar Navegación</a>

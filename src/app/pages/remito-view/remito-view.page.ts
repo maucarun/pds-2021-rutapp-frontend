@@ -15,6 +15,7 @@ import { Estado } from 'src/app/models/estado.models';
 import { ToastService } from 'src/app/services/toast.service';
 import jsPDF from 'jspdf';
 import domtoimage from 'dom-to-image';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-remito-view',
@@ -52,9 +53,11 @@ export class RemitoViewPage implements OnInit {
     private productoService: ProductoService,
     private modalController: ModalController,
     private toastService: ToastService,
+    private loading: LoadingService,
   ) { }
 
   async ngOnInit() {
+    this.loading.present('Cargando...');
     this.user = this.authService.getUsuario();
     this.clientes = await this.clienteService.getAll();
     await this.convertirProductosEnPr();
@@ -104,6 +107,7 @@ export class RemitoViewPage implements OnInit {
 
         this.remito = nuevoRemito;
       }
+      this.loading.dismiss();
     });
   }
 
@@ -190,6 +194,7 @@ export class RemitoViewPage implements OnInit {
   }
 
   async guardarRemito() {
+    this.loading.present('Guardando...');
     this.remito.fechaDeCreacion = this.formatearFecha(this.remito.fechaDeCreacion);
     console.log(this.remito);
     if (this.createMode) {
@@ -199,6 +204,7 @@ export class RemitoViewPage implements OnInit {
       delete this.remito.comprobante;
       await this.remitoService.actualizarRemito(this.remito);
     }
+    this.loading.dismiss();
     this.volverAListaRemitos();
   }
 
@@ -229,7 +235,8 @@ export class RemitoViewPage implements OnInit {
       const doc = new jsPDF('p', 'pt', 'a4');
       doc.addImage(imgData, 'PNG', 0, 0);
       doc.save(`${this.remito.fechaDeCreacion}_remito_${this.remito.idRemito}.pdf`);
-    });
+    })
+    .catch(e=> console.log('pdf', e));
   }
 }
 

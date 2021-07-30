@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController, PopoverController } from '@ionic/angular';
+import { PopoverController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/component/popover/popover.component';
 import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
 import { Usuario } from 'src/app/models/usuario.models';
@@ -26,7 +26,6 @@ export class HojaDeRutaPage {
   constructor(private hojaServ: HojaDeRutaService,
     private authService: AuthenticationService,
     private loading: LoadingService,
-    private menu: MenuController,
     public popoverController: PopoverController,
     private router: Router,
   ) { }
@@ -38,17 +37,19 @@ export class HojaDeRutaPage {
     this.user = user;
     this.hojasderuta = null;
     this.buscarHdR = '';
-    
+
     console.log("Buscaré las hojas de ruta del usuario " + this.user.idUsuario);
     await this.hojaServ.getAll().then(
       (data: PaginacionService) => this.hojasderuta = data.reultado
     ).then(() => {
       this.hdRBackup = this.hojasderuta;
       this.obtenerEstados();
-      this.loading.dismiss()
-    });
-
-    this.menu.enable(true);
+      this.loading.dismiss();
+    })
+      .catch(e => {
+        console.log('hoja de ruta getAll: ', e);
+        this.loading.dismiss();
+      });
   }
 
   async getHdRBusqueda(ev: any) {

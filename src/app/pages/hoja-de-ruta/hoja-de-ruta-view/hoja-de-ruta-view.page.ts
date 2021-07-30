@@ -85,10 +85,11 @@ export class HojaDeRutaViewPage {
      if (this.idHoja) {
        /* Como tiene id, completo el formulario con los datos del BE */
        try {
-         this.hoja = await this.hojaSev.get(this.idHoja)
+         this.hoja = await this.hojaSev.get(this.idHoja);
+         this.loading.dismiss();
        } catch (error) {
          console.log("Ha ocurrido un error cargando la hoja de ruta, reintente.")
-         this.loading.dismiss()
+         this.loading.dismiss();
          return
        }
 
@@ -105,6 +106,7 @@ export class HojaDeRutaViewPage {
          console.log('Como está en modo vista, completo el formulario con los datos del BE ');
          await this.cambiarWebEstado(true, false, false);
          await this.inicializacion();
+         this.loading.dismiss();
        }
      } else {
 

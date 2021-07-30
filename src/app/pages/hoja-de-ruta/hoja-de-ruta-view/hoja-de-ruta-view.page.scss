@@ -59,3 +59,17 @@
 #map {
     height: 400px;
 }
+
+.btn-whatsapp {
+    display:block;
+    width:3rem;
+    height:3rem;
+    color:#fff;
+    position: fixed;
+    right: 0.4em;;
+    bottom: 0.4em;;
+    border-radius:50%;
+    line-height:80px;
+    text-align:center;
+    z-index:999;
+}

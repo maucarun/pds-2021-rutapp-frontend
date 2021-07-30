@@ -250,7 +250,7 @@ export class HojaDeRutaNavPage {
     })
     await alert.present()
     await alert.onDidDismiss().then((data) => {
-      confirma = data
+      confirma = data.data
     })
     return confirma
   }
