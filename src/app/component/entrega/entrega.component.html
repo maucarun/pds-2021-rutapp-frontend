@@ -47,7 +47,7 @@
             </ion-input>
           </ion-label>
         </ion-item>
-        <span class="error ion-padding" *ngIf="submitted && comprobante.nombre_completo === ''">
+        <span class="error ion-padding" *ngIf="submitted && (comprobante.nombre_completo === '' || !comprobante.nombre_completo)">
           Debe ingresar el nombre de quien recibe.
         </span>
         <ion-item>
@@ -57,7 +57,7 @@
             </ion-input>
           </ion-label>
         </ion-item>
-        <span class="error ion-padding" *ngIf="submitted && comprobante.nombre_completo === ''">
+        <span class="error ion-padding" *ngIf="submitted && (comprobante.dni === '' || !comprobante.dni)">
           Debe ingresar el documento de quien recibe.
         </span>
       </ion-list>
