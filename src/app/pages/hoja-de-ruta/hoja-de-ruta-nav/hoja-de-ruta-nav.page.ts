@@ -14,6 +14,7 @@ import { ProductoRemito } from 'src/app/models/productoRemito.models';
 import { ComprobanteEntrega } from 'src/app/models/comprobanteEntrega.models';
 import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
 import { LoadingService } from 'src/app/services/loading.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 
 @Component({
@@ -40,7 +41,8 @@ export class HojaDeRutaNavPage {
     private loading: LoadingService,
     private authService: AuthenticationService,
     private alertCtrl: AlertController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private toastService: ToastService,
   ) {
     this.hojaForm = this.formBuilder.group({
       justificacion: new FormControl('', []),
@@ -106,45 +108,62 @@ export class HojaDeRutaNavPage {
 
   // ------------         Validadores del formulario         ------------
 
-  get validarJustificacion(): string {
-    const estado = this.hoja.estado;
-    if (estado && estado.id_estado === 1 && (!this.hoja.justificacion || this.hoja.justificacion === ''))
-      {return 'Debe ingresar el motivo de la suspensión';}
-    return null;
+  get validarJustificacion(): boolean {
+    let estado = this.hoja.estado
+    if (estado && estado.nombre === 'Suspendida' && (!this.hoja.justificacion || this.hoja.justificacion === "")) {
+      this.toastService.presentToast('Debe ingresar el motivo de la suspensión')
+      return false
+    }
+    return true
   }
 
-  get validarMks(): string {
-    const estado = this.hoja.estado;
-    if (estado && estado.id_estado === 3 && (!this.hoja.kms_recorridos || this.hoja.kms_recorridos <= 0))
-      {return 'Debe ingresar los kilometros recorridos';}
-    return null;
-  }
+  /*   get validarMks(): boolean {
+      let estado = this.hoja.estado
+      if (estado && estado.nombre === 'En Curso' && (!this.hoja.kms_recorridos || this.hoja.kms_recorridos <= 0)){
+        this.toastService.presentToast('Debe ingresar los kilometros recorridos')
+        return false
+      }
+      return true
+    } */
 
-  get validarFechas(): string {
-    if (this.hoja.estado.id_estado !== 2)
-      {if (!this.hoja.fecha_hora_inicio)
-        {return 'Debe ingresar la fecha y hora inicial';}
+  /* get validarFechas(): string {
+    if (this.hoja.estado.nombre == '' && this.hoja.estado.nombre !== 'Suspendida'){
+      if (!this.hoja.fecha_hora_inicio) {
+        return "Debe ingresar la fecha y hora inicial"
+      }
       else
-        if (this.hoja.estado.id_estado === 4)
-          {return 'Debe ingresar la fecha y hora final';}
-        else {return null;}}
-    else {return null;}
-  }
+        if (this.hoja.estado.nombre === 'Completada') {
+          return "Debe ingresar la fecha y hora final"
+        }
+        else {return null}
+      } else {return null}
+  } */
 
   soloNros(event: any) {
     this.hoja.kms_recorridos = event.target.value.replace(/[^0-9]*/g, '');
   }
 
   diasDisponibles(rmt: Remito): string {
-    let arrDias = [];
-    rmt.cliente.disponibilidades.forEach(dia => arrDias.push(dia));
-    arrDias = arrDias.sort( (a,b)=> {
-      if (a.diaSemana.id_dia_semana > b.diaSemana.id_dia_semana) { return 1;}
-      if (a.diaSemana.id_dia_semana < b.diaSemana.id_dia_semana) { return -1;}
-      if (a.diaSemana.id_dia_semana === b.diaSemana.id_dia_semana) { return 0;}
-    } );
-
-    return arrDias.map( obj => obj.diaSemana.diaSemana.substring(0, 2)).join(', ');
+    let _dias: string[] = [];
+    const sorter = {
+      'Lu': 1,
+      'Ma': 2,
+      'Mi': 3,
+      'Ju': 4,
+      'Vi': 5,
+      'Sa': 6,
+      'Do': 7
+    }
+    rmt.cliente.disponibilidades.forEach(dia => {
+      if (!_dias.includes(dia.diaSemana.diaSemana.substring(0, 2)))
+        _dias.push(dia.diaSemana.diaSemana.substring(0, 2))
+    })
+    _dias.sort(function sortByDay(a, b) {
+      let day1 = a;
+      let day2 = b;
+      return sorter[day1] - sorter[day2];
+    });
+    return _dias.join(", ")
   }
 
   async validarGuardado(): Promise<boolean> {
@@ -152,19 +171,17 @@ export class HojaDeRutaNavPage {
 
     return this.hojaForm.valid &&
       this.hoja.remitos.length > 0 &&
-      this.validarJustificacion === null &&
-      this.validarFechas === null &&
-      this.validarMks === null;
+      this.validarJustificacion
+    //&& this.validarFechas && this.validarMks
   }
 
   get hayRemitosPendientes() {
     let dia = new Date().getDay();
-    if (dia === 0)
-      {dia = 7;}
+    if (dia === 0) { dia = 7; }
 
     return (this.hoja.remitos.filter(item => (item.estado === null || item.estado.nombre == 'Pendiente') &&
-        (item.cliente.disponibilidades.filter(disp =>
-          disp.diaSemana.id_dia_semana === dia)).length > 0).length > 0);
+      (item.cliente.disponibilidades.filter(disp =>
+        disp.diaSemana.id_dia_semana === dia)).length > 0).length > 0);
   }
 
   // ###############          Ventanas modales          ###############
@@ -189,14 +206,16 @@ export class HojaDeRutaNavPage {
           handler: (data) => {
             alertMotivo.dismiss(true);
             return data.texto.value;
-          }
+          },
+          role: 'aceptar'
         },
         {
           text: 'Cancelar',
           handler: (data) => {
             alertMotivo.dismiss(false);
-            return '';
-          }
+            return null;
+          },
+          role: 'cancel'
         }
       ],
       backdropDismiss: false
@@ -237,21 +256,24 @@ export class HojaDeRutaNavPage {
           handler: (): boolean => {
             alert.dismiss(false);
             return false;
-          }
+          },
+          role: 'cancel'
         },
         {
           text: 'Aceptar',
           handler: (): boolean => {
             alert.dismiss(true);
             return false;
-          }
+          },
+          role: 'aceptar'
         }
       ],
       backdropDismiss: false
     });
     await alert.present();
     await alert.onDidDismiss().then((data) => {
-      confirma = data.data;
+      console.log(data)
+      confirma = data;
     });
     return confirma;
   }
@@ -280,9 +302,9 @@ export class HojaDeRutaNavPage {
 
   async editarHoja() {
 
-    await this.hojaServ.getEstados().then(data => this.estadosHdr = data);
-    await this.hojaServ.getRemitosDisponibles().then((data: PaginacionService) => this.remitosDisponibles = data.reultado);
-    this.editable = true;
+    await this.hojaServ.getEstados().then(data => { this.estadosHdr = data.filter(estado => estado.nombre !== 'Completada'); })
+    await this.hojaServ.getRemitosDisponibles().then((data: PaginacionService) => this.remitosDisponibles = data.reultado)
+    this.editable = true
   }
 
   eliminarRemito(rto: Remito) {
@@ -293,39 +315,43 @@ export class HojaDeRutaNavPage {
   }
 
   async borrarHoja() {
-    let confirma = false;
-    let motivo = '';
+    let confirma: any;
+    let motivo: any;
     if (this.idHoja) {
-      await this.seleccione('¿Esta seguro que desea cancelar esta hoja de ruta?').then(
-        rta => {
-          confirma = rta;
+      await this.seleccione('¿Esta seguro que desea suspender esta hoja de ruta?').then(
+        (rta: any) => {
+          confirma = rta //.data
+          console.log(rta)
         }
       ).catch(
         err => console.log('error')
       );
-      if (confirma) {
+      if (confirma.role !== 'cancel') {
         await this.ingresarTexto('Por favor ingrese el motivo de la suspensión', 'Motivo', 'Motivo de a suspensión').then(
-          (rta: any) => motivo = rta.data.values.texto
+          (rta: any) => {
+            motivo = rta
+            console.log(rta)
+          }
         );
-        if (motivo !== '') {
-          this.hojaServ.delete(+this.idHoja, motivo).then(async _ => {
+        if (motivo.role === 'cancel') return
+        if (motivo.data.values.texto !== '') {
+          try {
+            await this.hojaServ.delete(this.idHoja, motivo.data.values.texto)
             await this.confirmacion(
-              'Se ha eliminado la hoja de ruta ' + this.idHoja + ' correctamente.',
-              'Operación Exitosa!'
-            ).catch(async _ =>
-              await this.confirmacion(
-                'No se pudo eliminar la hoja de ruta ' + this.idHoja + '.',
-                'Operación Fallida!'
-              )
-            ).finally(async () => {
-              this.editable = false;
-              this.submitted = false;
-              await this.ionViewWillEnter();
-            });
-          });
+              'Se ha suspendido la hoja de ruta ' + this.idHoja + ' correctamente.',
+              'Operación Exitosa!')
+          } catch (e) {
+            await this.confirmacion(
+              'No se pudo suspender la hoja de ruta ' + this.idHoja + '.',
+              'Operación Fallida!'
+            )
+          }
+          this.editable = false
+          this.submitted = false
+          await this.ionViewWillEnter()
         } else {
           await this.confirmacion(
-            'No se pudo eliminar la hoja de ruta ' + this.idHoja + ' porque no ha indicado el motivo.',
+            'No se pudo suspender la hoja de ruta ' + this.idHoja + ' porque no ha indicado el motivo.',
             'Operación Fallida!'
           ).finally(async () => {
             this.editable = false;
@@ -345,17 +371,18 @@ export class HojaDeRutaNavPage {
     console.log(this.hojaForm);
 
     await this.validarGuardado().then(rta => confirma = rta);
-    if (!confirma)
-      {return;}
+    if (!confirma) { return; }
 
-    confirma = false;
-    let mensaje = '';
-    let titulo = '';
+    confirma = false
+    let mensaje = ''
+    let titulo = ''
     if (this.hoja) {
       await this.seleccione('¿Esta seguro que desea guardar esta hoja de ruta?').then(
         rta => confirma = rta
       );
       if (confirma) {
+
+        //this.hoja.estado = this.hojaForm.get('estado').value;
 
         if (this.editable && this.hoja.id_hoja_de_ruta > 0) {
           await this.hojaServ.update(this.hoja).then(_ => {

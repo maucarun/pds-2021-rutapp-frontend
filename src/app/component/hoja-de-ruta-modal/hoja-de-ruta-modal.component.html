@@ -9,7 +9,7 @@
     <ion-list>
       <ion-item *ngFor="let remito of remitos; let i= index">
         <ion-label text-wrap>
-          <ion-text color="primary">{{remito.cliente.nombre}}</ion-text>
+          <ion-text color="primary">{{remito.idRemito}} - {{remito.cliente.nombre}}</ion-text>
           <p>Disponible: {{diasDisponibles(remito)}}</p>
         </ion-label>
         <ion-checkbox slot="end" [(ngModel)]="remito.seleccionado"></ion-checkbox>

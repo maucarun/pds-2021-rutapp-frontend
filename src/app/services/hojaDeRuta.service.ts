@@ -102,7 +102,7 @@ export class HojaDeRutaService {
         ).toPromise()
     }
 
-    async delete(id: number, motivo: string): Promise<void> {
+    async delete(id: string, motivo: string): Promise<void> {
         this.autenticar()
         const headers = new HttpHeaders({
             usuario: this.username, password: this.password, 'Content-Type': 'application/json'

@@ -34,7 +34,7 @@
                 <ion-select-option *ngFor="let estadoHoja of estadosHdr" [value]="estadoHoja">{{estadoHoja.nombre}}
                 </ion-select-option>
               </ion-select> -->
-              <ion-select formControlName="estado" name="estado" [compareWith]="compareFn" okText="Aceptar" cancelText="Cancelar" type="input" >
+              <ion-select formControlName="estado" name="estado" [compareWith]="compareFn" okText="Aceptar" cancelText="Cancelar" type="input" [(ngModel)]="hoja.estado">
                 <ion-select-option *ngFor="let estado of estadosHdr" [value]="estado" >{{estado.nombre}}
                 </ion-select-option>
               </ion-select>
@@ -48,21 +48,21 @@
           <ion-input placeholder="Causa de la suspención" value="" type="text" formControlName="justificacion"
             [(ngModel)]="hoja.justificacion"></ion-input>
         </ion-item>
-        <span class="error ion-padding" *ngIf="submitted && validarJustificacion !== null">
+        <!-- <span class="error ion-padding" *ngIf="submitted && validarJustificacion !== null">
           {{validarJustificacion}}
-        </span>
+        </span> -->
 
-        <ion-item lines="full" *ngIf="hoja.estado.id_estado == 3">
+<!--         <ion-item lines="full" *ngIf="hoja.estado.id_estado == 3">
           <ion-label position="floating">Kms. Recorridos</ion-label>
           <ion-input placeholder="kms recorridos" type="number" (change)="soloNros($event)" required="true" min="0"
-            [(ngModel)]="hoja.kms_recorridos" formControlName="kms" [(ngModel)]="hoja.kms_recorridos">
+            [(ngModel)]="hoja.kms_recorridos" formControlName="kms">
           </ion-input>
         </ion-item>
         <span class="error ion-padding" *ngIf="submitted && validarMks">
           {{validarMks}}
-        </span>
+        </span> -->
 
-        <ion-item lines="full" *ngIf="hoja.estado.id_estado !== 2">
+       <!--  <ion-item lines="full" *ngIf="hoja.estado.id_estado !== 2">
           <ion-row style="width: 100%;">
             <ion-col class="ion-no-padding" size="6">
               <ion-label position="floating">Inicio del recorrido</ion-label>
@@ -80,7 +80,7 @@
         </ion-item>
         <span class="error ion-padding" *ngIf="submitted && validarMks !== null">
           {{validarFechas}}
-        </span>
+        </span> -->
 
         <ion-card>
           <div >
@@ -117,7 +117,7 @@
     
                     <ion-col size="6">
                       <!--<ion-input required="true" type="number" placeholder="Cant." [min]="1" [(ngModel)]="pr.cantidad" (ionChange)="calcularTotal()"> </ion-input>-->
-                      <ion-label>{{remito.cliente.nombre}}</ion-label>
+                      <ion-label>{{remito.idRemito}} - {{remito.cliente.nombre}}</ion-label>
                     </ion-col>
     
                     <ion-col size="4">
@@ -236,13 +236,13 @@
       </ion-fab-button>
     </ion-fab>
 
-    <ion-fab *ngIf="!editable" vertical="bottom" horizontal="start" slot="fixed">
+    <ion-fab *ngIf="!editable && hoja && hoja.estado.nombre != 'Completada'" vertical="bottom" horizontal="start" slot="fixed">
       <ion-fab-button color="warning" (click)="editarHoja()">
         <ion-icon name="create-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab>
 
-    <ion-fab *ngIf="!editable &&  hoja && hoja.estado && hoja.estado.id_estado !== 1" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab *ngIf="!editable && hoja && hoja.estado && hoja.estado.id_estado !== 1 && hoja.estado.id_estado !== 4" vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button color="danger" (click)="borrarHoja()">
         <ion-icon name="trash"></ion-icon>
       </ion-fab-button>

@@ -12,13 +12,13 @@ import { Remito } from 'src/app/models/remito.models';
   templateUrl: './hoja-de-ruta-modal.component.html',
   styleUrls: ['./hoja-de-ruta-modal.component.scss'],
 })
-export class HojaDeRutaModalComponent{
+export class HojaDeRutaModalComponent {
 
   @Input() remitos: RemitoSeleccionable[];
 
   constructor(private modalController: ModalController,) { }
 
-  get seleccionados() : RemitoSeleccionable[]{
+  get seleccionados(): RemitoSeleccionable[] {
     return this.remitos.filter(e => e.seleccionado);
   }
 
@@ -28,26 +28,36 @@ export class HojaDeRutaModalComponent{
 
   async cancelar() {
     await this.modalController.dismiss(null, 'cancelar');
-  } 
-  
+  }
 
-  diasDisponibles(rmt : Remito): string{
+
+  diasDisponibles(rmt: Remito): string {
     let _dias: string[] = [];
-    const disp = rmt.cliente.disponibilidades.sort((n1,n2) => n1.diaSemana.id_dia_semana - n2.diaSemana.id_dia_semana)
-    
-    rmt.cliente.disponibilidades.forEach(dia=>
-        {
-            console.log(dia.diaSemana.diaSemana)
-            if(!_dias.includes(dia.diaSemana.diaSemana.substring(0,2)))
-                _dias.push(dia.diaSemana.diaSemana.substring(0,2))
-        })
-        
+    const sorter = {
+      'Lu': 1,
+      'Ma': 2,
+      'Mi': 3,
+      'Ju': 4,
+      'Vi': 5,
+      'Sa': 6,
+      'Do': 7
+    }
+    //const disp = rmt.cliente.disponibilidades.sort((n1,n2) => n1.diaSemana.id_dia_semana - n2.diaSemana.id_dia_semana)
+    rmt.cliente.disponibilidades.forEach(dia => {
+      if (!_dias.includes(dia.diaSemana.diaSemana.substring(0, 2)))
+        _dias.push(dia.diaSemana.diaSemana.substring(0, 2))
+    })
+    _dias.sort(function sortByDay(a, b) {
+      let day1 = a;
+      let day2 = b;
+      return sorter[day1] - sorter[day2];
+    });
     return _dias.join(", ")
-  } 
+  }
 }
 
 
-class RemitoSeleccionable implements Remito{
+class RemitoSeleccionable implements Remito {
   idRemito: number
   fechaDeCreacion: string
   total: number
@@ -59,5 +69,5 @@ class RemitoSeleccionable implements Remito{
   comprobante: ComprobanteEntrega;
   cantidadDeItems: number;
   hojaDeRuta: HojaDeRuta;
-  seleccionado:boolean = false
+  seleccionado: boolean = false
 }
