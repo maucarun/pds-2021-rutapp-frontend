@@ -100,16 +100,18 @@ export class RegistroPage implements OnInit {
   }
 
   async registroConGoogle() {
-    // console.log('Registro con google');
+    console.log('Registro con google');
     // await this.registroConGoogleOFacebook(new firebase.auth.GoogleAuthProvider());
     if (this.platform.is('android')) {
       // this.loginGoogleAndroid();
+      console.log('es android');
       const res = await this.googlePlus.login({
         webClientId: '102831843420-mb43t9qjnv5akqq04elk2ffi9ggov2jr.apps.googleusercontent.com',
         offline: true
       });
       await this.registroConGoogleOFacebook(firebase.auth.GoogleAuthProvider.credential(res.idToken));
     } else {
+      console.log('es web');
       // this.loginGoogleWeb();
       await this.registroConGoogleOFacebook(new firebase.auth.GoogleAuthProvider());
     }

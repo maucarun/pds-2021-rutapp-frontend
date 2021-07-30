@@ -4,7 +4,7 @@
 
     <!-- Logo style="background-color: rosybrown;"style="padding: 20px;"-->
     <ion-img src="assets/IMG-20210623-WA0000.png" style="margin-top: 20px;"></ion-img>
-    <div  padding-horizontal text-center class="animated fadeInDown">
+    <div padding-horizontal text-center class="animated fadeInDown">
       <!-- <div class="logo"translucent ></div> -->
       <!-- <ion-toolbar   >
       </ion-toolbar> -->
@@ -16,48 +16,63 @@
 
     <!-- Login form -->
     <form class="list-form" (ngSubmit)="login()" (keyup.enter)="login()" [formGroup]="credenciales">
-      
+
       <ion-item class="input-login">
         <ion-label floating>
           <ion-icon name="mail" item-start class="text-primary"></ion-icon>
           <!-- Nombre de usuario -->
           <!-- Email -->
         </ion-label>
-        <ion-input  type="email" placeholder="Nombre de usuario"  formControlName="username" name="email" (ionChange)="handlerChange($event)"></ion-input>
+        <ion-input type="email" placeholder="Nombre de usuario" formControlName="username" name="email"
+          (ionChange)="handlerChange($event)"></ion-input>
       </ion-item>
-        <p *ngIf="errorCredenciales?.username" class="p-error">{{errorCredenciales?.username}}</p>
+      <p *ngIf="errorCredenciales?.username" class="p-error">{{errorCredenciales?.username}}</p>
 
       <ion-item>
         <ion-label floating>
           <ion-icon name="lock-closed" item-start class="text-primary"></ion-icon>
           <!-- Password -->
         </ion-label>
-        <ion-input [type]="passwordType" placeholder="Password" formControlName="password" (ionChange)="handlerChange($event)"></ion-input>
-        <ion-icon id="login-eye"[name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()' floating item-start class="text-primary"></ion-icon>
+        <ion-input [type]="passwordType" placeholder="Password" formControlName="password"
+          (ionChange)="handlerChange($event)"></ion-input>
+        <ion-icon id="login-eye" [name]="passwordIcon" class="passwordIcon" (click)='hideShowPassword()' floating
+          item-start class="text-primary"></ion-icon>
       </ion-item>
       <p *ngIf="errorCredenciales?.password" class="p-error">{{errorCredenciales?.password}}</p>
     </form>
 
-    <p text-right ion-text class="p-forgot" style="color: #4c6df9" tappable (click)="forgotPass()"><strong>Forgot Password?</strong></p>
-    
+    <p text-right ion-text class="p-forgot" style="color: #4c6df9" tappable (click)="forgotPass()"><strong>Forgot
+        Password?</strong></p>
+
     <!-- Botones -->
-    <button ion-button icon-start block class="btn-singin"  tappable (click)="login()">
+    <button ion-button icon-start block class="btn-singin" tappable (click)="login()">
       <ion-icon name="log-in"></ion-icon>
       LOGIN
     </button>
-    <p text-center ion-text style="color: #4c6df9">O iniciar sesión con:</p>
+    <p text-center ion-text style="color: #4c6df9">O </p>
+    <!-- <p text-center ion-text style="color: #4c6df9">O iniciar sesión con:</p> -->
 
     <div class="botonera">
 
-      <button ion-button icon-only block class="btn-facebook " (click)="loginFacebook()">
+      <!-- <button ion-button icon-only block class="btn-facebook " (click)="loginFacebook()">
         <ion-icon name="logo-facebook"></ion-icon>
-      </button>
-      <button ion-button icon-only block class="btn-gplus" (click)="loginGoogle()">
-        <ion-icon name="logo-google"></ion-icon>
-      </button>
-
+      </button> -->
+      <!-- <button ion-button icon-only block class="btn-gplus" (click)="loginGoogle()"> -->
+        <!-- <ion-icon name="logo-google"></ion-icon> -->
+        <!-- <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"> -->
+      <!-- </button> -->
+      
+      <div class="google-btn" (click)="loginGoogle()">
+        <div class="google-icon-wrapper" style="display: flex; justify-content: center; align-items: center;">
+          <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+            alt="google button" />
+        </div>
+        <p class="btn-text">
+          <b>Iniciar sesión con google</b>
+        </p>
+      </div>
     </div>
-
-    <p text-center ion-text style="color: #4c6df9" tappable (click)="irAregistro()" >Nuevo aquí? <strong>Registrarse</strong></p>
+    <p text-center ion-text style="color: #4c6df9" tappable (click)="irAregistro()">Nuevo aquí?
+      <strong>Registrarse</strong></p>
   </div>
 </ion-content>

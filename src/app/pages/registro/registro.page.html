@@ -58,15 +58,24 @@
         REGISTRAR
       </button>
 
-      <p text-center ion-text style="color: #4c6df9; font-size: small;">O registrarse con:</p>
+      <p text-center ion-text style="color: #4c6df9; font-size: small;">O</p>
+      <!-- <p text-center ion-text style="color: #4c6df9; font-size: small;">O registrarse con:</p> -->
       <div class="botonera">
-        <button ion-button icon-only block class="btn-facebook " (click)="registroConFacebook()">
+        <!-- <button ion-button icon-only block class="btn-facebook " (click)="registroConFacebook()">
           <ion-icon name="logo-facebook"></ion-icon>
         </button>
         <button ion-button icon-only block class="btn-gplus" (click)="registroConGoogle()">
           <ion-icon name="logo-google"></ion-icon>
-        </button>
-  
+        </button> -->
+        <div class="google-btn" (click)="registroConGoogle()">
+          <div class="google-icon-wrapper" style="display: flex; justify-content: center; align-items: center;">
+            <img class="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
+              alt="google button" />
+          </div>
+          <p class="btn-text">
+            <b>Registrarse con google</b>
+          </p>
+        </div>
       </div>
 
       <p text-center ion-text style="color: #4c6df9" tappable (click)="irAlogin()" >Tengo una cuenta</p>

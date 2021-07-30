@@ -23,14 +23,14 @@ import { LoadingService } from 'src/app/services/loading.service';
 })
 export class HojaDeRutaNavPage {
 
-  hojaForm: FormGroup
-  idHoja: string
-  hoja: HojaDeRuta
-  user: Usuario
-  remitosDisponibles: RemitoSeleccionable[]
-  estadosHdr: Estado[]
-  submitted = false
-  editable: boolean = null
+  hojaForm: FormGroup;
+  idHoja: string;
+  hoja: HojaDeRuta;
+  user: Usuario;
+  remitosDisponibles: RemitoSeleccionable[];
+  estadosHdr: Estado[];
+  submitted = false;
+  editable: boolean = null;
 
   constructor(
     public formBuilder: FormBuilder,
@@ -58,35 +58,35 @@ export class HojaDeRutaNavPage {
 
   async ionViewWillEnter() {
     this.loading.present('Cargando...');
-    this.user = await this.authService.getUsuario()
+    this.user = await this.authService.getUsuario();
 
     this.activatedRoute.paramMap.subscribe(async paramMap => {
-      this.idHoja = paramMap.get('idHojaDeRuta')
+      this.idHoja = paramMap.get('idHojaDeRuta');
       if (this.idHoja !== 'crear') {
         try {
-          this.hoja = await this.hojaServ.get(this.idHoja)
+          this.hoja = await this.hojaServ.get(this.idHoja);
 
           this.hoja.remitos.sort((a, b) => a.estado.id_estado - b.estado.id_estado);
 
-          this.editable = false
-          this.hojaForm.patchValue(this.hoja)
+          this.editable = false;
+          this.hojaForm.patchValue(this.hoja);
         } catch (error) {
-          console.log("Ha ocurrido un error cargando la hoja de ruta, reintente.")
+          console.log('Ha ocurrido un error cargando la hoja de ruta, reintente.');
         }
       } else {
-        await this.inicializarNuevaHoja()
-        this.editable = true
+        await this.inicializarNuevaHoja();
+        this.editable = true;
         // this.hojaForm.patchValue(this.hoja)
         this.hojaForm.patchValue({
           estado: this.hoja.estado,
           kms_recorridos: this.hoja.kms_recorridos
-        })
+        });
         /** Desactivar la selección de estado porque por defecto es "Pendiente" */
-        this.hojaForm.get("estado").disable()
-        console.log(this.hojaForm)
+        this.hojaForm.get('estado').disable();
+        console.log(this.hojaForm);
       }
       return this.loading.dismiss();
-    })
+    });
   }
 
 
@@ -95,40 +95,40 @@ export class HojaDeRutaNavPage {
   // ###############                    ###############
 
   async inicializarNuevaHoja() {
-    this.hoja = {} as HojaDeRuta
+    this.hoja = {} as HojaDeRuta;
     this.hoja.kms_recorridos = 0;
-    this.hoja.estado = { id_estado: 2, nombre: "Pendiente", tipo: 'HojaDeRuta' } as Estado
-    this.hoja.remitos = [] as Remito[]
-    await this.hojaServ.getEstados().then(data => this.estadosHdr = data)
-    await this.hojaServ.getRemitosDisponibles().then((data: PaginacionService) => this.remitosDisponibles = data.reultado)
-    this.editable = true
+    this.hoja.estado = { id_estado: 2, nombre: 'Pendiente', tipo: 'HojaDeRuta' } as Estado;
+    this.hoja.remitos = [] as Remito[];
+    await this.hojaServ.getEstados().then(data => this.estadosHdr = data);
+    await this.hojaServ.getRemitosDisponibles().then((data: PaginacionService) => this.remitosDisponibles = data.reultado);
+    this.editable = true;
   }
 
   // ------------         Validadores del formulario         ------------
 
   get validarJustificacion(): string {
-    let estado = this.hoja.estado
-    if (estado && estado.id_estado === 1 && (!this.hoja.justificacion || this.hoja.justificacion === ""))
-      return 'Debe ingresar el motivo de la suspensión'
-    return null
+    const estado = this.hoja.estado;
+    if (estado && estado.id_estado === 1 && (!this.hoja.justificacion || this.hoja.justificacion === ''))
+      {return 'Debe ingresar el motivo de la suspensión';}
+    return null;
   }
 
   get validarMks(): string {
-    let estado = this.hoja.estado
+    const estado = this.hoja.estado;
     if (estado && estado.id_estado === 3 && (!this.hoja.kms_recorridos || this.hoja.kms_recorridos <= 0))
-      return 'Debe ingresar los kilometros recorridos'
-    return null
+      {return 'Debe ingresar los kilometros recorridos';}
+    return null;
   }
 
   get validarFechas(): string {
     if (this.hoja.estado.id_estado !== 2)
-      if (!this.hoja.fecha_hora_inicio)
-        return "Debe ingresar la fecha y hora inicial"
+      {if (!this.hoja.fecha_hora_inicio)
+        {return 'Debe ingresar la fecha y hora inicial';}
       else
         if (this.hoja.estado.id_estado === 4)
-          return "Debe ingresar la fecha y hora final"
-        else return null
-    else return null
+          {return 'Debe ingresar la fecha y hora final';}
+        else {return null;}}
+    else {return null;}
   }
 
   soloNros(event: any) {
@@ -136,12 +136,15 @@ export class HojaDeRutaNavPage {
   }
 
   diasDisponibles(rmt: Remito): string {
-    let _dias: string[] = [];
-    rmt.cliente.disponibilidades.forEach(dia => {
-      if (!_dias.includes(dia.diaSemana.diaSemana.substring(0, 2)))
-        _dias.push(dia.diaSemana.diaSemana.substring(0, 2))
-    })
-    return _dias.join(", ")
+    let arrDias = [];
+    rmt.cliente.disponibilidades.forEach(dia => arrDias.push(dia));
+    arrDias = arrDias.sort( (a,b)=> {
+      if (a.diaSemana.id_dia_semana > b.diaSemana.id_dia_semana) { return 1;}
+      if (a.diaSemana.id_dia_semana < b.diaSemana.id_dia_semana) { return -1;}
+      if (a.diaSemana.id_dia_semana === b.diaSemana.id_dia_semana) { return 0;}
+    } );
+
+    return arrDias.map( obj => obj.diaSemana.diaSemana.substring(0, 2)).join(', ');
   }
 
   async validarGuardado(): Promise<boolean> {
@@ -151,25 +154,23 @@ export class HojaDeRutaNavPage {
       this.hoja.remitos.length > 0 &&
       this.validarJustificacion === null &&
       this.validarFechas === null &&
-      this.validarMks === null
+      this.validarMks === null;
   }
 
   get hayRemitosPendientes() {
-    let dia = new Date().getDay()
+    let dia = new Date().getDay();
     if (dia === 0)
-      dia = 7
+      {dia = 7;}
 
-    return (this.hoja.remitos.filter(item => {
-      return (item.estado === null || item.estado.nombre == 'Pendiente') &&
+    return (this.hoja.remitos.filter(item => (item.estado === null || item.estado.nombre == 'Pendiente') &&
         (item.cliente.disponibilidades.filter(disp =>
-          disp.diaSemana.id_dia_semana === dia)).length > 0
-    }).length > 0)
+          disp.diaSemana.id_dia_semana === dia)).length > 0).length > 0);
   }
 
   // ###############          Ventanas modales          ###############
 
   async ingresarTexto(texto: string, titulo: string, placeholder: string): Promise<string> {
-    let respuesta: string
+    let respuesta: string;
     const alertMotivo = await this.alertCtrl.create({
       header: titulo, //'Motivo',
       //message: 'Por favor ingrese el motivo de la suspensión',
@@ -177,7 +178,7 @@ export class HojaDeRutaNavPage {
       inputs: [
         {
           name: 'texto',
-          placeholder: placeholder, // 'Ingrese el motivo',
+          placeholder, // 'Ingrese el motivo',
           type: 'textarea',
 
         }
@@ -186,25 +187,25 @@ export class HojaDeRutaNavPage {
         {
           text: 'Aceptar',
           handler: (data) => {
-            alertMotivo.dismiss(true)
-            return data.texto.value
+            alertMotivo.dismiss(true);
+            return data.texto.value;
           }
         },
         {
           text: 'Cancelar',
           handler: (data) => {
-            alertMotivo.dismiss(false)
-            return ''
+            alertMotivo.dismiss(false);
+            return '';
           }
         }
       ],
       backdropDismiss: false
-    })
-    await alertMotivo.present()
+    });
+    await alertMotivo.present();
     await alertMotivo.onDidDismiss().then((data) => {
-      respuesta = data as string
-    })
-    return respuesta
+      respuesta = data as string;
+    });
+    return respuesta;
   }
 
   async confirmacion(mensaje: string, titulo: string) {
@@ -215,18 +216,18 @@ export class HojaDeRutaNavPage {
         {
           text: 'Aceptar',
           handler: (): boolean => {
-            alert.dismiss(true)
-            return false
+            alert.dismiss(true);
+            return false;
           }
         }],
       backdropDismiss: false
-    })
-    await alert.present()
-    await alert.onDidDismiss().then()
+    });
+    await alert.present();
+    await alert.onDidDismiss().then();
   }
 
   async seleccione(mensaje: string): Promise<boolean> {
-    let confirma
+    let confirma;
     const alert = await this.alertCtrl.create({
       header: 'Confirmación',
       message: mensaje,
@@ -241,18 +242,18 @@ export class HojaDeRutaNavPage {
         {
           text: 'Aceptar',
           handler: (): boolean => {
-            alert.dismiss(true)
-            return false
+            alert.dismiss(true);
+            return false;
           }
         }
       ],
       backdropDismiss: false
-    })
-    await alert.present()
+    });
+    await alert.present();
     await alert.onDidDismiss().then((data) => {
-      confirma = data.data
-    })
-    return confirma
+      confirma = data.data;
+    });
+    return confirma;
   }
 
   async mostrarModalRemitos() {
@@ -268,8 +269,8 @@ export class HojaDeRutaNavPage {
     await modal.onWillDismiss().then((respuestaModal) => {
       if (respuestaModal.role !== 'cancelar') {
         respuestaModal.data.forEach((rto: Remito) => {
-          this.hoja.remitos.push(rto)
-          this.remitosDisponibles = this.remitosDisponibles.filter(x => x !== rto)
+          this.hoja.remitos.push(rto);
+          this.remitosDisponibles = this.remitosDisponibles.filter(x => x !== rto);
         });
       }
     });
@@ -279,33 +280,33 @@ export class HojaDeRutaNavPage {
 
   async editarHoja() {
 
-    await this.hojaServ.getEstados().then(data => this.estadosHdr = data)
-    await this.hojaServ.getRemitosDisponibles().then((data: PaginacionService) => this.remitosDisponibles = data.reultado)
-    this.editable = true
+    await this.hojaServ.getEstados().then(data => this.estadosHdr = data);
+    await this.hojaServ.getRemitosDisponibles().then((data: PaginacionService) => this.remitosDisponibles = data.reultado);
+    this.editable = true;
   }
 
   eliminarRemito(rto: Remito) {
     this.hoja.remitos = this.hoja.remitos.filter(r => rto !== r);
-    let rtos = rto as RemitoSeleccionable
-    rtos.seleccionado = false
-    this.remitosDisponibles.push(rtos)
+    const rtos = rto as RemitoSeleccionable;
+    rtos.seleccionado = false;
+    this.remitosDisponibles.push(rtos);
   }
 
   async borrarHoja() {
-    let confirma: boolean = false
-    let motivo: string = ''
+    let confirma = false;
+    let motivo = '';
     if (this.idHoja) {
       await this.seleccione('¿Esta seguro que desea cancelar esta hoja de ruta?').then(
         rta => {
-          confirma = rta
+          confirma = rta;
         }
       ).catch(
         err => console.log('error')
-      )
+      );
       if (confirma) {
         await this.ingresarTexto('Por favor ingrese el motivo de la suspensión', 'Motivo', 'Motivo de a suspensión').then(
           (rta: any) => motivo = rta.data.values.texto
-        )
+        );
         if (motivo !== '') {
           this.hojaServ.delete(+this.idHoja, motivo).then(async _ => {
             await this.confirmacion(
@@ -317,21 +318,21 @@ export class HojaDeRutaNavPage {
                 'Operación Fallida!'
               )
             ).finally(async () => {
-              this.editable = false
-              this.submitted = false
-              await this.ionViewWillEnter()
-            })
-          })
+              this.editable = false;
+              this.submitted = false;
+              await this.ionViewWillEnter();
+            });
+          });
         } else {
           await this.confirmacion(
             'No se pudo eliminar la hoja de ruta ' + this.idHoja + ' porque no ha indicado el motivo.',
             'Operación Fallida!'
           ).finally(async () => {
-            this.editable = false
-            this.submitted = false
-            await this.ionViewWillEnter()
+            this.editable = false;
+            this.submitted = false;
+            await this.ionViewWillEnter();
           }
-          )
+          );
         }
       }
     }
@@ -339,53 +340,53 @@ export class HojaDeRutaNavPage {
 
   async guardarHoja() {
     this.submitted = true;
-    let confirma: boolean = false
-    console.log("Guardando la hoja de ruta")
-    console.log(this.hojaForm)
+    let confirma = false;
+    console.log('Guardando la hoja de ruta');
+    console.log(this.hojaForm);
 
-    await this.validarGuardado().then(rta => confirma = rta)
+    await this.validarGuardado().then(rta => confirma = rta);
     if (!confirma)
-      return
+      {return;}
 
-    confirma = false
-    let mensaje: string = ""
-    let titulo: string = ""
+    confirma = false;
+    let mensaje = '';
+    let titulo = '';
     if (this.hoja) {
       await this.seleccione('¿Esta seguro que desea guardar esta hoja de ruta?').then(
         rta => confirma = rta
-      )
+      );
       if (confirma) {
 
         if (this.editable && this.hoja.id_hoja_de_ruta > 0) {
           await this.hojaServ.update(this.hoja).then(_ => {
-            mensaje = 'Se ha modificado la hoja de ruta ' + this.idHoja + ' correctamente.'
-            titulo = 'Operación Exitosa!'
+            mensaje = 'Se ha modificado la hoja de ruta ' + this.idHoja + ' correctamente.';
+            titulo = 'Operación Exitosa!';
           }
           ).catch(_ => {
-            mensaje = 'No se pudo modificar la hoja de ruta ' + this.idHoja + '.'
-            titulo = 'Operación Fallida!'
+            mensaje = 'No se pudo modificar la hoja de ruta ' + this.idHoja + '.';
+            titulo = 'Operación Fallida!';
           }
-          )
+          );
         }
         else {
           await this.hojaServ.save(this.hoja).then(_ => {
-            titulo = 'Operación Exitosa!'
-            mensaje = 'Se ha creado la nueva hoja de ruta correctamente.'
+            titulo = 'Operación Exitosa!';
+            mensaje = 'Se ha creado la nueva hoja de ruta correctamente.';
           }
           ).catch(_ => {
-            titulo = 'Operación Fallida!'
-            mensaje = 'No se pudo crear la nueva hoja de ruta'
+            titulo = 'Operación Fallida!';
+            mensaje = 'No se pudo crear la nueva hoja de ruta';
           }
-          )
+          );
         }
         await this.confirmacion(
           mensaje, titulo
-        )
+        );
       }
     }
-    this.submitted = false
-    this.editable = false
-    await this.ionViewWillEnter()
+    this.submitted = false;
+    this.editable = false;
+    await this.ionViewWillEnter();
   }
 
   compareFn(e1: Estado, e2: Estado): boolean {
@@ -398,16 +399,16 @@ export class HojaDeRutaNavPage {
 
 
 class RemitoSeleccionable implements Remito {
-  idRemito: number
-  fechaDeCreacion: string
-  total: number
-  motivo: string
-  tiempo_espera: number
-  cliente: Cliente
-  estado: Estado
+  idRemito: number;
+  fechaDeCreacion: string;
+  total: number;
+  motivo: string;
+  tiempo_espera: number;
+  cliente: Cliente;
+  estado: Estado;
   productosDelRemito: ProductoRemito[];
   comprobante: ComprobanteEntrega;
   cantidadDeItems: number;
   hojaDeRuta: HojaDeRuta;
-  seleccionado: boolean = false
+  seleccionado = false;
 }

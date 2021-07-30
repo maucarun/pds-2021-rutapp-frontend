@@ -25,7 +25,8 @@ ion-content{
   background-color: #0039a2;/*dark*/
   color: aliceblue;
   width: 100%;
-  padding: 0.45rem 0;
+  padding: 0.65rem 0;
+  // padding: 0.45rem 0; //con el btn naranja de google
   border-radius: 0.2rem;
 }
 
@@ -34,7 +35,7 @@ ion-content{
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin: 1rem 0;
+  // margin: 1rem 0;
   width: 100%;
 }
 
@@ -183,3 +184,88 @@ ion-item {
     top: 22px !important;
     margin: 0 auto !important;
  }
+
+ $white: #fff;
+$google-blue: #4285f4;
+$button-active-blue: #1669f2;
+
+// .google-btn {
+//     cursor: pointer;
+//     margin-top: 5px;
+//     width: 100%;
+//     height: 42px;
+//     background-color: $google-blue;
+//     border-radius: 2px;
+//     box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
+
+//     transition: box-shadow .3s ease;
+
+//     .google-icon-wrapper {
+//         position: absolute;
+//         margin-top: 1px;
+//         margin-left: 1px;
+//         width: 40px;
+//         height: 40px;
+//         border-radius: 2px;
+//         background-color: $white;
+//     }
+//     .google-icon {
+//         position: absolute;
+//         margin-top: 11px;
+//         margin-left: 11px;
+//         width: 18px;
+//         height: 18px;
+//     }
+//     .btn-text {
+//         float: right;
+//         margin: 11px 40px 0 0;
+//         color: $white;
+//         font-size: 14px;
+//         letter-spacing: 0.2px;
+//     }
+//     &:hover {
+//         box-shadow: 0 0 6px $google-blue;
+//     }
+//     &:active {
+//         background: $button-active-blue;
+//     }
+// }
+
+.google-btn {
+  align-items: center;
+  background-color: $google-blue;
+  border-radius: 2px;
+  box-shadow: 0 3px 4px 0 rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  display: flex;
+  // margin-top: 5px;
+  height: 40px;
+  transition: box-shadow 0.3s ease;
+  width: 100%;
+  
+  .google-icon-wrapper {
+  align-items: center;
+  border-radius: 2px 0 0 2px;
+  background-color: $white;
+  display: flex;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  .google-icon {
+  width: 18px;
+  height: 18px;
+  }
+  }
+  .btn-text {
+  color: $white;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  margin-left: 10px;
+  }
+  &:hover {
+  box-shadow: 0 0 6px $google-blue;
+  }
+  &:active {
+  background: $button-active-blue;
+  }
+  }
