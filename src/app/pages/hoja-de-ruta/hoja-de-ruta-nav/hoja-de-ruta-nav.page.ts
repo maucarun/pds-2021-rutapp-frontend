@@ -419,7 +419,12 @@ export class HojaDeRutaNavPage {
   compareFn(e1: Estado, e2: Estado): boolean {
     return e1 && e2 ? e1.id_estado == e2.id_estado : e1 == e2;
   }
-  navegarClick() {
+
+  async navegarClick() {
+    if (this.hoja.estado.nombre !== 'En Curso') {
+      this.hoja.estado = { "tipo": "HojaDeRuta", "id_estado": 3, "nombre": "En Curso" }
+      await this.hojaServ.update(this.hoja)
+    }
     this.router.navigateByUrl('hojasderuta/recorrido/' + this.hoja.id_hoja_de_ruta, { replaceUrl: true });
   }
 }

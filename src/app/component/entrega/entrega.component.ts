@@ -74,29 +74,30 @@ get tieneTelefono(){
 
 
   enviarMje() {
-    window.open('https://api.whatsapp.com/send?phone=+5491139368836&text=Su pedido está en camino');
-    // window.open('https://api.whatsapp.com/send?phone=54' + this.visita.remito.cliente.contactos[0].telefonos[0].telefono)
+    window.open('https://api.whatsapp.com/send?phone=54' + this.visita.remito.cliente.contactos[0].telefonos[0].telefono + '&text=Su pedido está en camino')
   }
+
   entregar() {
     this.horaInicioEspera = Date.now()
     this.estado = 'entregar'
     this.comprobante = {} as ComprobanteEntrega
-    const horaFechaActual = new Date()
-    const horaFechaEntrega = new Date(horaFechaActual.getFullYear(), horaFechaActual.getMonth(), horaFechaActual.getDate(), horaFechaActual.getHours()-3, horaFechaActual.getMinutes());
-    this.comprobante.fechaHoraEntrega = horaFechaEntrega
   }
-
+  
   async finalizarEntregar() {
     this.submitted = true
     if (!this.comprobante.nombre_completo || this.comprobante.nombre_completo === '') {
       this.nombreValido = false
       return
     }
-
+    
     if (!this.comprobante.dni || this.comprobante.dni === '') {
       this.docValido = false
       return
     }
+    
+    const horaFechaActual = new Date()
+    const horaFechaEntrega = new Date(horaFechaActual.getFullYear(), horaFechaActual.getMonth(), horaFechaActual.getDate(), horaFechaActual.getHours()-3, horaFechaActual.getMinutes());
+    this.comprobante.fechaHoraEntrega = horaFechaEntrega
 
     const difEnMilisegundos = Date.now() - this.horaInicioEspera
     const difEnMinutos = Math.round((difEnMilisegundos/1000)/60)

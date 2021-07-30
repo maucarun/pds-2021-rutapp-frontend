@@ -119,8 +119,8 @@ export class HojaDeRutaViewPage {
   }
 
   async inicializacion() {
-    if (!this.hoja || (this.hoja.estado.nombre.toLowerCase() !== 'en curso' && this.hoja.estado.nombre.toLowerCase() !== 'pendiente')) {
-      this.alert('No hay una hoja de ruta o el estado no es en curso y no es pendiente', 'Error: Sin hoja de ruta');
+    if (!this.hoja || (this.hoja.estado.nombre.toLowerCase() === 'completada')) {
+      this.alert('No hay una hoja de ruta o el estado es completada', 'Error: Sin hoja de ruta');
     }
 
     await this.servicioRuta.get(this.hoja).then((data: RutaDeNavegacion) => {
