@@ -16,7 +16,7 @@ import { HojaDeRuta } from 'src/app/models/hojaDeRuta.models';
 @Component({
   selector: 'app-reportes',
   templateUrl: './reportes.page.html',
-  styleUrls: ['./reportes.page.scss'],
+  styleUrls: ['./reportes.page.scss', './../../app.component.scss'],
   /** Permite stylizar con styles de ngx-datatables*/
   encapsulation: ViewEncapsulation.None
 })
@@ -144,6 +144,10 @@ export class ReportesPage implements OnInit {
         await this.remitosService.getAll().then(
           (remitos: Remito[]) => {
             console.log(remitos);
+            remitos.forEach((r: any) => {
+              r.cliente = r.cliente.nombre;
+              r.estado = r.estado.nombre
+            })
             this.rows = remitos
             this.filteredData = remitos;
           }
@@ -220,6 +224,11 @@ export class ReportesPage implements OnInit {
     this.limpiarFechas();
     this.reporteSubmitted = false;
     return this.reportes = this.tipoReporteSeleccionado.reportes
+  }
+
+  seleccionarTipoReporte($event) {
+    this.reporteSeleccionado = null;
+    this.seleccionarReporte($event);
   }
 
   validarFechas(): boolean {
@@ -299,10 +308,13 @@ export class ReportesPage implements OnInit {
 
   getBusqueda(ev: any) {
     let val = ev.target.value.toLowerCase();
+    console.log(val)
     // get the amount of columns in the table
     let colsAmt = this.columns.length;
     // get the key names of each column in the dataset
     let keys = Object.keys(this.rows[0]);
+    console.log(this.rows[0])
+    console.log(keys)
     // assign filtered matches to the active datatable
     this.rows = this.filteredData.filter(function (item) {
       // iterate through each row's column data

@@ -55,11 +55,11 @@
                     "necesitaFecha": false,
                     "columnas" : [
                         { "prop": "idRemito", "name": "Id" },
-                        { "prop": "cliente.nombre", "name": "Nombre" },
+                        { "prop": "cliente", "name": "Nombre" },
                         { "prop": "fechaDeCreacion", "name": "Fecha de Creacion" },
                         { "prop": "cantidadDeItems", "name": "Cantidad de items" },
                         { "prop": "total", "name": "Total" },
-                        { "prop": "estado.nombre", "name": "Estado" }
+                        { "prop": "estado", "name": "Estado" }
                     ]
                 }
             ]

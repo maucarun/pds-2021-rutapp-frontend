@@ -2,9 +2,9 @@
 
   <ion-header [translucent]="true">
     <ion-toolbar color="secondary">
-      <ion-buttons *ngIf='!onlyView' slot="start" (click)="cambiarEstadoDeVista()">
+      <!-- <ion-buttons *ngIf='!onlyView' slot="start" (click)="cambiarEstadoDeVista()">
         <ion-back-button defaultHref="reportes"></ion-back-button>
-      </ion-buttons>
+      </ion-buttons> -->
       <ion-buttons slot="end">
         <ion-menu-button color="light"></ion-menu-button>
       </ion-buttons>
@@ -16,74 +16,74 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;">
-    <div class="ion-padding">
+    <ion-grid style="margin-bottom: 50px">
+      <div class="ion-padding">
 
-      <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
-      <!-- <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)" -->
-      <ion-item>
-        <ion-icon style="margin-right: 5px;" name="caret-down-outline"></ion-icon>
-        <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
-          [(ngModel)]="tipoReporteSeleccionado" placeholder="Seleccione Tipo de Reporte" okText="Aceptar"
-          cancelText="Cancelar">
-          <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
-          <ion-select-option *ngFor="let tipoReporte of tiposDeReportes.tipoReporte" [value]="tipoReporte">
-            {{ tipoReporte.nombre }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item *ngIf="!!reportes">
-        <ion-icon style="margin-right: 5px;" name="chevron-down-outline"></ion-icon>
-        <ion-select  required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
-          [(ngModel)]="reporteSeleccionado" placeholder="Seleccione Reporte" okText="Aceptar" cancelText="Cancelar">
-          <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
-          <ion-select-option *ngFor="let reporte of reportes" [value]="reporte">
-            {{ reporte.nombre }}
-          </ion-select-option>
-        </ion-select>
-
-      </ion-item>
-
-
-      <div style="display: flex;" *ngIf="!!reporteSeleccionado && reporteSeleccionado.necesitaFecha">
-        <ion-item style="width: 100%; text-align: left;">
-          <ion-icon style="margin-right: 5px;" name="calendar-outline"></ion-icon>
-          <ion-datetime  placeholder="Fecha Desde" [monthNames]="mesesCustomizados"
-            cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY"
-            [(ngModel)]="fechaDesde" [max]="fechaDeHoy">
-          </ion-datetime>
+        <!-- opciones de interface para el ion-select interface="popover"||"alert" -->
+        <!-- <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)" -->
+        <ion-item>
+          <ion-icon style="margin-right: 5px;" name="caret-down-outline"></ion-icon>
+          <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarTipoReporte($event)"
+            [(ngModel)]="tipoReporteSeleccionado" placeholder="Seleccione Tipo de Reporte" okText="Aceptar"
+            cancelText="Cancelar">
+            <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
+            <ion-select-option *ngFor="let tipoReporte of tiposDeReportes.tipoReporte" [value]="tipoReporte">
+              {{ tipoReporte.nombre }}
+            </ion-select-option>
+          </ion-select>
         </ion-item>
 
-        <ion-item *ngIf="!!fechaDesde" style="width: 100%; text-align: right;">
-          <ion-icon style="margin-right: 5px;" name="calendar-outline"></ion-icon>
-          <ion-datetime  placeholder="Fecha Hasta"
-            [monthNames]="mesesCustomizados" cancelText="Cancelar" doneText="Aceptar" displayFormat="DD/MMMM/YYYY"
-            pickFormat="DDDD MMMM YYYY" [(ngModel)]="fechaHasta" [min]="fechaDesde" [max]="fechaDeHoy">
-          </ion-datetime>
+        <ion-item *ngIf="!!reportes">
+          <ion-icon style="margin-right: 5px;" name="chevron-down-outline"></ion-icon>
+          <ion-select required="true" interface="action-sheet" (ionChange)="seleccionarReporte($event)"
+            [(ngModel)]="reporteSeleccionado" placeholder="Seleccione Reporte" okText="Aceptar" cancelText="Cancelar">
+            <!-- <ion-select-option *ngFor="let cliente of clientes" [value]="cliente">{{ cliente.nombre }} -->
+            <ion-select-option *ngFor="let reporte of reportes" [value]="reporte">
+              {{ reporte.nombre }}
+            </ion-select-option>
+          </ion-select>
+
         </ion-item>
+
+
+        <div style="display: flex;" *ngIf="!!reporteSeleccionado && reporteSeleccionado.necesitaFecha">
+          <ion-item style="width: 100%; text-align: left;">
+            <ion-icon style="margin-right: 5px;" name="calendar-outline"></ion-icon>
+            <ion-datetime placeholder="Fecha Desde" [monthNames]="mesesCustomizados" cancelText="Cancelar"
+              doneText="Aceptar" displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY" [(ngModel)]="fechaDesde"
+              [max]="fechaDeHoy">
+            </ion-datetime>
+          </ion-item>
+
+          <ion-item *ngIf="!!fechaDesde" style="width: 100%; text-align: right;">
+            <ion-icon style="margin-right: 5px;" name="calendar-outline"></ion-icon>
+            <ion-datetime placeholder="Fecha Hasta" [monthNames]="mesesCustomizados" cancelText="Cancelar"
+              doneText="Aceptar" displayFormat="DD/MMMM/YYYY" pickFormat="DDDD MMMM YYYY" [(ngModel)]="fechaHasta"
+              [min]="fechaDesde" [max]="fechaDeHoy">
+            </ion-datetime>
+          </ion-item>
+        </div>
+
+        <ion-searchbar *ngIf="reporteSubmitted" (ionInput)="getBusqueda($event)" autocomplete="on"
+          placeholder="Buscar..." color="primary">
+        </ion-searchbar>
+
+
+        <!-- [selected]="selected" (activate)="onActivate($event)" -->
+        <!-- Theme classes dark, material, bootstrap -->
+        <ngx-datatable style="height: 100%;" *ngIf="reporteSubmitted" class="bootstrap" [limit]="8" [rows]="rows"
+          [rowHeight]="50" [columns]="columns" [columnMode]="'force'" [sortType]="'multi'"
+          [selectionType]="SelectionType.single" (select)="onSelect($event)" [headerHeight]="50" [footerHeight]="50"
+          [scrollbarV]="true" [scrollbarH]="true">
+        </ngx-datatable>
+
       </div>
-
-      <ion-searchbar *ngIf="reporteSubmitted" (ionInput)="getBusqueda($event)" autocomplete="on" placeholder="Buscar..."
-        color="primary">
-      </ion-searchbar>
-
-      <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-        <ion-fab-button color="warning" (click)="ejecutarReporte()">
-          <ion-icon name="play-outline"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
-
-      <!-- [selected]="selected" (activate)="onActivate($event)" -->
-      <!-- Theme classes dark, material, bootstrap -->
-      <ngx-datatable style="height: 250px;" *ngIf="reporteSubmitted" class="bootstrap" [limit]="8" [rows]="rows"
-        [rowHeight]="50" [columns]="columns" [columnMode]="'force'" [sortType]="'multi'"
-        [selectionType]="SelectionType.single" (select)="onSelect($event)" 
-        [headerHeight]="50" [footerHeight]="50"
-        [scrollbarV]="true" [scrollbarH]="true">
-      </ngx-datatable>
-
-    </div>
+    </ion-grid>
+    <ion-fab vertical="bottom" horizontal="start" slot="fixed">
+      <ion-fab-button color="warning" (click)="ejecutarReporte()">
+        <ion-icon name="play-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
   </ion-content>
-
 
 </div>
