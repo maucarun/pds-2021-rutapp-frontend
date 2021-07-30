@@ -45,7 +45,7 @@
 
         <ion-item lines="full" *ngIf="hoja.estado.id_estado == 1">
           <ion-label position="floating">Motivo</ion-label>
-          <ion-input placeholder="Causa de la suspención" value="" type="text" formControlName="justificacion"
+          <ion-input placeholder="Causa de la suspensión" value="" type="text" formControlName="justificacion"
             [(ngModel)]="hoja.justificacion"></ion-input>
         </ion-item>
         <!-- <span class="error ion-padding" *ngIf="submitted && validarJustificacion !== null">
@@ -171,7 +171,7 @@
         <ion-row *ngIf="hoja.estado.nombre === 'Suspendida'">
           <ion-row>
             <ion-col size="12" class="ion-no-padding ion-padding-start ion-padding-end">
-              Causa de la Suspención
+              <small style="color:gray">Causa de la Suspensión</small>
             </ion-col>
             <ion-col size="12" class="ion-no-padding ion-padding-bottom ion-padding-start ion-padding-end">
               {{ hoja.justificacion }}
